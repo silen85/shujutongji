@@ -21,9 +21,8 @@ public class SplashFragment extends Fragment {
 
         view = new LinearLayout(getActivity());
 
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(params);
 
         view.setBackgroundResource(R.mipmap.splash_bg);
