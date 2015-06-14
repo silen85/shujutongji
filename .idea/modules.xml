@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/shujutongji.iml" filepath="$PROJECT_DIR$/shujutongji.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gesturepass/src/main/gesturepass.iml" filepath="$PROJECT_DIR$/gesturepass/src/main/gesturepass.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/src/main/shujutongji.iml" filepath="$PROJECT_DIR$/app/src/main/shujutongji.iml" />
     </modules>
   </component>
 </project>

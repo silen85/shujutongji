@@ -9,23 +9,17 @@ import android.widget.Button;
 
 import com.lesso.data.R;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 /**
  * Created by meisl on 2015/6/9.
  */
 public class LoginFragment extends Fragment implements View.OnClickListener {
-
-    @InjectView(R.id.login)
-    Button login;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.login, null);
 
-        ButterKnife.inject(this, view);
+        Button login = (Button) view.findViewById(R.id.login);
 
         login.setOnClickListener(this);
 

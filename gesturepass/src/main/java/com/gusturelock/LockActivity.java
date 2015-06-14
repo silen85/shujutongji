@@ -1,6 +1,9 @@
-package com.lesso.gesturepass;
+package com.gusturelock;
 
 import java.util.List;
+
+import com.gusturelock.LockPatternView.Cell;
+import com.gusturelock.LockPatternView.DisplayMode;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -21,7 +24,7 @@ public class LockActivity extends Activity implements
         LockPatternView.OnPatternListener {
     private static final String TAG = "LockActivity";
 
-    private List<LockPatternView.Cell> lockPattern;
+    private List<Cell> lockPattern;
     private LockPatternView lockPatternView;
 
     @Override
@@ -73,7 +76,7 @@ public class LockActivity extends Activity implements
     }
 
     @Override
-    public void onPatternCellAdded(List<LockPatternView.Cell> pattern) {
+    public void onPatternCellAdded(List<Cell> pattern) {
         Log.d(TAG, "onPatternCellAdded");
         Log.e(TAG, LockPatternView.patternToString(pattern));
         // Toast.makeText(this, LockPatternView.patternToString(pattern),
@@ -81,13 +84,13 @@ public class LockActivity extends Activity implements
     }
 
     @Override
-    public void onPatternDetected(List<LockPatternView.Cell> pattern) {
+    public void onPatternDetected(List<Cell> pattern) {
         Log.d(TAG, "onPatternDetected");
 
         if (pattern.equals(lockPattern)) {
             finish();
         } else {
-            lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
+            lockPatternView.setDisplayMode(DisplayMode.Wrong);
             Toast.makeText(this, R.string.lockpattern_error, Toast.LENGTH_LONG)
                     .show();
         }

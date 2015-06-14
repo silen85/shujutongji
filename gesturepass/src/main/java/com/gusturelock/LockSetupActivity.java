@@ -1,11 +1,11 @@
-package com.lesso.gesturepass;
+package com.gusturelock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.lesso.gesturepass.LockPatternView.Cell;
-import com.lesso.gesturepass.LockPatternView.DisplayMode;
+import com.gusturelock.LockPatternView.Cell;
+import com.gusturelock.LockPatternView.DisplayMode;
 
 import android.os.Bundle;
 import android.app.Activity;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lesso.gesturepass;
+package com.gusturelock;
 
 
 import android.content.Context;
@@ -36,11 +36,10 @@ import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//import com.google.android.collect.Lists;
 
 /**
  * Displays and detects the user's unlock attempt, which is a drag of a finger
@@ -269,14 +268,14 @@ public class LockPatternView extends View {
         mPathPaint.setStrokeCap(Paint.Cap.ROUND);
 
         // lot's of bitmaps!
-        mBitmapBtnDefault = getBitmapFor(R.mipmap.btn_code_lock_default_holo);
-        mBitmapBtnTouched = getBitmapFor(R.mipmap.btn_code_lock_touched_holo);
-        mBitmapCircleDefault = getBitmapFor(R.mipmap.indicator_code_lock_point_area_default_holo);
-        mBitmapCircleGreen = getBitmapFor(R.mipmap.indicator_code_lock_point_area_green_holo);
-        mBitmapCircleRed = getBitmapFor(R.mipmap.indicator_code_lock_point_area_red_holo);
+        mBitmapBtnDefault = getBitmapFor(R.drawable.btn_code_lock_default_holo);
+        mBitmapBtnTouched = getBitmapFor(R.drawable.btn_code_lock_touched_holo);
+        mBitmapCircleDefault = getBitmapFor(R.drawable.indicator_code_lock_point_area_default_holo);
+        mBitmapCircleGreen = getBitmapFor(R.drawable.indicator_code_lock_point_area_green_holo);
+        mBitmapCircleRed = getBitmapFor(R.drawable.indicator_code_lock_point_area_red_holo);
 
-        mBitmapArrowGreenUp = getBitmapFor(R.mipmap.indicator_code_lock_drag_direction_green_up);
-        mBitmapArrowRedUp = getBitmapFor(R.mipmap.indicator_code_lock_drag_direction_red_up);
+        mBitmapArrowGreenUp = getBitmapFor(R.drawable.indicator_code_lock_drag_direction_green_up);
+        mBitmapArrowRedUp = getBitmapFor(R.drawable.indicator_code_lock_drag_direction_red_up);
 
         // bitmaps have the size of the largest bitmap in this group
         final Bitmap bitmaps[] = { mBitmapBtnDefault, mBitmapBtnTouched, mBitmapCircleDefault,
@@ -741,7 +740,10 @@ public class LockPatternView extends View {
     }
 
     private void sendAccessEvent(int resId) {
-        announceForAccessibility(getContext().getString(resId));
+
+        Toast.makeText(getContext(),getContext().getString(resId),Toast.LENGTH_SHORT).show();
+
+        //announceForAccessibility(getContext().getString(resId));
     }
 
     private void handleActionUp(MotionEvent event) {

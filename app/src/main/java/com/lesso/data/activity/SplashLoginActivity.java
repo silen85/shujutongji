@@ -26,7 +26,6 @@ public class SplashLoginActivity extends FragmentActivity {
 
         fragmentManager =getSupportFragmentManager();
 
-
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         splashFragment = new SplashFragment();
         fragmentTransaction.add(R.id.splash_login, splashFragment);

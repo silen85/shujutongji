@@ -1,4 +1,4 @@
-package com.lesso.gesturepass;
+package com.gusturelock;
 
 import android.os.Bundle;
 import android.app.Activity;
