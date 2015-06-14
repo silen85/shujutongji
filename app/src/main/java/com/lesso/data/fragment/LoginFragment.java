@@ -18,7 +18,7 @@ import butterknife.InjectView;
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     @InjectView(R.id.login)
-    private Button login;
+    Button login;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
