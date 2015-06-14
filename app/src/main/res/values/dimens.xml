@@ -2,4 +2,30 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="interval_line_height">0.5dp</dimen>
+
+    <dimen name="F1">22dp</dimen>
+    <dimen name="F2">20dp</dimen>
+    <dimen name="F3">18dp</dimen>
+    <dimen name="F4">16dp</dimen>
+    <dimen name="F5">14dp</dimen>
+    <dimen name="F6">12dp</dimen>
+
+    <dimen name="title_text_size">@dimen/F1</dimen>
+    <dimen name="title_padding">8dp</dimen>
+    <dimen name="title_padding_top">16dp</dimen>
+    <dimen name="title_padding_right">8dp</dimen>
+    <dimen name="title_padding_bottom">16dp</dimen>
+    <dimen name="title_padding_left">8dp</dimen>
+
+
+    <dimen name="interval_A">16dp</dimen>   <!--  垂直间大间距  \\  -->
+    <dimen name="interval_B">12dp</dimen>   <!--  垂直间小间距  \\  -->
+    <dimen name="interval_C">16dp</dimen>   <!--  水平间大间距  ==  -->
+    <dimen name="interval_D">12dp</dimen>   <!--  水平间小间距  ==  -->
+    <dimen name="interval_E">8dp</dimen>   <!--  EditText文字开头间距  -->
+    <dimen name="interval_F">4dp</dimen>   <!--  EditText文字上间距  -->
+    <dimen name="interval_G">4dp</dimen>   <!--  EditText文字下间距  -->
+
 </resources>

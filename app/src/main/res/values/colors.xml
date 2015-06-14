@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="MALL_C1">#ED6C00</color>
+    <color name="MALL_C2">#231815</color>
+    <color name="MALL_C3">#FFFFFF</color>
+    <color name="MALL_C4">#9B9B9B</color>
+    <color name="MALL_C5">#EFEFF4</color>
+    <color name="MALL_C6">#F7F7F8</color>
+    <color name="MALL_C7">#CFCFD2</color>
+    <color name="MALL_C8">#898989</color>
+    <color name="MALL_C9">#855A3C</color>
+    <color name="MALL_C10">#7293A1</color>
+    <color name="MALL_C11">#1A5B4E</color>
+    <color name="MALL_C12">#4DB7CD</color>
+    <color name="MALL_C13">#005CA1</color>
+    <color name="MALL_C14">#FDD000</color>
+    <color name="MALL_C15">#BB272F</color>
+    <color name="MALL_C16">#158953</color>
+
+</resources>
