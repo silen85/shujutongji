@@ -14,6 +14,9 @@ import com.lesso.data.fragment.SplashFragment;
 
 public class SplashLoginActivity extends FragmentActivity {
 
+    public static final String LOCK = "lock";
+    public static final String LOCK_KEY = "lock_key";
+
     private FragmentManager fragmentManager;
 
     private Fragment splashFragment;
