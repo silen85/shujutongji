@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 
 import com.lesso.data.R;
 
@@ -14,18 +17,23 @@ import com.lesso.data.R;
  */
 public class SplashFragment extends Fragment {
 
-    private LinearLayout view;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = new LinearLayout(getActivity());
+        view = inflater.inflate(R.layout.activity_splash,null);
 
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-        view.setLayoutParams(params);
+        ImageView l = (ImageView) view.findViewById(R.id.splash_leftroat);
+        ImageView r = (ImageView) view.findViewById(R.id.splash_rightroat);
 
-        view.setBackgroundResource(R.mipmap.splash_bg);
+        Animation anim_r = AnimationUtils.loadAnimation(getActivity(),R.anim.roat_login_r);
+        anim_r.setInterpolator(new LinearInterpolator());
+        r.startAnimation(anim_r);
+
+        Animation anim_l = AnimationUtils.loadAnimation(getActivity(),R.anim.roat_login_l);
+        anim_l.setInterpolator(new LinearInterpolator());
+        l.startAnimation(anim_l);
 
         return view;
     }

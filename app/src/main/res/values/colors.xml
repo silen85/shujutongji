@@ -18,4 +18,21 @@
     <color name="MALL_C15">#BB272F</color>
     <color name="MALL_C16">#158953</color>
 
+
+    <color name="REPORT_UI_C1">#E76E41</color>
+    <color name="REPORT_UI_C2">#232736</color>
+    <color name="REPORT_UI_C3">#656D78</color>
+    <color name="REPORT_UI_C4">#CFCFD2</color>
+    <color name="REPORT_UI_C5">#EFEFF4</color>
+    <color name="REPORT_UI_C6">#FBFBFB</color>
+
+    <color name="REPORT_TABLE_C1">#E76E41</color>
+    <color name="REPORT_TABLE_C2">#FDC400</color>
+    <color name="REPORT_TABLE_C3">#65BA3E</color>
+    <color name="REPORT_TABLE_C4">#81ACA9</color>
+    <color name="REPORT_TABLE_C5">#6B83B7</color>
+    <color name="REPORT_TABLE_C6">#EB8ABE</color>
+    <color name="REPORT_TABLE_C7">#9E7866</color>
+    <color name="REPORT_TABLE_C8">#9069B5</color>
+
 </resources>

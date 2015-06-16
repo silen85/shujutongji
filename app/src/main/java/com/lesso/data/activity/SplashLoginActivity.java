@@ -1,5 +1,8 @@
 package com.lesso.data.activity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -40,17 +43,26 @@ public class SplashLoginActivity extends FragmentActivity {
             public void run() {
 
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                loginFragment = new LoginFragment();
+                SharedPreferences preferences = getSharedPreferences(SplashLoginActivity.LOCK, Activity.MODE_PRIVATE);
 
-                fragmentTransaction.remove(splashFragment);
+                String lockPattenString = preferences.getString(SplashLoginActivity.LOCK_KEY, null);
 
-                fragmentTransaction.add(R.id.splash_login, loginFragment);
-                fragmentTransaction.commit();
+                if (lockPattenString != null) {
+                    Intent intent = new Intent(SplashLoginActivity.this,LockActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    loginFragment = new LoginFragment();
 
+                    fragmentTransaction.remove(splashFragment);
+                    fragmentTransaction.add(R.id.splash_login, loginFragment);
+
+                    fragmentTransaction.commit();
+                }
 
             }
-        }, 6000);
+        }, 5000000);
 
 
 
