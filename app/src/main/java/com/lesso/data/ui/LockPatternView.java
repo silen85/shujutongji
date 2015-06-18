@@ -743,7 +743,7 @@ public class LockPatternView extends View {
 
     private void sendAccessEvent(int resId) {
 
-        Toast.makeText(getContext(),getContext().getString(resId),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),getContext().getString(resId),Toast.LENGTH_SHORT).show();
 
         //announceForAccessibility(getContext().getString(resId));
     }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@null">
@@ -9,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="38dp"
+        android:clickable="true"
         android:layout_alignParentTop="true">
 
         <ImageView
@@ -21,6 +24,7 @@
             android:src="@mipmap/splash_left_roat" />
 
         <ImageView
+            android:id="@+id/splash_centerroat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -43,7 +47,7 @@
         android:id="@+id/login_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="18dp"
         android:layout_marginBottom="18dp"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
@@ -59,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -68,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
+                    android:layout_marginBottom="2dp"
                     android:src="@mipmap/login_account_icon" />
 
                 <TextView
@@ -89,8 +94,11 @@
                 android:paddingTop="@dimen/interval_F"
                 android:paddingBottom="4dp"
                 android:gravity="center"
+                android:inputType="textVisiblePassword"
+                android:singleLine="true"
                 android:background="@null"
-                android:ems="16">
+                android:digits="@string/digits"
+                android:ems="20">
             </EditText>
 
 
@@ -108,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -117,6 +125,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
+                    android:layout_marginBottom="2dp"
                     android:src="@mipmap/login_password_icon" />
 
                 <TextView
@@ -138,8 +147,10 @@
                 android:paddingTop="@dimen/interval_F"
                 android:paddingBottom="4dp"
                 android:gravity="center"
+                android:singleLine="true"
+                android:inputType="textPassword"
                 android:background="@null"
-                android:ems="16">
+                android:ems="20">
             </EditText>
 
         </FrameLayout>

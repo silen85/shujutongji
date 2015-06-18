@@ -29,7 +29,7 @@ public class LockSetupActivity extends Activity implements
     private static final int STEP_2 = 2; // 第一次设置手势完成
     private static final int STEP_3 = 3; // 按下继续按钮
     private static final int STEP_4 = 4; // 第二次设置手势完成
-    // private static final int SETP_5 = 4; // 按确认按钮
+    private static final int SETP_5 = 4; // 按确认按钮
 
     private int step;
 
@@ -43,8 +43,10 @@ public class LockSetupActivity extends Activity implements
         setContentView(R.layout.activity_lock_setup);
         lockPatternView = (LockPatternView) findViewById(R.id.lock_pattern);
         lockPatternView.setOnPatternListener(this);
+
         leftButton = (Button) findViewById(R.id.left_btn);
         rightButton = (Button) findViewById(R.id.right_btn);
+
 
         step = STEP_1;
         updateView();
@@ -163,16 +165,16 @@ public class LockSetupActivity extends Activity implements
 
         if (choosePattern == null) {
             choosePattern = new ArrayList<LockPatternView.Cell>(pattern);
-            //           Log.d(TAG, "choosePattern = "+choosePattern.toString());
-//            Log.d(TAG, "choosePattern.size() = "+choosePattern.size());
+            //      Log.d(TAG, "choosePattern = "+choosePattern.toString());
+            //      Log.d(TAG, "choosePattern.size() = "+choosePattern.size());
             Log.d(TAG, "choosePattern = " + Arrays.toString(choosePattern.toArray()));
 
             step = STEP_2;
             updateView();
             return;
         }
-//[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
-//[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]    
+            //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
+            //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
 
         Log.d(TAG, "choosePattern = " + Arrays.toString(choosePattern.toArray()));
         Log.d(TAG, "pattern = " + Arrays.toString(pattern.toArray()));

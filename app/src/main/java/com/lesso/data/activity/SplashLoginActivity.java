@@ -3,19 +3,24 @@ package com.lesso.data.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 import com.lesso.data.R;
+import com.lesso.data.cusinterface.FragmentListener;
 import com.lesso.data.fragment.LoginFragment;
 import com.lesso.data.fragment.SplashFragment;
+import com.lesso.data.ui.CustomRelativeLayout;
 
 
-public class SplashLoginActivity extends FragmentActivity {
+public class SplashLoginActivity extends FragmentActivity{
 
     public static final String LOCK = "lock";
     public static final String LOCK_KEY = "lock_key";
@@ -25,12 +30,14 @@ public class SplashLoginActivity extends FragmentActivity {
     private Fragment splashFragment;
     private Fragment loginFragment;
 
+   private FragmentListener fragmentListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_login);
 
-        fragmentManager =getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         splashFragment = new SplashFragment();
@@ -48,10 +55,10 @@ public class SplashLoginActivity extends FragmentActivity {
                 String lockPattenString = preferences.getString(SplashLoginActivity.LOCK_KEY, null);
 
                 if (lockPattenString != null) {
-                    Intent intent = new Intent(SplashLoginActivity.this,LockActivity.class);
+                    Intent intent = new Intent(SplashLoginActivity.this, LockActivity.class);
                     startActivity(intent);
                     finish();
-                }else{
+                } else {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     loginFragment = new LoginFragment();
 
@@ -60,12 +67,29 @@ public class SplashLoginActivity extends FragmentActivity {
 
                     fragmentTransaction.commit();
                 }
-
             }
-        }, 5000000);
+        }, 8000);
 
+    }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
 
+        if(fragmentListener !=null)
+            fragmentListener.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        if(fragmentListener !=null)
+            fragmentListener.dispatchKeyEvent(event);
+        return super.dispatchKeyEvent(event);
+    }
+
+    public void setFragmentListener(FragmentListener fragmentListener){
+        this.fragmentListener = fragmentListener;
     }
 
 }

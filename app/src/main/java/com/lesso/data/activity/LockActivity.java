@@ -40,6 +40,20 @@ public class LockActivity extends Activity implements
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        SharedPreferences preferences = getSharedPreferences(SplashLoginActivity.LOCK,
+                MODE_PRIVATE);
+        String patternString = preferences.getString(SplashLoginActivity.LOCK_KEY,
+                null);
+        if (patternString == null) {
+            finish();
+            return;
+        }
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         // disable back key

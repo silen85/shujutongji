@@ -6,7 +6,9 @@
     <string name="text_account">账 号</string>
     <string name="text_password">密 码</string>
     <string name="text_password_forget">忘记密码?</string>
-
+    <string name="text_lock_input">请输入手势密码</string>
+    <string name="text_lock_setup">请设置手势密码</string>
+    <string name="text_lock_setup_again">请再次设置手势密码</string>
 
     <string name="cancel">取消</string>
     <string name="try_again">重试</string>
@@ -14,6 +16,8 @@
     <string name="confirm">确认</string>
 
     <string name="app_full_name">联塑商城数据报表系统beta1.0</string>
+
+    <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
     <string name="lockpattern_recording_incorrect_too_short" >"至少连接4个点，请重试"</string>
     <string name="lockpattern_error" >"手势密码不对"</string>
