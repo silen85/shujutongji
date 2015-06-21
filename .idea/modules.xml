@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/mpchartlib/src/androidTest/MPAndroidLib.iml" filepath="$PROJECT_DIR$/mpchartlib/src/androidTest/MPAndroidLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/src/main/app.iml" filepath="$PROJECT_DIR$/app/src/main/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/gesturepass/src/main/gesturepass.iml" filepath="$PROJECT_DIR$/gesturepass/src/main/gesturepass.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/src/main/shujutongji.iml" filepath="$PROJECT_DIR$/app/src/main/shujutongji.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mpchartexample/mpchartexample.iml" filepath="$PROJECT_DIR$/mpchartexample/mpchartexample.iml" />
     </modules>
   </component>
 </project>

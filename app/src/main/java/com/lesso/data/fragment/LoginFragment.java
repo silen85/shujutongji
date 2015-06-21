@@ -3,20 +3,17 @@ package com.lesso.data.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -34,7 +31,6 @@ import com.lesso.data.R;
 import com.lesso.data.activity.LockSetupActivity;
 import com.lesso.data.activity.SplashLoginActivity;
 import com.lesso.data.cusinterface.FragmentListener;
-import com.lesso.data.ui.CustomRelativeLayout;
 import com.lesso.data.ui.EditTextHolder;
 
 /**
@@ -76,7 +72,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener,Hand
 
         mHandler = new Handler(this);
 
-        view = (RelativeLayout) inflater.inflate(R.layout.activity_login,null);
+        view = (RelativeLayout) inflater.inflate(R.layout.fragment_login,null);
 
         initView();
 
@@ -183,6 +179,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener,Hand
                         Log.v(TAG, "键盘收起状态");
                         onKeybordHidden();
                     }
+                }
+            });*/
+
+            /*login_input.setOnSoftKeyboardListener(new CustomLinearLayout.OnSoftKeyboardListener() {
+                @Override
+                public void onShown() {
+                    onKeybordShow();
+                }
+
+                @Override
+                public void onHidden() {
+                    onKeybordHidden();
                 }
             });*/
 

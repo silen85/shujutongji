@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/REPORT_UI_C6"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/fragment_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/interval_C"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/interval_A"
+        android:paddingRight="@dimen/interval_A">
+
+
+        <include layout="@layout/time_chooser" />
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|top">
+
+
+        <LinearLayout
+            android:id="@+id/fragment_middle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/interval_C"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/interval_A"
+            android:paddingRight="@dimen/interval_A">
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@color/TRANSPARENT"
+                android:divider="@color/TRANSPARENT"
+                android:scrollbarStyle="outsideInset">
+
+            </ListView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fragment_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/interval_C"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>

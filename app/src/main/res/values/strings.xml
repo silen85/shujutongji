@@ -17,6 +17,8 @@
 
     <string name="app_full_name">联塑商城数据报表系统beta1.0</string>
 
+    <string name="app_title_name1">联塑商城数据报表系统</string>
+
     <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
     <string name="lockpattern_recording_incorrect_too_short" >"至少连接4个点，请重试"</string>

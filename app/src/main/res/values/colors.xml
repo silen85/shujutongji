@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="TRANSPARENT">#00FFFFFF</color>
+
     <color name="MALL_C1">#ED6C00</color>
     <color name="MALL_C2">#231815</color>
     <color name="MALL_C3">#FFFFFF</color>

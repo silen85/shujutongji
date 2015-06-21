@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
  */
 public class CustomRelativeLayout extends RelativeLayout{
 
-    private OnSizeChangedListener listener;
+    private OnSoftKeyboardListener onSoftKeyboardListener;
 
     public CustomRelativeLayout(Context context) {
         super(context);
@@ -21,6 +21,16 @@ public class CustomRelativeLayout extends RelativeLayout{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (onSoftKeyboardListener != null) {
+            final int newSpec = MeasureSpec.getSize(heightMeasureSpec);
+            final int oldSpec = getMeasuredHeight();
+            // If layout became smaller, that means something forced it to resize. Probably soft keyboard :)
+            if (oldSpec > newSpec){
+                onSoftKeyboardListener.onShown();
+            } else {
+                onSoftKeyboardListener.onHidden();
+            }
+        }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -29,22 +39,20 @@ public class CustomRelativeLayout extends RelativeLayout{
         super.onLayout(changed, l, t, r, b);
     }
 
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-
         super.onSizeChanged(w, h, oldw, oldh);
-        if (listener != null) {
-            listener.onSizeChanged(w, h, oldw, oldh);
-        }
     }
 
-    public void setOnSizeChangedListener(OnSizeChangedListener listener) {
-        this.listener = listener;
+    public final void setOnSoftKeyboardListener(OnSoftKeyboardListener onSoftKeyboardListener) {
+        this.onSoftKeyboardListener = onSoftKeyboardListener;
     }
 
 
-    public interface OnSizeChangedListener {
-        void onSizeChanged(int w, int h, int oldw, int oldh);
+    public interface OnSoftKeyboardListener {
+        public void onShown();
+        public void onHidden();
     }
 
 }

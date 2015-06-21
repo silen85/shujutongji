@@ -27,7 +27,7 @@ public class SplashFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.activity_splash,null);
+        view = inflater.inflate(R.layout.fragment_splash,null);
 
          l = (ImageView) view.findViewById(R.id.splash_leftroat);
          r = (ImageView) view.findViewById(R.id.splash_rightroat);

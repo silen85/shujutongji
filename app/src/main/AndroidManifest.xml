@@ -26,6 +26,10 @@
         <activity
             android:name=".activity.LockSetupActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
