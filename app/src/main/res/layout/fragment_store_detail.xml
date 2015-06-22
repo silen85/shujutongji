@@ -11,6 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/interval_C"
+        android:background="@color/REPORT_UI_C6"
         android:paddingBottom="80dp"
         android:paddingLeft="@dimen/interval_A"
         android:paddingRight="@dimen/interval_A">
@@ -25,9 +26,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
+            android:background="@drawable/border_normal"
             android:cacheColorHint="@color/TRANSPARENT"
             android:divider="@color/TRANSPARENT"
-            android:scrollbarStyle="outsideInset"></ListView>
+            android:padding="1dp"
+            android:scrollbarStyle="outsideOverlay"></ListView>
 
     </FrameLayout>
 
@@ -37,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/interval_C"
+        android:background="@color/TRANSPARENT"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
@@ -139,6 +143,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>

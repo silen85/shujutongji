@@ -1,0 +1,22 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!--  渐变色 -->
+    <!-- <gradient
+        android:startColor="@android:color/white"
+        android:endColor="@android:color/white"
+        android:centerX="5"
+        android:type="sweep"/>     -->
+
+    <solid android:color="@android:color/white" />
+
+    <stroke
+        android:width="1dp"
+        android:color="@color/REPORT_UI_C4" />
+
+    <corners
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="0dp"
+        android:topLeftRadius="0dp"
+        android:topRightRadius="0dp" />
+
+</shape>  

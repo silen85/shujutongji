@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,13 +23,15 @@ import java.util.Map;
 /**
  * Created by meisl on 2015/6/21.
  */
-public class StroeFragment extends ListFragment {
+public class StoreFragment extends ListFragment {
 
     private MainActivity activity;
 
     private StoreAdapter adapter;
 
     private View view;
+
+    private Button btn_toogle_fragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,12 +99,14 @@ public class StroeFragment extends ListFragment {
         list.add(item8);
         list.add(item9);
         list.add(item10);
+        list.add(item10);
+        list.add(item10);
+        list.add(item10);
+        list.add(item10);
 
         adapter = new StoreAdapter(activity, list, R.layout.processbar_item);
 
         setListAdapter(adapter);
-
-        adapter.notifyDataSetChanged();
 
     }
 
@@ -110,9 +115,37 @@ public class StroeFragment extends ListFragment {
 
         view = inflater.inflate(R.layout.fragment_store, null);
 
+        initView();
+
         return view;
     }
 
+    private void initView() {
+
+        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
+        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.toogleFragment(StoreFragment.this);
+            }
+        });
+
+    }
+
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        /*RelativeLayout time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
+
+        int hh = ((FrameLayout.LayoutParams) time_chooser.getLayoutParams()).height;
+
+        int h = time_chooser.getHeight();
+
+        ((FrameLayout.LayoutParams) getListView().getLayoutParams()).setMargins(0, h + 10, 0, 0);*/
+
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -130,7 +163,7 @@ public class StroeFragment extends ListFragment {
 
         public StoreAdapter(Context context, List<Map<String, String>> listobject, int listcontextid) {
             this.context = context;
-            this.layoutInflater = LayoutInflater.from(context);
+            this.layoutInflater = LayoutInflater.from(this.context);
             this.list = listobject;
             this.layoutlistid = listcontextid;
         }
