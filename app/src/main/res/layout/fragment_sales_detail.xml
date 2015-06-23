@@ -40,7 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/interval_C"
-        android:background="@color/TRANSPARENT"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
@@ -57,10 +56,10 @@
             android:layout_marginTop="@dimen/interval_C"
             android:gravity="bottom"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="4">
 
             <LinearLayout
-                android:id="@+id/tab_store_out"
+                android:id="@+id/tab_sales_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -74,7 +73,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/interval_C"
                     android:paddingTop="@dimen/interval_C"
-                    android:text="@string/store_out"
+                    android:text="@string/sales_amount"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F5" />
 
@@ -87,7 +86,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tab_store_in"
+                android:id="@+id/tab_sales_paper"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -101,7 +100,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/interval_C"
                     android:paddingTop="@dimen/interval_C"
-                    android:text="@string/store_in"
+                    android:text="@string/sales_paper"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F5" />
 
@@ -114,7 +113,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tab_store_all"
+                android:id="@+id/tab_sales_car"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -128,7 +127,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/interval_C"
                     android:paddingTop="@dimen/interval_C"
-                    android:text="@string/store_all"
+                    android:text="@string/sales_car"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F5" />
 
@@ -136,6 +135,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C3" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tab_sales_type"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/REPORT_UI_C5"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/interval_C"
+                    android:paddingTop="@dimen/interval_C"
+                    android:text="@string/sales_type"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/interval_C"
+                    android:background="@color/REPORT_TABLE_C4" />
 
 
             </LinearLayout>

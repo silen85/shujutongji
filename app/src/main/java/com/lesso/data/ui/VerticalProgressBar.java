@@ -10,53 +10,37 @@ import android.widget.ProgressBar;
  */
 public class VerticalProgressBar extends ProgressBar {
 
-    public static final int MODE_TOP = 0x001;
-    public static final int MODE_BOTTOM = 0x002;
-
-    private int curr_mode = MODE_BOTTOM;
-
     public VerticalProgressBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        // TODO Auto-generated constructor stub
     }
 
     public VerticalProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+        // TODO Auto-generated constructor stub
     }
 
     public VerticalProgressBar(Context context) {
         super(context);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(h, w, oldh, oldw);
-    }
-
-    @Override
-    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        // TODO Auto-generated constructor stub
     }
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
-
-        switch (curr_mode) {
-            case MODE_BOTTOM:
-                canvas.rotate(-90);
-                canvas.translate(-canvas.getHeight(), 0);
-                super.onDraw(canvas);
-                break;
-            case MODE_TOP:
-                canvas.rotate(90, canvas.getWidth(), 0);
-                canvas.translate(10, 0);
-                super.onDraw(canvas);
-                break;
-        }
+        // TODO Auto-generated method stub
+        canvas.rotate(-90);//反转90度，将水平ProgressBar竖起来
+        canvas.translate(-getHeight(), 0);//将经过旋转后得到的VerticalProgressBar移到正确的位置,注意经旋转<span style="white-space:pre">						</span>    后宽高值互换
+        super.onDraw(canvas);
     }
 
-    public void setCurrMode(int mode) {
-        curr_mode = mode;
-        invalidate();
+    @Override
+    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(heightMeasureSpec, widthMeasureSpec);
+        setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());//互换宽高值
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(h, w, oldw, oldh);//互换宽高值
+    }
 }

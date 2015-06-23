@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="0dip" />
+            <gradient
+                android:angle="270"
+                android:centerColor="@color/REPORT_UI_C6"
+                android:centerY="0.75"
+                android:endColor="@color/REPORT_UI_C6"
+                android:startColor="@color/REPORT_UI_C6" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="0dip" />
+                <gradient
+                    android:angle="270"
+                    android:centerColor="@color/REPORT_TABLE_C5"
+                    android:centerY="0.75"
+                    android:endColor="@color/REPORT_TABLE_C5"
+                    android:startColor="@color/REPORT_TABLE_C5" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

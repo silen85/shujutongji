@@ -37,10 +37,11 @@
             <LinearLayout
                 android:id="@+id/data_listview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
+                <include layout="@layout/item_vprocessbar" />
 
             </LinearLayout>
 
@@ -96,7 +97,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C1" />
 
 
@@ -123,7 +124,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C2" />
 
 
@@ -150,7 +151,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C3" />
 
 
@@ -177,7 +178,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C4" />
 
 

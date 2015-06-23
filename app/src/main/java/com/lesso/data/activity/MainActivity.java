@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.lesso.data.R;
+import com.lesso.data.fragment.SalesDetailFragment;
+import com.lesso.data.fragment.SalesFragment;
 import com.lesso.data.fragment.StoreDetailFragment;
 import com.lesso.data.fragment.StoreFragment;
 
@@ -18,6 +20,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private FragmentManager fragmentManager;
 
+    private SalesFragment salesFragment;
+    private SalesDetailFragment salesDetailFragment;
     private StoreFragment storeFragment;
     private StoreDetailFragment storeDetailFragment;
 
@@ -35,12 +39,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void initFragment() {
 
+        salesFragment = new SalesFragment();
+        salesDetailFragment = new SalesDetailFragment();
         storeFragment = new StoreFragment();
         storeDetailFragment = new StoreDetailFragment();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_content, storeFragment);
+        fragmentTransaction.add(R.id.main_content, salesFragment);
 
         fragmentTransaction.commit();
 
@@ -61,6 +67,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 fragmentTransaction.show(storeFragment);
             } else {
                 fragmentTransaction.add(R.id.main_content, storeFragment);
+            }
+        }else if (fragment instanceof SalesFragment) {
+            if (salesDetailFragment.isAdded()) {
+                fragmentTransaction.show(salesDetailFragment);
+            } else {
+                fragmentTransaction.add(R.id.main_content, salesDetailFragment);
+            }
+        } else if (fragment instanceof SalesDetailFragment) {
+            if (salesFragment.isAdded()) {
+                fragmentTransaction.show(salesFragment);
+            } else {
+                fragmentTransaction.add(R.id.main_content, salesFragment);
             }
         }
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/REPORT_UI_C6"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/interval_A"
+    android:paddingRight="@dimen/interval_A">
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/interval_C"
+        android:paddingTop="@dimen/interval_C"
+        android:tag="amount"
+        android:text="23456"
+        android:textColor="@color/REPORT_UI_C2"
+        android:textSize="@dimen/F5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|bottom"
+        android:orientation="horizontal">
+
+        <com.lesso.data.ui.VerticalProgressBar
+            android:id="@+id/process"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="@dimen/interval_C"
+            android:layout_height="180dp"
+            android:max="100"
+            android:tag="process" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/interval_C"
+        android:paddingTop="@dimen/interval_C"
+        android:tag="date"
+        android:text="8-11"
+        android:textColor="@color/REPORT_UI_C2"
+        android:textSize="@dimen/F5" />
+</LinearLayout>

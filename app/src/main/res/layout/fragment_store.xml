@@ -76,7 +76,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C1" />
 
 
@@ -103,7 +103,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C2" />
 
 
@@ -130,7 +130,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/interval_C"
                     android:background="@color/REPORT_TABLE_C3" />
 
 

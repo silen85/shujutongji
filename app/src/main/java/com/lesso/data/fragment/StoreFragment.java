@@ -50,44 +50,59 @@ public class StoreFragment extends ListFragment {
         item2.put("product_percent", "55");
 
         Map<String, String> item3 = new HashMap<String, String>();
-        item3.put("product_name", "万型");
+        item3.put("product_name", "万t型");
         item3.put("product_num", "44 件");
-        item3.put("product_percent", "55");
+        item3.put("product_percent", "44");
 
         Map<String, String> item4 = new HashMap<String, String>();
-        item4.put("product_name", "万型");
+        item4.put("product_name", "万jj型");
         item4.put("product_num", "44 件");
-        item4.put("product_percent", "55");
+        item4.put("product_percent", "70");
 
         Map<String, String> item5 = new HashMap<String, String>();
-        item5.put("product_name", "万型");
+        item5.put("product_name", "万uy型");
         item5.put("product_num", "44 件");
-        item5.put("product_percent", "55");
+        item5.put("product_percent", "99");
 
         Map<String, String> item6 = new HashMap<String, String>();
-        item6.put("product_name", "万型");
+        item6.put("product_name", "万i型");
         item6.put("product_num", "44 件");
-        item6.put("product_percent", "55");
+        item6.put("product_percent", "78");
 
         Map<String, String> item7 = new HashMap<String, String>();
-        item7.put("product_name", "万型");
+        item7.put("product_name", "万yt型");
         item7.put("product_num", "44 件");
-        item7.put("product_percent", "55");
+        item7.put("product_percent", "36");
 
         Map<String, String> item8 = new HashMap<String, String>();
-        item8.put("product_name", "万型");
+        item8.put("product_name", "万tr型");
         item8.put("product_num", "44 件");
-        item8.put("product_percent", "55");
+        item8.put("product_percent", "66");
 
         Map<String, String> item9 = new HashMap<String, String>();
-        item9.put("product_name", "万型");
+        item9.put("product_name", "万we型");
         item9.put("product_num", "44 件");
-        item9.put("product_percent", "55");
+        item9.put("product_percent", "45");
 
         Map<String, String> item10 = new HashMap<String, String>();
-        item10.put("product_name", "万型");
+        item10.put("product_name", "万ds型");
         item10.put("product_num", "44 件");
-        item10.put("product_percent", "55");
+        item10.put("product_percent", "77");
+
+        Map<String, String> item11 = new HashMap<String, String>();
+        item11.put("product_name", "万ds型");
+        item11.put("product_num", "44 件");
+        item11.put("product_percent", "94");
+
+        Map<String, String> item12 = new HashMap<String, String>();
+        item12.put("product_name", "万ds型");
+        item12.put("product_num", "44 件");
+        item12.put("product_percent", "12");
+
+        Map<String, String> item13 = new HashMap<String, String>();
+        item13.put("product_name", "万ds型");
+        item13.put("product_num", "44 件");
+        item13.put("product_percent", "43");
 
         list.add(item1);
         list.add(item2);
@@ -99,15 +114,13 @@ public class StoreFragment extends ListFragment {
         list.add(item8);
         list.add(item9);
         list.add(item10);
-        list.add(item10);
-        list.add(item10);
-        list.add(item10);
-        list.add(item10);
+        list.add(item11);
+        list.add(item12);
+        list.add(item13);
 
-        adapter = new StoreAdapter(activity, list, R.layout.processbar_item);
+        adapter = new StoreAdapter(activity, list, R.layout.item_processbar);
 
         setListAdapter(adapter);
-
     }
 
     @Override
@@ -155,6 +168,10 @@ public class StoreFragment extends ListFragment {
 
     class StoreAdapter extends BaseAdapter {
 
+        private int[] processbar_stys = {R.drawable.processbar_sty1, R.drawable.processbar_sty2, R.drawable.processbar_sty3,
+                R.drawable.processbar_sty4, R.drawable.processbar_sty5, R.drawable.processbar_sty6,
+                R.drawable.processbar_sty7, R.drawable.processbar_sty8};
+
         private Context context;
         private LayoutInflater layoutInflater;
         private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -186,40 +203,44 @@ public class StoreFragment extends ListFragment {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
-            View listviewitem = null;
+            ViewHolder viewHolder;
+            if (view == null) {
+                view = layoutInflater.inflate(this.layoutlistid, null);
 
-            if (view != null) {
-                listviewitem = view;
+                viewHolder = new ViewHolder();
+                viewHolder.product_name = (TextView) view.findViewById(R.id.product_name);
+                viewHolder.product_num = (TextView) view.findViewById(R.id.product_num);
+                viewHolder.product_percent = (ProgressBar) view.findViewById(R.id.product_percent);
+
+                view.setTag(viewHolder);
             } else {
-                listviewitem = layoutInflater.inflate(this.layoutlistid, null);
+                viewHolder = (ViewHolder) view.getTag();
             }
 
-            this.writeData(listviewitem, i);
+            viewHolder.product_percent.setProgressDrawable
+                    (getResources().getDrawable(processbar_stys[i % processbar_stys.length]));
 
-            return listviewitem;
+            this.writeData(viewHolder, i);
+
+            return view;
         }
 
 
-        private void writeData(View listviewitem, int position) {
+        private void writeData(ViewHolder viewHolder, int position) {
 
-            Map<String, String> map = list.get(position);
+            Map<String, String> itemData = (Map) getItem(position);
 
+            viewHolder.product_name.setText(itemData.get("product_name"));
+            viewHolder.product_num.setText(itemData.get("product_num"));
+            viewHolder.product_percent.setProgress(Integer.parseInt(itemData.get("product_percent")));
 
-            TextView product_name = (TextView) listviewitem.findViewById(R.id.product_name);
-            TextView product_num = (TextView) listviewitem.findViewById(R.id.product_num);
+        }
 
-            ProgressBar product_percent = (ProgressBar) listviewitem.findViewById(R.id.product_percent);
+        class ViewHolder {
 
-            String name = map.get("product_name");
-            String num = map.get("product_num");
-            String percent = map.get("product_percent");
-
-            product_name.setText(name);
-            product_num.setText(num);
-
-            product_percent.setMax(100);
-            product_percent.setProgress(80);
-
+            TextView product_name;
+            TextView product_num;
+            ProgressBar product_percent;
 
         }
 

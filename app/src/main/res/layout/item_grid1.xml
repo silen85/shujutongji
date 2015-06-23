@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/REPORT_UI_C6"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:weightSum="2">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingBottom="@dimen/interval_C"
+        android:paddingLeft="@dimen/interval_A"
+        android:paddingRight="@dimen/interval_A"
+        android:paddingTop="@dimen/interval_C"
+        android:singleLine="false"
+        android:tag="date"
+        android:text="2015-08-15"
+        android:textColor="@color/REPORT_UI_C2"
+        android:textSize="@dimen/F5" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingBottom="@dimen/interval_C"
+        android:paddingLeft="@dimen/interval_A"
+        android:paddingRight="@dimen/interval_A"
+        android:paddingTop="@dimen/interval_C"
+        android:singleLine="false"
+        android:tag="amount"
+        android:text="176800"
+        android:textColor="@color/REPORT_UI_C2"
+        android:textSize="@dimen/F5" />
+
+</LinearLayout>

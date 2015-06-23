@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/interval_C"
-    android:paddingBottom="@dimen/interval_C"
     android:background="@color/REPORT_UI_C6"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/interval_C"
+    android:paddingTop="@dimen/interval_C">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,10 +17,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/REPORT_UI_C2"
-            android:textSize="@dimen/F5"
             android:text="九佛 16W T8 万众型灯管"
-            />
+            android:textColor="@color/REPORT_UI_C2"
+            android:textSize="@dimen/F5" />
 
         <TextView
             android:id="@+id/product_num"
@@ -28,20 +27,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/REPORT_UI_C2"
-            android:textSize="@dimen/F5"
             android:text="32154 件"
-            />
+            android:textColor="@color/REPORT_UI_C2"
+            android:textSize="@dimen/F5" />
 
     </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/product_percent"
+        style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/interval_C"
         android:layout_marginTop="@dimen/interval_D"
-        android:progressDrawable="@drawable/progressbar_style"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        />
+        android:max="100" />
 
 </LinearLayout>

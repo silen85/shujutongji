@@ -28,7 +28,7 @@ public class StoreDetailFragment extends ListFragment {
 
     private MainActivity activity;
 
-    StoreDetailAdapter adapter;
+    private StoreDetailAdapter adapter;
 
     private View view;
 
@@ -60,7 +60,7 @@ public class StoreDetailFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.grid_item, null);
+        LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
 
         TextView a = ((TextView) header.findViewById(R.id.product_id));
         a.setText("编  号");
@@ -137,12 +137,8 @@ public class StoreDetailFragment extends ListFragment {
         list.add(item8);
         list.add(item9);
         list.add(item10);
-        list.add(item10);
-        list.add(item10);
-        list.add(item10);
-        list.add(item10);
 
-        adapter = new StoreDetailAdapter(activity, list, R.layout.grid_item);
+        adapter = new StoreDetailAdapter(activity, list, R.layout.item_grid);
 
         getListView().addHeaderView(header);
         setListAdapter(adapter);
@@ -170,11 +166,6 @@ public class StoreDetailFragment extends ListFragment {
             this.layoutInflater = LayoutInflater.from(this.context);
             this.list = listobject;
             this.layoutlistid = listcontextid;
-        }
-
-        @Override
-        public boolean areAllItemsEnabled() {
-            return true;
         }
 
         @Override
