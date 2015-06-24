@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by meisl on 2015/6/21.
+ * Created by meisl on 2015/6/24.
  */
-public class StoreDetailFragment extends ListFragment {
+public class AccessDetailFragment extends ListFragment {
 
     private MainActivity activity;
 
-    private StoreDetailAdapter adapter;
+    private AccessDetailAdapter adapter;
 
     private View view;
 
@@ -37,7 +37,7 @@ public class StoreDetailFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_store_detail, null);
+        view = inflater.inflate(R.layout.fragment_access_detail, null);
 
         initView();
 
@@ -50,7 +50,7 @@ public class StoreDetailFragment extends ListFragment {
         btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.toogleFragment(StoreDetailFragment.this);
+                activity.toogleFragment(AccessDetailFragment.this);
             }
         });
 
@@ -60,72 +60,70 @@ public class StoreDetailFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
+        LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
         TextView a = ((TextView) header.findViewById(R.id.colum1));
-        a.setText("编号");
+        a.setText("日期");
         a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
         TextView b = ((TextView) header.findViewById(R.id.colum2));
-        b.setText("名称");
+        b.setText("访问量");
         b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         b.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-        TextView c = ((TextView) header.findViewById(R.id.colum3));
-        c.setText("出货量");
-        c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        c.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
 
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
         Map<String, String> item1 = new HashMap<String, String>();
-        item1.put("colum1", "987654321");
-        item1.put("colum2", "万众型");
-        item1.put("colum3", "8888 件");
+        item1.put("colum1", "2015-08-15");
+        item1.put("colum2", "895654");
 
         Map<String, String> item2 = new HashMap<String, String>();
-        item2.put("colum1", "987654321");
-        item2.put("colum2", "万众型");
-        item2.put("colum3", "8888 件");
+        item2.put("colum1", "2015-08-16");
+        item2.put("colum2", "8953454");
 
         Map<String, String> item3 = new HashMap<String, String>();
-        item3.put("colum1", "987654321");
-        item3.put("colum2", "万众型");
-        item3.put("colum3", "8888 件");
+        item3.put("colum1", "2015-08-17");
+        item3.put("colum2", "894454");
 
         Map<String, String> item4 = new HashMap<String, String>();
-        item4.put("colum1", "987654321");
-        item4.put("colum2", "万众型");
-        item4.put("colum3", "8888 件");
+        item4.put("colum1", "2015-08-18");
+        item4.put("colum2", "895354");
 
         Map<String, String> item5 = new HashMap<String, String>();
-        item5.put("colum1", "987654321");
-        item5.put("colum2", "万众型");
-        item5.put("colum3", "8888 件");
+        item5.put("colum1", "2015-08-19");
+        item5.put("colum2", "895234");
 
         Map<String, String> item6 = new HashMap<String, String>();
-        item6.put("colum1", "987654321");
-        item6.put("colum2", "万众型");
-        item6.put("colum3", "8888 件");
+        item6.put("colum1", "2015-08-20");
+        item6.put("colum2", "895674");
 
         Map<String, String> item7 = new HashMap<String, String>();
-        item7.put("colum1", "987654321");
-        item7.put("colum2", "万众型");
-        item7.put("colum3", "8888 件");
+        item7.put("colum1", "2015-08-21");
+        item7.put("colum2", "895600");
 
         Map<String, String> item8 = new HashMap<String, String>();
-        item8.put("colum1", "987654321");
-        item8.put("colum2", "万众型");
-        item8.put("colum3", "8888 件");
+        item8.put("colum1", "2015-08-22");
+        item8.put("colum2", "896754");
 
         Map<String, String> item9 = new HashMap<String, String>();
-        item9.put("colum1", "987654321");
-        item9.put("colum2", "万众型");
-        item9.put("colum3", "8888 件");
+        item9.put("colum1", "2015-08-23");
+        item9.put("colum2", "895654");
 
         Map<String, String> item10 = new HashMap<String, String>();
-        item10.put("colum1", "987654321");
-        item10.put("colum2", "万众型");
-        item10.put("colum3", "8888 件");
+        item10.put("colum1", "2015-08-24");
+        item10.put("colum2", "89094");
+
+        Map<String, String> item11 = new HashMap<String, String>();
+        item11.put("colum1", "2015-08-25");
+        item11.put("colum2", "83494");
+
+        Map<String, String> item12 = new HashMap<String, String>();
+        item12.put("colum1", "2015-08-26");
+        item12.put("colum2", "89089");
+
+        Map<String, String> item13 = new HashMap<String, String>();
+        item13.put("colum1", "2015-08-27");
+        item13.put("colum2", "89794");
 
         list.add(item1);
         list.add(item2);
@@ -137,8 +135,11 @@ public class StoreDetailFragment extends ListFragment {
         list.add(item8);
         list.add(item9);
         list.add(item10);
+        list.add(item11);
+        list.add(item12);
+        list.add(item13);
 
-        adapter = new StoreDetailAdapter(activity, list, R.layout.item_grid);
+        adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
 
         getListView().addHeaderView(header);
         setListAdapter(adapter);
@@ -152,8 +153,7 @@ public class StoreDetailFragment extends ListFragment {
         this.activity = (MainActivity) activity;
     }
 
-
-    class StoreDetailAdapter extends BaseAdapter {
+    class AccessDetailAdapter extends BaseAdapter {
 
         private Context context;
         private LayoutInflater layoutInflater;
@@ -161,7 +161,7 @@ public class StoreDetailFragment extends ListFragment {
 
         private int layoutlistid;
 
-        public StoreDetailAdapter(Context context, List<Map<String, String>> listobject, int listcontextid) {
+        public AccessDetailAdapter(Context context, List<Map<String, String>> listobject, int listcontextid) {
             this.context = context;
             this.layoutInflater = LayoutInflater.from(this.context);
             this.list = listobject;
@@ -186,50 +186,36 @@ public class StoreDetailFragment extends ListFragment {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
-            View listviewitem = null;
-
-            if (view != null) {
-                listviewitem = view;
-            } else {
-                listviewitem = layoutInflater.inflate(this.layoutlistid, null);
+            if (view == null) {
+                view = layoutInflater.inflate(this.layoutlistid, null);
             }
 
-            this.writeData(listviewitem, i);
+            this.writeData(view, i);
 
-            return listviewitem;
+            return view;
         }
 
 
         private void writeData(View listviewitem, int position) {
 
-            Map<String, String> map = list.get(position);
+            Map<String, String> map = (Map<String, String>) getItem(position);
 
+            TextView date = (TextView) listviewitem.findViewById(R.id.colum1);
+            TextView amount = (TextView) listviewitem.findViewById(R.id.colum2);
 
-            TextView product_id = (TextView) listviewitem.findViewById(R.id.colum1);
-            TextView product_name = (TextView) listviewitem.findViewById(R.id.colum2);
-            TextView store_out_num = (TextView) listviewitem.findViewById(R.id.colum3);
-
-            String id = map.get("colum1");
-            String name = map.get("colum2");
-            String num = map.get("colum3");
-
-            product_id.setText(id);
-            product_name.setText(name);
-            store_out_num.setText(num);
+            date.setText(map.get(date.getTag()));
+            amount.setText(map.get(amount.getTag()));
 
             if (position % 2 > 0) {
-                product_id.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-                product_name.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-                store_out_num.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+                date.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+                amount.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
             } else {
-                product_id.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
-                product_name.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
-                store_out_num.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
+                date.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
+                amount.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
             }
 
         }
 
     }
-
 
 }

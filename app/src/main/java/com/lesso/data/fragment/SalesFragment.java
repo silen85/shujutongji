@@ -140,15 +140,15 @@ public class SalesFragment extends Fragment {
 
     private void fillData() {
 
-        data_listview.removeAllViews();
+        //data_listview.removeAllViews();
 
         for (int i = 0; i < list.size(); i++) {
 
             LinearLayout item = (LinearLayout) layoutInflater.inflate(R.layout.item_vprocessbar, null);
 
-            TextView amount = (TextView) item.findViewById(R.id.amount);
+            TextView amount = (TextView) item.findViewById(R.id.colum2);
             VerticalProgressBar process = (VerticalProgressBar) item.findViewById(R.id.process);
-            TextView date = (TextView) item.findViewById(R.id.date);
+            TextView date = (TextView) item.findViewById(R.id.colum1);
 
             process.setProgressDrawable
                     (activity.getResources().getDrawable(processbar_stys[i % processbar_stys.length]));
@@ -159,7 +159,7 @@ public class SalesFragment extends Fragment {
             amount.setText(list.get(i).get(amount.getTag()));
             date.setText(list.get(i).get(date.getTag()));
 
-            data_listview.addView(item);
+            data_listview.addView(item,i);
 
         }
 

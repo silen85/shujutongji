@@ -21,26 +21,24 @@
     </LinearLayout>
 
 
-    <HorizontalScrollView
+    <LinearLayout
+        android:id="@+id/data_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="320dp"
         android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="38dp"
         android:paddingLeft="@dimen/interval_A"
-        android:paddingRight="@dimen/interval_A"
-        android:scrollbarStyle="outsideOverlay">
+        android:paddingRight="@dimen/interval_A">
 
-        <LinearLayout
-            android:id="@+id/data_listview"
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-        </LinearLayout>
+            android:layout_height="match_parent" />
 
 
-    </HorizontalScrollView>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -68,7 +66,7 @@
             android:weightSum="4">
 
             <LinearLayout
-                android:id="@+id/tab_sales_amount"
+                android:id="@+id/tab_user_new"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -82,7 +80,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/interval_C"
                     android:paddingTop="@dimen/interval_C"
-                    android:text="@string/sales_amount"
+                    android:text="@string/user_new"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F5" />
 
@@ -95,7 +93,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tab_sales_paper"
+                android:id="@+id/tab_user_total"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -109,7 +107,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/interval_C"
                     android:paddingTop="@dimen/interval_C"
-                    android:text="@string/sales_paper"
+                    android:text="@string/user_total"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F5" />
 
@@ -122,7 +120,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tab_sales_car"
+                android:id="@+id/tab_user_supplier"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -136,7 +134,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/interval_C"
                     android:paddingTop="@dimen/interval_C"
-                    android:text="@string/sales_car"
+                    android:text="@string/user_supplier"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F5" />
 
@@ -149,7 +147,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tab_sales_type"
+                android:id="@+id/tab_user_fivemetal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -163,7 +161,7 @@
                     android:gravity="center"
                     android:paddingBottom="@dimen/interval_C"
                     android:paddingTop="@dimen/interval_C"
-                    android:text="@string/sales_type"
+                    android:text="@string/user_fivemetal"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F5" />
 

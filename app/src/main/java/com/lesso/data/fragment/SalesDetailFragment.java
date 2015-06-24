@@ -64,68 +64,68 @@ public class SalesDetailFragment extends ListFragment {
 
         LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
-        TextView a = ((TextView) header.findViewById(R.id.date));
-        a.setText("日  期");
+        TextView a = ((TextView) header.findViewById(R.id.colum1));
+        a.setText("日期");
         a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-        TextView b = ((TextView) header.findViewById(R.id.amount));
-        b.setText("销 售 额");
+        TextView b = ((TextView) header.findViewById(R.id.colum2));
+        b.setText("销售额");
         b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         b.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
 
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
         Map<String, String> item1 = new HashMap<String, String>();
-        item1.put("date", "2015-08-15");
-        item1.put("amount", "895654");
+        item1.put("colum1", "2015-08-15");
+        item1.put("colum2", "895654");
 
         Map<String, String> item2 = new HashMap<String, String>();
-        item2.put("date", "2015-08-16");
-        item2.put("amount", "8953454");
+        item2.put("colum1", "2015-08-16");
+        item2.put("colum2", "8953454");
 
         Map<String, String> item3 = new HashMap<String, String>();
-        item3.put("date", "2015-08-17");
-        item3.put("amount", "894454");
+        item3.put("colum1", "2015-08-17");
+        item3.put("colum2", "894454");
 
         Map<String, String> item4 = new HashMap<String, String>();
-        item4.put("date", "2015-08-18");
-        item4.put("amount", "895354");
+        item4.put("colum1", "2015-08-18");
+        item4.put("colum2", "895354");
 
         Map<String, String> item5 = new HashMap<String, String>();
-        item5.put("date", "2015-08-19");
-        item5.put("amount", "895234");
+        item5.put("colum1", "2015-08-19");
+        item5.put("colum2", "895234");
 
         Map<String, String> item6 = new HashMap<String, String>();
-        item6.put("date", "2015-08-20");
-        item6.put("amount", "895674");
+        item6.put("colum1", "2015-08-20");
+        item6.put("colum2", "895674");
 
         Map<String, String> item7 = new HashMap<String, String>();
-        item7.put("date", "2015-08-21");
-        item7.put("amount", "895600");
+        item7.put("colum1", "2015-08-21");
+        item7.put("colum2", "895600");
 
         Map<String, String> item8 = new HashMap<String, String>();
-        item8.put("date", "2015-08-22");
-        item8.put("amount", "896754");
+        item8.put("colum1", "2015-08-22");
+        item8.put("colum2", "896754");
 
         Map<String, String> item9 = new HashMap<String, String>();
-        item9.put("date", "2015-08-23");
-        item9.put("amount", "895654");
+        item9.put("colum1", "2015-08-23");
+        item9.put("colum2", "895654");
 
         Map<String, String> item10 = new HashMap<String, String>();
-        item10.put("date", "2015-08-24");
-        item10.put("amount", "89094");
+        item10.put("colum1", "2015-08-24");
+        item10.put("colum2", "89094");
 
         Map<String, String> item11 = new HashMap<String, String>();
-        item11.put("date", "2015-08-25");
-        item11.put("amount", "83494");
+        item11.put("colum1", "2015-08-25");
+        item11.put("colum2", "83494");
 
         Map<String, String> item12 = new HashMap<String, String>();
-        item12.put("date", "2015-08-26");
-        item12.put("amount", "89089");
+        item12.put("colum1", "2015-08-26");
+        item12.put("colum2", "89089");
 
         Map<String, String> item13 = new HashMap<String, String>();
-        item13.put("date", "2015-08-27");
-        item13.put("amount", "89794");
+        item13.put("colum1", "2015-08-27");
+        item13.put("colum2", "89794");
 
         list.add(item1);
         list.add(item2);
@@ -203,8 +203,8 @@ public class SalesDetailFragment extends ListFragment {
 
             Map<String, String> map = (Map<String, String>) getItem(position);
 
-            TextView date = (TextView) listviewitem.findViewById(R.id.date);
-            TextView amount = (TextView) listviewitem.findViewById(R.id.amount);
+            TextView date = (TextView) listviewitem.findViewById(R.id.colum1);
+            TextView amount = (TextView) listviewitem.findViewById(R.id.colum2);
 
             date.setText(map.get(date.getTag()));
             amount.setText(map.get(amount.getTag()));

@@ -8,10 +8,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.lesso.data.R;
+import com.lesso.data.fragment.AccessDetailFragment;
+import com.lesso.data.fragment.AccessFragment;
 import com.lesso.data.fragment.SalesDetailFragment;
 import com.lesso.data.fragment.SalesFragment;
 import com.lesso.data.fragment.StoreDetailFragment;
 import com.lesso.data.fragment.StoreFragment;
+import com.lesso.data.fragment.UserDetailFragment;
+import com.lesso.data.fragment.UserFragment;
 
 /**
  * Created by meisl on 2015/6/19.
@@ -24,6 +28,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private SalesDetailFragment salesDetailFragment;
     private StoreFragment storeFragment;
     private StoreDetailFragment storeDetailFragment;
+    private AccessFragment accessFragment;
+    private AccessDetailFragment accessDetailFragment;
+    private UserFragment userFragment;
+    private UserDetailFragment userDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +47,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void initFragment() {
 
+        accessFragment = new AccessFragment();
+        accessDetailFragment = new AccessDetailFragment();
         salesFragment = new SalesFragment();
         salesDetailFragment = new SalesDetailFragment();
         storeFragment = new StoreFragment();
         storeDetailFragment = new StoreDetailFragment();
+        userFragment = new UserFragment();
+        userDetailFragment = new UserDetailFragment();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_content, salesFragment);
+        fragmentTransaction.add(R.id.main_content, userFragment);
 
         fragmentTransaction.commit();
 
@@ -56,17 +68,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.hide(fragment);
-        if (fragment instanceof StoreFragment) {
-            if (storeDetailFragment.isAdded()) {
-                fragmentTransaction.show(storeDetailFragment);
+
+        if (fragment instanceof AccessFragment) {
+            if (accessDetailFragment.isAdded()) {
+                fragmentTransaction.show(accessDetailFragment);
             } else {
-                fragmentTransaction.add(R.id.main_content, storeDetailFragment);
+                fragmentTransaction.add(R.id.main_content, accessDetailFragment);
             }
-        } else if (fragment instanceof StoreDetailFragment) {
-            if (storeFragment.isAdded()) {
-                fragmentTransaction.show(storeFragment);
+        } else if (fragment instanceof AccessDetailFragment) {
+            if (accessFragment.isAdded()) {
+                fragmentTransaction.show(accessFragment);
             } else {
-                fragmentTransaction.add(R.id.main_content, storeFragment);
+                fragmentTransaction.add(R.id.main_content, accessFragment);
             }
         }else if (fragment instanceof SalesFragment) {
             if (salesDetailFragment.isAdded()) {
@@ -79,6 +92,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 fragmentTransaction.show(salesFragment);
             } else {
                 fragmentTransaction.add(R.id.main_content, salesFragment);
+            }
+        }else if (fragment instanceof StoreFragment) {
+            if (storeDetailFragment.isAdded()) {
+                fragmentTransaction.show(storeDetailFragment);
+            } else {
+                fragmentTransaction.add(R.id.main_content, storeDetailFragment);
+            }
+        } else if (fragment instanceof StoreDetailFragment) {
+            if (storeFragment.isAdded()) {
+                fragmentTransaction.show(storeFragment);
+            } else {
+                fragmentTransaction.add(R.id.main_content, storeFragment);
+            }
+        }else if (fragment instanceof UserFragment) {
+            if (userDetailFragment.isAdded()) {
+                fragmentTransaction.show(userDetailFragment);
+            } else {
+                fragmentTransaction.add(R.id.main_content, userDetailFragment);
+            }
+        } else if (fragment instanceof UserDetailFragment) {
+            if (userFragment.isAdded()) {
+                fragmentTransaction.show(userFragment);
+            } else {
+                fragmentTransaction.add(R.id.main_content, userFragment);
             }
         }
 

@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/interval_A">
 
     <TextView
-        android:id="@+id/amount"
+        android:id="@+id/colum2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -38,7 +38,7 @@
 
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/colum1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

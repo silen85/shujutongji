@@ -21,14 +21,24 @@
 
     <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
-    <string name="store_out">出货统计</string>
-    <string name="store_in">收货统计</string>
-    <string name="store_all">库存查询</string>
+
+    <string name="access_uv">访客(UV)</string>
+    <string name="access_pv">浏览量(PV)</string>
 
     <string name="sales_amount">销售额</string>
     <string name="sales_paper">单据量</string>
     <string name="sales_car">车次量</string>
     <string name="sales_type">分类占比</string>
+
+    <string name="store_out">出货统计</string>
+    <string name="store_in">收货统计</string>
+    <string name="store_all">库存查询</string>
+
+    <string name="user_new">新增用户</string>
+    <string name="user_total">总用户</string>
+    <string name="user_supplier">供应商</string>
+    <string name="user_fivemetal">五金门店</string>
+
 
     <string name="lockpattern_recording_incorrect_too_short" >"至少连接4个点，请重试"</string>
     <string name="lockpattern_error" >"手势密码不对"</string>

@@ -8,7 +8,7 @@
     android:weightSum="3">
 
     <TextView
-        android:id="@+id/product_id"
+        android:id="@+id/colum1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -19,12 +19,13 @@
         android:paddingRight="@dimen/interval_A"
         android:paddingTop="@dimen/interval_C"
         android:singleLine="false"
+        android:tag="colum1"
         android:text="9000016290"
         android:textColor="@color/REPORT_UI_C2"
         android:textSize="@dimen/F5" />
 
     <TextView
-        android:id="@+id/product_name"
+        android:id="@+id/colum2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -35,12 +36,13 @@
         android:paddingRight="@dimen/interval_A"
         android:paddingTop="@dimen/interval_C"
         android:singleLine="false"
+        android:tag="colum2"
         android:text="九佛 16W T8 万众型灯管"
         android:textColor="@color/REPORT_UI_C2"
         android:textSize="@dimen/F5" />
 
     <TextView
-        android:id="@+id/store_out_num"
+        android:id="@+id/colum3"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -51,6 +53,7 @@
         android:paddingRight="@dimen/interval_A"
         android:paddingTop="@dimen/interval_C"
         android:singleLine="false"
+        android:tag="colum3"
         android:text="32154 件"
         android:textColor="@color/REPORT_UI_C2"
         android:textSize="@dimen/F5" />
