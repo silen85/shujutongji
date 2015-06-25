@@ -1,6 +1,7 @@
 package com.lesso.data.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -88,6 +89,8 @@ public class LockActivity extends Activity implements
         Log.d(TAG, "onPatternDetected");
 
         if (pattern.equals(lockPattern)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             finish();
         } else {
             lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);

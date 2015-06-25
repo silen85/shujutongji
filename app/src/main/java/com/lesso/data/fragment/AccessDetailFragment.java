@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,19 @@ import android.widget.TextView;
 
 import com.lesso.data.R;
 import com.lesso.data.activity.MainActivity;
+import com.lesso.data.common.Base64;
+import com.lesso.data.common.Constant;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
+import org.apache.http.Header;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +39,13 @@ import java.util.Map;
  */
 public class AccessDetailFragment extends ListFragment {
 
+    private String TAG = "com.lesso.data.fragment.AccessDetailFragment";
+
     private MainActivity activity;
 
+    private Handler mHandler = new Handler();
+
+    List<Map<String, String>> list = new ArrayList();
     private AccessDetailAdapter adapter;
 
     private View view;
@@ -44,6 +62,13 @@ public class AccessDetailFragment extends ListFragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initData();
+    }
+
     private void initView() {
 
         btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
@@ -56,9 +81,7 @@ public class AccessDetailFragment extends ListFragment {
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void initData() {
 
         LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
@@ -71,7 +94,43 @@ public class AccessDetailFragment extends ListFragment {
         b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         b.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
 
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+        Map<String, String> parems = new HashMap();
+        parems.put("appkey", Constant.APP_KEY);
+        parems.put("timestamp", (System.currentTimeMillis()/1000) + "");
+
+        String token = "";
+        try {
+            Base64 base64en = new Base64();
+            token = base64en.encode(MessageDigest.getInstance("MD5").
+                    digest((Constant.SECRET_KEY + Constant.DATE_FORMAT_1.format(new Date())).getBytes()));
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        parems.put("token", token);
+
+        RequestParams requestParams = new RequestParams(parems);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(activity, Constant.URL_REPORT_ACCESS, requestParams, new TextHttpResponseHandler() {
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG, responseString);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    String decodeResp = new String(responseString.getBytes(),"GBK");
+
+                    Log.d(TAG,decodeResp);
+                } catch (UnsupportedEncodingException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+        });
+
 
         Map<String, String> item1 = new HashMap<String, String>();
         item1.put("colum1", "2015-08-15");
@@ -145,7 +204,6 @@ public class AccessDetailFragment extends ListFragment {
         setListAdapter(adapter);
 
     }
-
 
     @Override
     public void onAttach(Activity activity) {

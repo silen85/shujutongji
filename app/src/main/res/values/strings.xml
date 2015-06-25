@@ -21,6 +21,14 @@
 
     <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
+    <string name="main_access">访问统计</string>
+    <string name="main_access_today">今日访客</string>
+    <string name="main_sales">销售统计</string>
+    <string name="main_sales_today">今日销售额</string>
+    <string name="main_store">库存统计</string>
+    <string name="main_store_today">今日出货合计</string>
+    <string name="main_user">用户统计</string>
+    <string name="main_user_today">今日新增用户</string>
 
     <string name="access_uv">访客(UV)</string>
     <string name="access_pv">浏览量(PV)</string>

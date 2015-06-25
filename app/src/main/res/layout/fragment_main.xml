@@ -1,7 +1,418 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/REPORT_UI_C6">
+    android:background="@color/REPORT_UI_C6"
+    android:scrollbars="none">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/fragment_access"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/interval_C"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/interval_A"
+            android:clickable="true"
+            android:paddingRight="@dimen/interval_A">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/interval_C">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_access"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F1" />
+
+                <TextView
+                    android:id="@+id/fragment_access_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="1126"
+                    android:textColor="@color/REPORT_UI_C1"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/interval_C">
+
+                <TextView
+                    android:id="@+id/fragment_access_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
+                    android:textColor="@color/REPORT_UI_C3"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_access_today"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/data_view_access"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="@dimen/interval_C"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_access"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/REPORT_UI_C6"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="horizontal" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@color/REPORT_UI_C3" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@color/REPORT_UI_C3" />
+
+        <LinearLayout
+            android:id="@+id/fragment_sales"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/interval_C"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:paddingLeft="@dimen/interval_A"
+            android:paddingRight="@dimen/interval_A">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/interval_C">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_sales"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F1" />
+
+                <TextView
+                    android:id="@+id/fragment_sales_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="684120"
+                    android:textColor="@color/REPORT_UI_C1"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/interval_C">
+
+                <TextView
+                    android:id="@+id/fragment_sales_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
+                    android:textColor="@color/REPORT_UI_C3"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_sales_today"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/interval_C"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/data_view_sales"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
+
+            </HorizontalScrollView>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@color/REPORT_UI_C3" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@color/REPORT_UI_C3" />
+
+        <LinearLayout
+            android:id="@+id/fragment_store"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/interval_C"
+            android:orientation="vertical"
+
+            android:paddingLeft="@dimen/interval_A"
+            android:paddingRight="@dimen/interval_A">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/interval_C">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_store"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F1" />
+
+                <TextView
+                    android:id="@+id/fragment_store_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="35460"
+                    android:textColor="@color/REPORT_UI_C1"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/interval_C">
+
+                <TextView
+                    android:id="@+id/fragment_store_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
+                    android:textColor="@color/REPORT_UI_C3"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_store_today"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/data_view_store"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/interval_C"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <ListView
+                    android:id="@+id/listview_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="320dp"
+                    android:cacheColorHint="@color/TRANSPARENT"
+                    android:divider="@color/TRANSPARENT"
+                    android:scrollbars="none"></ListView>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@color/REPORT_UI_C3" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@color/REPORT_UI_C3" />
+
+        <LinearLayout
+            android:id="@+id/fragment_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/interval_C"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/interval_A"
+            android:paddingRight="@dimen/interval_A">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/interval_C">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_user"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F1" />
+
+                <TextView
+                    android:id="@+id/fragment_user_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="11"
+                    android:textColor="@color/REPORT_UI_C1"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/interval_C">
+
+                <TextView
+                    android:id="@+id/fragment_user_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
+                    android:textColor="@color/REPORT_UI_C3"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/main_user_today"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F2" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/data_view_user"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="@dimen/interval_C"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/REPORT_UI_C6"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="horizontal" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@color/REPORT_UI_C3" />
+
+
+    </LinearLayout>
+</ScrollView>

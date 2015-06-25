@@ -5,7 +5,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/REPORT_UI_C6</item>
-        <item name="android:textSize">@dimen/F1</item>
+        <item name="android:textSize">@dimen/F2</item>
     </style>
 
     <style name="TIME_CHOOSER">

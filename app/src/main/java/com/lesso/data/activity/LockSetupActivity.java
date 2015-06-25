@@ -123,7 +123,7 @@ public class LockSetupActivity extends Activity implements
                                     LockPatternView.patternToString(choosePattern))
                             .commit();
 
-                    Intent intent = new Intent(this, LockActivity.class);
+                    Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -173,8 +173,8 @@ public class LockSetupActivity extends Activity implements
             updateView();
             return;
         }
-            //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
-            //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
+        //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
+        //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
 
         Log.d(TAG, "choosePattern = " + Arrays.toString(choosePattern.toArray()));
         Log.d(TAG, "pattern = " + Arrays.toString(pattern.toArray()));

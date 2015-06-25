@@ -28,6 +28,7 @@ public class UserDetailFragment extends ListFragment {
 
     private MainActivity activity;
 
+    List<Map<String, String>> list = new ArrayList();
     private AccessDetailAdapter adapter;
 
     private View view;
@@ -56,9 +57,7 @@ public class UserDetailFragment extends ListFragment {
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void initData() {
 
         LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
@@ -70,8 +69,6 @@ public class UserDetailFragment extends ListFragment {
         b.setText("访问量");
         b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         b.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
         Map<String, String> item1 = new HashMap<String, String>();
         item1.put("colum1", "2015-08-15");
@@ -143,6 +140,14 @@ public class UserDetailFragment extends ListFragment {
 
         getListView().addHeaderView(header);
         setListAdapter(adapter);
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initData();
 
     }
 

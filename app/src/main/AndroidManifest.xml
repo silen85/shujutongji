@@ -7,11 +7,12 @@
         android:targetSdkVersion="21" />
 
     <application
+        android:name="com.lesso.data.LessoApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.SplashLoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -26,11 +27,12 @@
         <activity
             android:name=".activity.LockSetupActivity"
             android:screenOrientation="portrait" />
-        <!--
+
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait" />
--->
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>

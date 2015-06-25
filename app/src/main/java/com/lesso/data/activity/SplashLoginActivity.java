@@ -3,7 +3,6 @@ package com.lesso.data.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import com.lesso.data.R;
 import com.lesso.data.cusinterface.FragmentListener;
 import com.lesso.data.fragment.LoginFragment;
 import com.lesso.data.fragment.SplashFragment;
-import com.lesso.data.ui.CustomRelativeLayout;
 
 
 public class SplashLoginActivity extends FragmentActivity{
@@ -68,7 +66,7 @@ public class SplashLoginActivity extends FragmentActivity{
                     fragmentTransaction.commit();
                 }
             }
-        }, 8000);
+        }, 3000);
 
     }
 

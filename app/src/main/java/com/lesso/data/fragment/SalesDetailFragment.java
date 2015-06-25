@@ -28,6 +28,7 @@ public class SalesDetailFragment extends ListFragment {
 
     private MainActivity activity;
 
+    List<Map<String, String>> list = new ArrayList();
     private SalesDetailAdapter adapter;
 
     private View view;
@@ -57,10 +58,7 @@ public class SalesDetailFragment extends ListFragment {
 
     }
 
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void initData(){
 
         LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
@@ -72,8 +70,6 @@ public class SalesDetailFragment extends ListFragment {
         b.setText("销售额");
         b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         b.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
         Map<String, String> item1 = new HashMap<String, String>();
         item1.put("colum1", "2015-08-15");
@@ -145,6 +141,15 @@ public class SalesDetailFragment extends ListFragment {
 
         getListView().addHeaderView(header);
         setListAdapter(adapter);
+
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initData();
 
     }
 

@@ -30,7 +30,8 @@
             android:cacheColorHint="@color/TRANSPARENT"
             android:divider="@color/TRANSPARENT"
             android:padding="1dp"
-            android:scrollbarStyle="outsideOverlay"></ListView>
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="none"></ListView>
 
     </FrameLayout>
 

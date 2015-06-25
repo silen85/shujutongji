@@ -28,6 +28,7 @@ public class StoreDetailFragment extends ListFragment {
 
     private MainActivity activity;
 
+    List<Map<String, String>> list = new ArrayList();
     private StoreDetailAdapter adapter;
 
     private View view;
@@ -56,9 +57,7 @@ public class StoreDetailFragment extends ListFragment {
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void initData(){
 
         LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
 
@@ -74,8 +73,6 @@ public class StoreDetailFragment extends ListFragment {
         c.setText("出货量");
         c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         c.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
         Map<String, String> item1 = new HashMap<String, String>();
         item1.put("colum1", "987654321");
@@ -142,6 +139,14 @@ public class StoreDetailFragment extends ListFragment {
 
         getListView().addHeaderView(header);
         setListAdapter(adapter);
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initData();
 
     }
 
