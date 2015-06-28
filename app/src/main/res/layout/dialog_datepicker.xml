@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/interval_B"
+    android:layout_marginRight="@dimen/interval_B"
+    android:background="@drawable/border_normal1"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/interval_C"
+        android:paddingLeft="@dimen/interval_B"
+        android:paddingRight="@dimen/interval_B"
+        android:paddingTop="@dimen/interval_C">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@mipmap/time_chooser" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/byday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_orange_x"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="8dp"
+                android:text="按日"
+                android:textColor="@color/REPORT_UI_C2" />
+
+            <TextView
+                android:id="@+id/bymonth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_orange_x"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="8dp"
+                android:text="按月"
+                android:textColor="@color/REPORT_UI_C2" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/datepicker_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/border_orange_x"
+            android:clickable="true"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="完成"
+            android:textColor="@color/REPORT_UI_C2"
+
+            />
+
+    </RelativeLayout>
+
+
+    <!--
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/interval_C"
+        android:paddingLeft="@dimen/interval_B"
+        android:paddingRight="@dimen/interval_B"
+        android:paddingTop="@dimen/interval_C"
+        android:weightSum="4">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="1"
+            android:src="@mipmap/time_chooser" />
+
+        <TextView
+            android:id="@+id/byday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/border_orange_x"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
+            android:text="按日"
+            android:textColor="@color/REPORT_UI_C2" />
+
+        <TextView
+            android:id="@+id/bymonth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/border_orange_x"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
+            android:text="按月"
+            android:textColor="@color/REPORT_UI_C2" />
+
+        <TextView
+            android:id="@+id/datepicker_finish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/border_orange_x"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
+            android:text="完成"
+            android:textColor="@color/REPORT_UI_C2"
+
+            />
+
+    </LinearLayout>
+
+    -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/interval_line_height"
+        android:layout_marginBottom="@dimen/interval_C"
+        android:layout_marginTop="@dimen/interval_C"
+        android:background="@color/REPORT_UI_C4" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/interval_A"
+        android:paddingRight="@dimen/interval_A">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp"
+            android:text="开始"
+            android:textColor="@color/REPORT_UI_C2" />
+
+        <TextView
+            android:id="@+id/datepicker_bdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp"
+            android:text=""
+            android:textColor="@color/REPORT_UI_C1"
+
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/interval_line_height"
+        android:layout_marginBottom="@dimen/interval_C"
+        android:layout_marginLeft="@dimen/interval_A"
+        android:layout_marginRight="@dimen/interval_A"
+        android:layout_marginTop="@dimen/interval_C"
+        android:background="@color/REPORT_UI_C4" />
+
+    <DatePicker
+        android:id="@+id/datepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/REPORT_UI_C6"
+        android:calendarTextColor="@color/REPORT_UI_C2"
+        android:calendarViewShown="false"
+        android:dayOfWeekBackground="@color/REPORT_UI_C6"
+        android:headerBackground="@color/REPORT_UI_C6"
+        android:spinnersShown="true"></DatePicker>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/interval_line_height"
+        android:layout_marginBottom="@dimen/interval_C"
+        android:layout_marginLeft="@dimen/interval_A"
+        android:layout_marginRight="@dimen/interval_A"
+        android:layout_marginTop="@dimen/interval_C"
+        android:background="@color/REPORT_UI_C4" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/interval_A"
+        android:paddingRight="@dimen/interval_A">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp"
+            android:text="结束"
+            android:textColor="@color/REPORT_UI_C2" />
+
+        <TextView
+            android:id="@+id/datepicker_edate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp"
+            android:text=""
+            android:textColor="@color/REPORT_UI_C2"
+
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 public class Constant {
 
     public static final String URL_REPORT_ACCESS = "http://10.10.7.221/api";
+    public static final String URL_REPORT_SALES = "http://192.168.4.13:65153/lswm_text/api/ZSDHandler.ashx";
 
     public static final String APP_KEY = "fc98141d";
 
@@ -16,5 +17,14 @@ public class Constant {
     public static final SimpleDateFormat DATE_FORMAT_1 = new SimpleDateFormat("yyyy-MM-dd");
 
     public static final SimpleDateFormat DATE_FORMAT_2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public static final SimpleDateFormat DATE_FORMAT_3 = new SimpleDateFormat("yyyy-MM");
+
+
+    public static int HTTP_STATUS_CODE_SUCCESS = 200;
+    public static String ACCESS_STATUS_CODE_SUCCESS = "1";
+    public static String ACCESS_STATUS_CODE_FAILED = "0";
+
+
 
 }

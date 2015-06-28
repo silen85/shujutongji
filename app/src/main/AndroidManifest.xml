@@ -10,7 +10,7 @@
         android:name="com.lesso.data.LessoApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        android:theme="@style/APP_THEME">
         <activity
             android:name=".activity.SplashLoginActivity"
             android:label="@string/app_name"

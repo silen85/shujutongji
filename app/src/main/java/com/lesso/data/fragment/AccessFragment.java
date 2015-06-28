@@ -68,7 +68,7 @@ public class AccessFragment extends Fragment {
         lineChart.setDescription("");
         lineChart.setNoDataTextDescription("暂无数据显示");
         lineChart.setHighlightEnabled(true);
-        lineChart.setTouchEnabled(true);
+        lineChart.setTouchEnabled(false);
         lineChart.setDragEnabled(false);
         lineChart.setScaleEnabled(false);
         lineChart.setPinchZoom(false);

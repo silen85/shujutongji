@@ -30,6 +30,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
+        android:background="@drawable/border_left"
         android:gravity="center"
         android:paddingBottom="@dimen/interval_C"
         android:paddingLeft="@dimen/interval_A"

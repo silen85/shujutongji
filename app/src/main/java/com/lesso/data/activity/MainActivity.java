@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.lesso.data.R;
@@ -44,6 +46,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_main);
 
         btn_back = (Button) findViewById(R.id.btn_back);
@@ -66,6 +72,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         storeDetailFragment = new StoreDetailFragment();
         userFragment = new UserFragment();
         userDetailFragment = new UserDetailFragment();
+
+        // Fragment testFragment = new TestFragment();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
