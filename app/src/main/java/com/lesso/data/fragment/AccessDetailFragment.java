@@ -165,7 +165,7 @@ public class AccessDetailFragment extends ListFragment {
          * 初始化列表
          */
 
-        LinearLayout list_content = (LinearLayout) view.findViewById(R.id.list_content);
+        list_content = (LinearLayout) view.findViewById(R.id.list_content);
         LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
         TextView a = ((TextView) header.findViewById(R.id.colum1));
@@ -246,7 +246,9 @@ public class AccessDetailFragment extends ListFragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d(TAG, responseString);
-                Toast.makeText(activity, "网络未连通，数据请求错误", Toast.LENGTH_SHORT).show();
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_NETWORK_ERR;
+                message.sendToTarget();
             }
 
             @Override
@@ -278,6 +280,7 @@ public class AccessDetailFragment extends ListFragment {
     private final int HANDLER_DATA = 1;
     private final int HANDLER_SROAT = 2;
     private final int HANDLER_EROAT = 3;
+    private final int HANDLER_NETWORK_ERR = 4;
     private Handler mHandler = new Handler() {
 
         @Override
@@ -295,6 +298,10 @@ public class AccessDetailFragment extends ListFragment {
                         dataCache = (List<Map<String, String>>) result.get("data");
                         fillData(dataCache);
                     } else {
+                        if (list != null && list.size() > 0) {
+                            list.clear();
+                            adapter.notifyDataSetChanged();
+                        }
                         Toast.makeText(activity, "数据内容为空", Toast.LENGTH_SHORT).show();
                     }
                     break;
@@ -307,6 +314,13 @@ public class AccessDetailFragment extends ListFragment {
                     break;
                 case HANDLER_EROAT:
                     btn_toogle_fragment.clearAnimation();
+                    break;
+                case HANDLER_NETWORK_ERR:
+                    if (list != null && list.size() > 0) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    Toast.makeText(activity, "数据请求错误", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

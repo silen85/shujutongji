@@ -37,4 +37,7 @@
     <color name="REPORT_TABLE_C7">#9E7866</color>
     <color name="REPORT_TABLE_C8">#9069B5</color>
 
+    <color name="record_bg_color">@color/REPORT_UI_C6</color>
+    <color name="record_text_bg_color">@color/REPORT_UI_C4</color>
+
 </resources>

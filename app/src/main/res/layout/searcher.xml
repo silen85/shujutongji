@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/searcher"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_orange_x"
+    android:paddingLeft="@dimen/interval_B"
+    android:paddingRight="@dimen/interval_B"
+    android:visibility="gone">
+
+    <EditText
+        android:id="@+id/searcher_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:ems="20"
+        android:hint="请输入名称、编号"
+        android:inputType="text"
+        android:paddingBottom="@dimen/interval_G"
+        android:paddingTop="@dimen/interval_F"
+        android:singleLine="true"
+        android:textColor="@color/REPORT_UI_C2"
+        android:textSize="@dimen/F4"></EditText>
+
+    <ImageView
+        android:id="@+id/searcher_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/searcher_x"
+        android:clickable="true" />
+
+
+</RelativeLayout>

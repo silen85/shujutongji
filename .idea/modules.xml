@@ -4,11 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/mpchartlib/src/androidTest/MPAndroidLib.iml" filepath="$PROJECT_DIR$/mpchartlib/src/androidTest/MPAndroidLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyChart_XY/MyChart_XY.iml" filepath="$PROJECT_DIR$/MyChart_XY/MyChart_XY.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TimePicker-master/TimePicker-master.iml" filepath="$PROJECT_DIR$/TimePicker-master/TimePicker-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RecordDemo/RecordDemo.iml" filepath="$PROJECT_DIR$/RecordDemo/RecordDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/src/main/app.iml" filepath="$PROJECT_DIR$/app/src/main/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/gesturepass/src/main/gesturepass.iml" filepath="$PROJECT_DIR$/gesturepass/src/main/gesturepass.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android-async-http-master/library/src/main/http.iml" filepath="$PROJECT_DIR$/android-async-http-master/library/src/main/http.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android-async-http-master/sample/src/main/httpsample.iml" filepath="$PROJECT_DIR$/android-async-http-master/sample/src/main/httpsample.iml" />
       <module fileurl="file://$PROJECT_DIR$/mpchartexample/mpchartexample.iml" filepath="$PROJECT_DIR$/mpchartexample/mpchartexample.iml" />
     </modules>
   </component>

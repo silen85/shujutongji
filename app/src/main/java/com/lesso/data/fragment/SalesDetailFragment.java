@@ -49,11 +49,9 @@ public class SalesDetailFragment extends ListFragment {
 
     private TimeChooserDialog timerDialog;
     private int timeType = 1;
-    private boolean timeChanged=false;
     private RelativeLayout time_chooser;
     private String sBeginDate, sEndDate;
 
-    private List<Map<String, String>> dataCache1, dataCache2, dataCache3, dataCache4;
     List<Map<String, String>> list = new ArrayList();
     private SalesDetailAdapter adapter;
     private LinearLayout list_content;
@@ -122,6 +120,7 @@ public class SalesDetailFragment extends ListFragment {
             }
         });
 
+
         tab_sales_amount = (LinearLayout) view.findViewById(R.id.tab_sales_amount);
         tab_sales_paper = (LinearLayout) view.findViewById(R.id.tab_sales_paper);
         tab_sales_car = (LinearLayout) view.findViewById(R.id.tab_sales_car);
@@ -137,15 +136,7 @@ public class SalesDetailFragment extends ListFragment {
                     tabType = 1;
                     toogleHeader(tabType);
                     toogleTab(tabType);
-
-                    if (dataCache1 != null && dataCache1.size() > 0 && !timeChanged) {
-                        fillData(dataCache1);
-                    } else {
-                        if(timeChanged){
-                            timeChanged = false;dataCache1=null;dataCache2=null;dataCache3=null;dataCache4=null;
-                        }
-                        sendRequest(generateParam());
-                    }
+                    sendRequest(generateParam());
                 }
             }
         });
@@ -158,15 +149,7 @@ public class SalesDetailFragment extends ListFragment {
                     tabType = 2;
                     toogleHeader(tabType);
                     toogleTab(tabType);
-
-                    if (dataCache2 != null && dataCache2.size() > 0 && !timeChanged) {
-                        fillData(dataCache2);
-                    } else {
-                        if(timeChanged){
-                            timeChanged = false;dataCache1=null;dataCache2=null;dataCache3=null;dataCache4=null;
-                        }
-                        sendRequest(generateParam());
-                    }
+                    sendRequest(generateParam());
                 }
             }
         });
@@ -179,15 +162,7 @@ public class SalesDetailFragment extends ListFragment {
                     tabType = 3;
                     toogleHeader(tabType);
                     toogleTab(tabType);
-
-                    if (dataCache3 != null && dataCache3.size() > 0 && !timeChanged) {
-                        fillData(dataCache3);
-                    } else {
-                        if(timeChanged){
-                            timeChanged = false;dataCache1=null;dataCache2=null;dataCache3=null;dataCache4=null;
-                        }
-                        sendRequest(generateParam());
-                    }
+                    sendRequest(generateParam());
                 }
             }
         });
@@ -200,15 +175,7 @@ public class SalesDetailFragment extends ListFragment {
                     tabType = 4;
                     toogleHeader(tabType);
                     toogleTab(tabType);
-
-                    if (dataCache4 != null && dataCache4.size() > 0 && !timeChanged) {
-                        fillData(dataCache4);
-                    } else {
-                        if(timeChanged){
-                            timeChanged = false;dataCache1=null;dataCache2=null;dataCache3=null;dataCache4=null;
-                        }
-                        sendRequest(generateParam());
-                    }
+                    sendRequest(generateParam());
 
                 }
             }
@@ -216,20 +183,20 @@ public class SalesDetailFragment extends ListFragment {
 
     }
 
-    private void toogleHeader(int tabType){
+    private void toogleHeader(int tabType) {
 
-        LinearLayout list_content = (LinearLayout) view.findViewById(R.id.list_content);
-        if(header!=null){
+        list_content = (LinearLayout) view.findViewById(R.id.list_content);
+        if (header != null) {
             list_content.removeView(header);
         }
 
-        if(tabType==2){
+        if (tabType == 2) {
             header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
-        }else if(tabType==3){
+        } else if (tabType == 3) {
             header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
-        }else if(tabType==4){
+        } else if (tabType == 4) {
             header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
-        }else{
+        } else {
             header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
         }
 
@@ -238,11 +205,11 @@ public class SalesDetailFragment extends ListFragment {
         a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
         TextView b = ((TextView) header.findViewById(R.id.colum2));
-        b.setText(tabType == 2 ? "单据量" : tabType == 3 ? "车牌号码":tabType == 4 ? "占比":"销售额");
+        b.setText(tabType == 2 ? "单据量" : tabType == 3 ? "车牌号码" : tabType == 4 ? "占比" : "销售额");
         b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
 
-        if(tabType==3){
+        if (tabType == 3) {
             TextView c = ((TextView) header.findViewById(R.id.colum3));
             c.setText("车次量");
             c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -277,49 +244,34 @@ public class SalesDetailFragment extends ListFragment {
 
         if (data != null && data.size() > 0) {
 
-            switch (tabType) {
-                case 2:
-                    dataCache2 = data;
-                    break;
-                case 3:
-                    dataCache3 = data;
-                    break;
-                case 4:
-                    dataCache4 = data;
-                    break;
-                default:
-                    dataCache1 = data;
-                    break;
-            }
-
-            boolean flag = (tabType==3?true:false);
+            boolean flag = (tabType == 3 ? true : false);
             list.clear();
             for (int i = 0; i < data.size(); i++) {
 
                 Map<String, String> item = new HashMap();
 
-                String coloum1 = "",coloum2 = "",coloum3="";
+                String coloum1 = "", coloum2 = "", coloum3 = "";
 
-                if(tabType==2){
-                    if (timeType == 2){
+                if (tabType == 2) {
+                    if (timeType == 2) {
                         coloum1 = data.get(i).get("ZMONTH");
                         coloum2 = data.get(i).get("ZTOTLEM");
-                    }else{
+                    } else {
                         coloum1 = data.get(i).get("ZDATE");
                         coloum2 = data.get(i).get("ZNUMBER");
                     }
-                }else if(tabType==3){
+                } else if (tabType == 3) {
                     coloum1 = data.get(i).get("ERDAT");
                     coloum2 = data.get(i).get("ZZCHHAO");
                     coloum3 = data.get(i).get("ZCOUNT");
-                }else if(tabType==4){
+                } else if (tabType == 4) {
                     coloum1 = data.get(i).get("MATKL");
                     coloum2 = data.get(i).get("ZTOTLE");
-                }else {
-                    if (timeType == 2){
+                } else {
+                    if (timeType == 2) {
                         coloum1 = data.get(i).get("ZMONTH");
                         coloum2 = data.get(i).get("ZTOTLEM");
-                    }else{
+                    } else {
                         coloum1 = data.get(i).get("ZDATE");
                         coloum2 = data.get(i).get("ZTOTLE");
                     }
@@ -328,33 +280,33 @@ public class SalesDetailFragment extends ListFragment {
                 item.put("colum1", coloum1);
                 item.put("colum2", coloum2);
 
-                if(flag){
+                if (flag) {
                     item.put("colum3", coloum3);
                 }
 
                 list.add(item);
             }
 
-            if(adapter==null){
+            if (adapter == null) {
 
                 adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid1);
                 adapter.setColoumCount(2);
                 setListAdapter(adapter);
 
-            }else {
+            } else {
 
-                if(adapter.getColoumCount()==2){
+                if (adapter.getColoumCount() == 2) {
 
-                    if(flag){
+                    if (flag) {
                         adapter.notifyDataSetInvalidated();
                         adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid);
                         adapter.setColoumCount(3);
                         setListAdapter(adapter);
                     }
 
-                }else if (adapter.getColoumCount()==3){
+                } else if (adapter.getColoumCount() == 3) {
 
-                    if(!flag){
+                    if (!flag) {
 
                         adapter.notifyDataSetInvalidated();
                         adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid1);
@@ -368,35 +320,35 @@ public class SalesDetailFragment extends ListFragment {
         }
     }
 
-    private Map<String, String> generateParam(){
+    private Map<String, String> generateParam() {
 
         Map<String, String> parems = new HashMap();
 
-        parems.put("VKORG","1250");
+        parems.put("VKORG", "1250");
 
         if (sBeginDate != null && !"".equals(sBeginDate.trim()))
             parems.put("start", sBeginDate);
         if (sEndDate != null && !"".equals(sEndDate.trim()))
             parems.put("end", sEndDate);
 
-        if(tabType==2){
+        if (tabType == 2) {
             parems.put("VBELN", "00");
-            if (timeType == 2){
+            if (timeType == 2) {
                 parems.put("type", "NUMBER_MONTH");
-            }else{
+            } else {
                 parems.put("type", "NUMBER");
             }
-        }else if(tabType==3){
+        } else if (tabType == 3) {
             parems.put("VBELN", "01");
             parems.put("type", "CAR");
-        }else if(tabType==4){
+        } else if (tabType == 4) {
             parems.put("VBELN", "00");
             parems.put("type", "CLASS");
-        }else {
+        } else {
             parems.put("VBELN", "00");
-            if (timeType == 2){
+            if (timeType == 2) {
                 parems.put("type", "MONEY_MONTH");
-            }else{
+            } else {
                 parems.put("type", "MONEY");
             }
         }
@@ -423,7 +375,9 @@ public class SalesDetailFragment extends ListFragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d(TAG, responseString);
-                Toast.makeText(activity, "网络未连通，数据请求错误", Toast.LENGTH_SHORT).show();
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_NETWORK_ERR;
+                message.sendToTarget();
             }
 
             @Override
@@ -455,6 +409,7 @@ public class SalesDetailFragment extends ListFragment {
     private final int HANDLER_DATA = 1;
     private final int HANDLER_SROAT = 2;
     private final int HANDLER_EROAT = 3;
+    private final int HANDLER_NETWORK_ERR = 4;
     private Handler mHandler = new Handler() {
 
         @Override
@@ -467,16 +422,20 @@ public class SalesDetailFragment extends ListFragment {
 
                     List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
 
-                    if (viewtable!=null&&viewtable.size()>0) {
+                    if (viewtable != null && viewtable.size() > 0) {
 
                         List<Map<String, String>> dataCache = viewtable;
                         fillData(dataCache);
                     } else {
+                        if (list != null && list.size() > 0) {
+                            list.clear();
+                            adapter.notifyDataSetChanged();
+                        }
                         Toast.makeText(activity, "数据内容为空", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case HANDLER_SROAT:
-                    if(roatAnim==null){
+                    if (roatAnim == null) {
                         roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
                         roatAnim.setInterpolator(new LinearInterpolator());
                     }
@@ -484,6 +443,13 @@ public class SalesDetailFragment extends ListFragment {
                     break;
                 case HANDLER_EROAT:
                     btn_toogle_fragment.clearAnimation();
+                    break;
+                case HANDLER_NETWORK_ERR:
+                    if (list != null && list.size() > 0) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    Toast.makeText(activity, "数据请求错误", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -501,8 +467,7 @@ public class SalesDetailFragment extends ListFragment {
             @Override
             public void doFinish() {
 
-                if( timeType != timerDialog.getType()){
-                    timeChanged = true;
+                if (timeType != timerDialog.getType()) {
                     timeType = timerDialog.getType();
                 }
                 sBeginDate = timerDialog.getsBeaginDate();
@@ -588,14 +553,14 @@ public class SalesDetailFragment extends ListFragment {
             }
 
 
-            if(getColoumCount()==3){
+            if (getColoumCount() == 3) {
 
                 TextView colum3 = (TextView) listviewitem.findViewById(R.id.colum3);
                 colum3.setText(map.get(colum3.getTag()));
 
                 if (position % 2 > 0) {
                     colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
-                }else {
+                } else {
                     colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
                 }
             }

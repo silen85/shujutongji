@@ -4,19 +4,39 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lesso.data.R;
 import com.lesso.data.activity.MainActivity;
+import com.lesso.data.common.Constant;
+import com.lesso.data.common.Tools;
+import com.lesso.data.ui.TimeChooserDialog;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
+import org.apache.http.Header;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,13 +46,30 @@ import java.util.Map;
  */
 public class StoreDetailFragment extends ListFragment {
 
+    private String TAG = "com.lesso.data.fragment.StoreDetailFragment";
+
     private MainActivity activity;
+
+    private TimeChooserDialog timerDialog;
+    private int timeType = 1;
+    private RelativeLayout time_chooser;
+    private String sBeginDate, sEndDate;
+
+    private RelativeLayout searcher;
+    private EditText searcher_text;
+    private ImageView searcher_icon;
 
     List<Map<String, String>> list = new ArrayList();
     private StoreDetailAdapter adapter;
+    private LinearLayout list_content;
+    private LinearLayout header;
+
+    private int tabType = 1;
+    private LinearLayout tab_store_out, tab_store_in, tab_store_all;
 
     private View view;
 
+    private Animation roatAnim;
     private Button btn_toogle_fragment;
 
     @Override
@@ -45,7 +82,60 @@ public class StoreDetailFragment extends ListFragment {
         return view;
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initData();
+
+    }
+
     private void initView() {
+
+        time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
+        time_chooser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimerDialog();
+            }
+        });
+
+        sBeginDate = Constant.DATE_FORMAT_1.format(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6));
+        ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+        time_chooser.findViewById(R.id.time_chooser_f).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimerDialog();
+            }
+        });
+
+        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
+        ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+        time_chooser.findViewById(R.id.time_chooser_t).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimerDialog();
+            }
+        });
+
+        searcher = (RelativeLayout) view.findViewById(R.id.searcher);
+        searcher_text = (EditText) view.findViewById(R.id.searcher_text);
+        searcher_icon = (ImageView) view.findViewById(R.id.searcher_icon);
+        searcher_text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                searcher.setSelected(b);
+                searcher_icon.setSelected(b);
+            }
+        });
+        searcher_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendRequest(generateParam());
+            }
+        });
+
 
         btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
         btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
@@ -55,99 +145,306 @@ public class StoreDetailFragment extends ListFragment {
             }
         });
 
-    }
+        tab_store_out = (LinearLayout) view.findViewById(R.id.tab_store_out);
+        tab_store_in = (LinearLayout) view.findViewById(R.id.tab_store_in);
+        tab_store_all = (LinearLayout) view.findViewById(R.id.tab_store_all);
 
-    private void initData(){
+        toogleTab(tabType);
 
-        LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
+        tab_store_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        TextView a = ((TextView) header.findViewById(R.id.colum1));
-        a.setText("编号");
-        a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-        TextView b = ((TextView) header.findViewById(R.id.colum2));
-        b.setText("名称");
-        b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        b.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-        TextView c = ((TextView) header.findViewById(R.id.colum3));
-        c.setText("出货量");
-        c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        c.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+                if (tabType != 1) {
+                    tabType = 1;
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    sendRequest(generateParam());
+                }
+            }
+        });
 
-        Map<String, String> item1 = new HashMap<String, String>();
-        item1.put("colum1", "987654321");
-        item1.put("colum2", "万众型");
-        item1.put("colum3", "8888 件");
+        tab_store_in.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        Map<String, String> item2 = new HashMap<String, String>();
-        item2.put("colum1", "987654321");
-        item2.put("colum2", "万众型");
-        item2.put("colum3", "8888 件");
+                if (tabType != 2) {
+                    tabType = 2;
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    sendRequest(generateParam());
+                }
+            }
+        });
 
-        Map<String, String> item3 = new HashMap<String, String>();
-        item3.put("colum1", "987654321");
-        item3.put("colum2", "万众型");
-        item3.put("colum3", "8888 件");
+        tab_store_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        Map<String, String> item4 = new HashMap<String, String>();
-        item4.put("colum1", "987654321");
-        item4.put("colum2", "万众型");
-        item4.put("colum3", "8888 件");
+                if (tabType != 3) {
+                    tabType = 3;
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    sendRequest(generateParam());
+                }
+            }
+        });
 
-        Map<String, String> item5 = new HashMap<String, String>();
-        item5.put("colum1", "987654321");
-        item5.put("colum2", "万众型");
-        item5.put("colum3", "8888 件");
-
-        Map<String, String> item6 = new HashMap<String, String>();
-        item6.put("colum1", "987654321");
-        item6.put("colum2", "万众型");
-        item6.put("colum3", "8888 件");
-
-        Map<String, String> item7 = new HashMap<String, String>();
-        item7.put("colum1", "987654321");
-        item7.put("colum2", "万众型");
-        item7.put("colum3", "8888 件");
-
-        Map<String, String> item8 = new HashMap<String, String>();
-        item8.put("colum1", "987654321");
-        item8.put("colum2", "万众型");
-        item8.put("colum3", "8888 件");
-
-        Map<String, String> item9 = new HashMap<String, String>();
-        item9.put("colum1", "987654321");
-        item9.put("colum2", "万众型");
-        item9.put("colum3", "8888 件");
-
-        Map<String, String> item10 = new HashMap<String, String>();
-        item10.put("colum1", "987654321");
-        item10.put("colum2", "万众型");
-        item10.put("colum3", "8888 件");
-
-        list.add(item1);
-        list.add(item2);
-        list.add(item3);
-        list.add(item4);
-        list.add(item5);
-        list.add(item6);
-        list.add(item7);
-        list.add(item8);
-        list.add(item9);
-        list.add(item10);
-
-        adapter = new StoreDetailAdapter(activity, list, R.layout.item_grid);
-
-        getListView().addHeaderView(header);
-        setListAdapter(adapter);
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void toogleHeader(int tabType) {
 
-        initData();
+        list_content = (LinearLayout) view.findViewById(R.id.list_content);
 
+        if (header == null) {
+            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
+
+            TextView a = ((TextView) header.findViewById(R.id.colum1));
+            a.setText("编号");
+            a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+            TextView b = ((TextView) header.findViewById(R.id.colum2));
+            b.setText("名称");
+            b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+            TextView c = ((TextView) header.findViewById(R.id.colum3));
+            c.setText(tabType == 2 ? "收货量" : tabType == 3 ? "库存" : "出货量");
+            c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            c.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+
+            list_content.addView(header, 0);
+
+        } else {
+
+            TextView c = ((TextView) header.findViewById(R.id.colum3));
+            c.setText(tabType == 2 ? "收货量" : tabType == 3 ? "库存" : "出货量");
+
+        }
+
+    }
+
+    private void toogleTab(int tabType) {
+
+        tab_store_out.setSelected(tabType == 2 || tabType == 3 ? false : true);
+        tab_store_in.setSelected(tabType == 2 ? true : false);
+        tab_store_all.setSelected(tabType == 3 ? true : false);
+
+        if (tabType == 3) {
+
+            time_chooser.setVisibility(View.GONE);
+            searcher.setVisibility(View.VISIBLE);
+
+        } else {
+
+            time_chooser.setVisibility(View.VISIBLE);
+            searcher.setVisibility(View.GONE);
+
+        }
+
+
+    }
+
+
+    private void initData() {
+
+        toogleHeader(tabType);
+
+        /**
+         * 发送请求
+         */
+        sendRequest(generateParam());
+
+    }
+
+    public void fillData(List<Map<String, String>> data) {
+
+        if (data != null && data.size() > 0) {
+
+            list.clear();
+            for (int i = 0; i < data.size(); i++) {
+
+                Map<String, String> item = new HashMap();
+
+                String coloum1 = "", coloum2 = "", coloum3 = "";
+
+                coloum1 = data.get(i).get("prd_num");
+                try {
+                    coloum2 = new String(data.get(i).get("prd_neme").getBytes(), "GB2312");
+                } catch (UnsupportedEncodingException e) {
+                }
+                try {
+                    coloum3 = data.get(i).get("number") + new String(data.get(i).get("sales").getBytes(), "GB2312");
+                } catch (UnsupportedEncodingException e) {
+                }
+
+                item.put("colum1", coloum1);
+                item.put("colum2", coloum2);
+                item.put("colum3", coloum3);
+
+                list.add(item);
+            }
+
+            if (adapter == null) {
+                adapter = new StoreDetailAdapter(activity, list, R.layout.item_grid);
+                setListAdapter(adapter);
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private Map<String, String> generateParam() {
+
+        Map<String, String> parems = new HashMap();
+
+        parems.put("uid", "39");
+
+        if (tabType == 3) {
+            Log.d(TAG,Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
+            parems.put("txt", Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
+        }
+
+        if (sBeginDate != null && !"".equals(sBeginDate.trim()))
+            parems.put("start", sBeginDate);
+        if (sEndDate != null && !"".equals(sEndDate.trim()))
+            parems.put("end", sEndDate);
+
+        if (tabType == 2) {
+            parems.put("type", "in");
+        } else if (tabType == 3) {
+            parems.put("type", "sel");
+        } else {
+            parems.put("type", "out");
+        }
+
+        return parems;
+
+    }
+
+    private void sendRequest(Map<String, String> parems) {
+
+        RequestParams requestParams = new RequestParams(parems);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(activity, Constant.URL_REPORT_STORE, requestParams, new TextHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_SROAT;
+                message.sendToTarget();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG, responseString);
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_NETWORK_ERR;
+                message.sendToTarget();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d(TAG, responseString);
+
+                if (statusCode == 200) {
+                    Message message = mHandler.obtainMessage();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("json", responseString);
+                    message.what = HANDLER_DATA;
+                    message.setData(bundle);
+                    message.sendToTarget();
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_EROAT;
+                message.sendToTarget();
+            }
+        });
+
+    }
+
+    private final int HANDLER_DATA = 1;
+    private final int HANDLER_SROAT = 2;
+    private final int HANDLER_EROAT = 3;
+    private final int HANDLER_NETWORK_ERR = 4;
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HANDLER_DATA:
+
+                    String json = msg.getData().getString("json");
+                    Map result = Tools.json2Map(json);
+
+                    List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+
+                    if (viewtable != null && viewtable.size() > 0) {
+
+                        List<Map<String, String>> dataCache = viewtable;
+                        fillData(dataCache);
+                    } else {
+                        if (list != null && list.size() > 0) {
+                            list.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                        Toast.makeText(activity, "数据内容为空", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case HANDLER_SROAT:
+                    if (roatAnim == null) {
+                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
+                        roatAnim.setInterpolator(new LinearInterpolator());
+                    }
+                    btn_toogle_fragment.startAnimation(roatAnim);
+                    break;
+                case HANDLER_EROAT:
+                    btn_toogle_fragment.clearAnimation();
+                    break;
+                case HANDLER_NETWORK_ERR:
+                    if (list != null && list.size() > 0) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    Toast.makeText(activity, "数据请求错误", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+
+    private void showTimerDialog() {
+
+        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+        timerDialog.setCanceledOnTouchOutside(true);
+        timerDialog.show();
+        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+            @Override
+            public void doFinish() {
+
+                if (timeType != timerDialog.getType()) {
+                    timeType = timerDialog.getType();
+                }
+                sBeginDate = timerDialog.getsBeaginDate();
+                sEndDate = timerDialog.getsEndDate();
+
+                /**
+                 * 发送请求
+                 */
+                sendRequest(generateParam());
+
+            }
+        });
     }
 
 
@@ -210,26 +507,23 @@ public class StoreDetailFragment extends ListFragment {
             Map<String, String> map = list.get(position);
 
 
-            TextView product_id = (TextView) listviewitem.findViewById(R.id.colum1);
-            TextView product_name = (TextView) listviewitem.findViewById(R.id.colum2);
-            TextView store_out_num = (TextView) listviewitem.findViewById(R.id.colum3);
+            TextView colum1 = (TextView) listviewitem.findViewById(R.id.colum1);
+            TextView colum2 = (TextView) listviewitem.findViewById(R.id.colum2);
+            TextView colum3 = (TextView) listviewitem.findViewById(R.id.colum3);
 
-            String id = map.get("colum1");
-            String name = map.get("colum2");
-            String num = map.get("colum3");
+            colum1.setText(map.get(colum1.getTag()));
+            colum2.setText(map.get(colum2.getTag()));
+            colum3.setText(map.get(colum3.getTag()));
 
-            product_id.setText(id);
-            product_name.setText(name);
-            store_out_num.setText(num);
 
             if (position % 2 > 0) {
-                product_id.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-                product_name.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-                store_out_num.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+                colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+                colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+                colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
             } else {
-                product_id.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
-                product_name.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
-                store_out_num.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
+                colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
+                colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
+                colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
             }
 
         }

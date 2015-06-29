@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="record_text_bg_color">#FFabc3d7</color>
+    <color name="record_bg_color">#FFebf0f8</color>
+</resources>

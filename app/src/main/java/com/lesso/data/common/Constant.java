@@ -9,6 +9,7 @@ public class Constant {
 
     public static final String URL_REPORT_ACCESS = "http://10.10.7.221/api";
     public static final String URL_REPORT_SALES = "http://192.168.4.13:65153/lswm_text/api/ZSDHandler.ashx";
+    public static final String URL_REPORT_STORE = "http://192.168.4.13:65153/lswm_text/api/WM_OutHandler.ashx";
 
     public static final String APP_KEY = "fc98141d";
 

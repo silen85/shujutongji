@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         userFragment = new UserFragment();
         userDetailFragment = new UserDetailFragment();
 
-        // Fragment testFragment = new TestFragment();
+        //Fragment testFragment = new TestFragment();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 

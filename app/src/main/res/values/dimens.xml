@@ -25,7 +25,7 @@
     <dimen name="interval_C">8dp</dimen>   <!--  水平间大间距  ==  -->
     <dimen name="interval_D">4dp</dimen>   <!--  水平间小间距  ==  -->
     <dimen name="interval_E">12dp</dimen>   <!--  EditText文字开头间距  -->
-    <dimen name="interval_F">12dp</dimen>   <!--  EditText文字上间距  -->
+    <dimen name="interval_F">4dp</dimen>   <!--  EditText文字上间距  -->
     <dimen name="interval_G">4dp</dimen>   <!--  EditText文字下间距  -->
 
 </resources>
