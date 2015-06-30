@@ -18,6 +18,7 @@ import com.lesso.data.fragment.SalesDetailFragment;
 import com.lesso.data.fragment.SalesFragment;
 import com.lesso.data.fragment.StoreDetailFragment;
 import com.lesso.data.fragment.StoreFragment;
+import com.lesso.data.fragment.TestFragment;
 import com.lesso.data.fragment.UserDetailFragment;
 import com.lesso.data.fragment.UserFragment;
 
@@ -73,11 +74,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         userFragment = new UserFragment();
         userDetailFragment = new UserDetailFragment();
 
-        //Fragment testFragment = new TestFragment();
+        Fragment testFragment = new TestFragment();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_content, mainFragment);
+        fragmentTransaction.add(R.id.main_content, testFragment);
 
         fragmentTransaction.commit();
 
