@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.lesso.data.R;
 import com.lesso.data.fragment.AccessDetailFragment;
 import com.lesso.data.fragment.AccessFragment;
+import com.lesso.data.fragment.MainFragment1;
 import com.lesso.data.fragment.MainFragment;
 import com.lesso.data.fragment.SalesDetailFragment;
 import com.lesso.data.fragment.SalesFragment;
@@ -78,7 +79,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.add(R.id.main_content, testFragment);
+        fragmentTransaction.add(R.id.main_content, mainFragment);
 
         fragmentTransaction.commit();
 
@@ -156,6 +157,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.fragment_sales:
             case R.id.data_view_sales:
+            case R.id.chart_sales:
                 fragment = salesFragment;
                 break;
             case R.id.fragment_store:
@@ -190,7 +192,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         for (int i = 0; i < fragmentList.size(); i++) {
             Fragment fragment = fragmentList.get(i);
-            if (fragment.isVisible() && !(fragment instanceof MainFragment)) {
+            if (fragment.isVisible() && !(fragment instanceof MainFragment1)) {
                 fragmentTransaction.hide(fragment);
             }
         }

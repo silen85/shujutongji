@@ -438,6 +438,9 @@ public class StoreDetailFragment extends ListFragment {
                 sBeginDate = timerDialog.getsBeaginDate();
                 sEndDate = timerDialog.getsEndDate();
 
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+
                 /**
                  * 发送请求
                  */

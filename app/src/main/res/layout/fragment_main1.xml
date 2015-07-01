@@ -15,9 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/interval_C"
-            android:clickable="true"
             android:orientation="vertical"
             android:paddingLeft="@dimen/interval_A"
+            android:clickable="true"
             android:paddingRight="@dimen/interval_A">
 
             <RelativeLayout
@@ -28,9 +28,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_access"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F1" />
@@ -39,10 +39,10 @@
                     android:id="@+id/fragment_access_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="1126"
                     android:textColor="@color/REPORT_UI_C1"
                     android:textSize="@dimen/F2" />
 
@@ -57,19 +57,19 @@
                     android:id="@+id/fragment_access_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
                     android:textColor="@color/REPORT_UI_C3"
                     android:textSize="@dimen/F5" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_access_today"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F2" />
@@ -77,31 +77,21 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/data_view_access"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="280dp"
                 android:layout_marginTop="@dimen/interval_C"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.lesso.data.ui.RecordScrollView
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_access"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/data_view_access"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <com.lesso.data.ui.XYLineView
-                            android:id="@+id/chart_access"
-                            android:layout_width="match_parent"
-                            android:layout_height="250dp" />
-
-                    </LinearLayout>
-
-                </com.lesso.data.ui.RecordScrollView>
+                    android:background="@color/REPORT_UI_C6"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="horizontal" />
 
 
             </LinearLayout>
@@ -128,8 +118,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/interval_C"
-            android:clickable="true"
             android:orientation="vertical"
+            android:clickable="true"
             android:paddingLeft="@dimen/interval_A"
             android:paddingRight="@dimen/interval_A">
 
@@ -141,9 +131,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_sales"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F1" />
@@ -152,10 +142,10 @@
                     android:id="@+id/fragment_sales_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="684120"
                     android:textColor="@color/REPORT_UI_C1"
                     android:textSize="@dimen/F2" />
 
@@ -170,54 +160,43 @@
                     android:id="@+id/fragment_sales_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
                     android:textColor="@color/REPORT_UI_C3"
                     android:textSize="@dimen/F5" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_sales_today"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F2" />
 
             </RelativeLayout>
 
-            <LinearLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/interval_C"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:scrollbars="none">
 
-                <com.lesso.data.ui.RecordScrollView
+                <LinearLayout
+                    android:id="@+id/data_view_sales"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="none">
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/data_view_sales"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <com.lesso.data.ui.BarView
-                            android:id="@+id/chart_sales"
-                            android:layout_width="match_parent"
-                            android:layout_height="250dp" />
-
-                    </LinearLayout>
-
-                </com.lesso.data.ui.RecordScrollView>
+                </LinearLayout>
 
 
-            </LinearLayout>
+            </HorizontalScrollView>
 
 
         </LinearLayout>
@@ -254,9 +233,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_store"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F1" />
@@ -265,10 +244,10 @@
                     android:id="@+id/fragment_store_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="35460"
                     android:textColor="@color/REPORT_UI_C1"
                     android:textSize="@dimen/F2" />
 
@@ -283,19 +262,19 @@
                     android:id="@+id/fragment_store_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
                     android:textColor="@color/REPORT_UI_C3"
                     android:textSize="@dimen/F5" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_store_today"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F2" />
@@ -314,7 +293,7 @@
                 <ListView
                     android:id="@+id/listview_store"
                     android:layout_width="match_parent"
-                    android:layout_height="480dp"
+                    android:layout_height="320dp"
                     android:cacheColorHint="@color/TRANSPARENT"
                     android:divider="@color/TRANSPARENT"
                     android:scrollbars="none"></ListView>
@@ -356,9 +335,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_user"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F1" />
@@ -367,10 +346,10 @@
                     android:id="@+id/fragment_user_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="11"
                     android:textColor="@color/REPORT_UI_C1"
                     android:textSize="@dimen/F2" />
 
@@ -385,19 +364,19 @@
                     android:id="@+id/fragment_user_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
-                    android:text=""
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="2015-07-18 至 2015-08-18"
                     android:textColor="@color/REPORT_UI_C3"
                     android:textSize="@dimen/F5" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/main_user_today"
                     android:textColor="@color/REPORT_UI_C2"
                     android:textSize="@dimen/F2" />
@@ -405,31 +384,21 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/data_view_user"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="280dp"
                 android:layout_marginTop="@dimen/interval_C"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.lesso.data.ui.RecordScrollView
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_user"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/data_view_user"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <com.lesso.data.ui.XYLineView
-                            android:id="@+id/chart_user"
-                            android:layout_width="match_parent"
-                            android:layout_height="250dp" />
-
-                    </LinearLayout>
-
-                </com.lesso.data.ui.RecordScrollView>
+                    android:background="@color/REPORT_UI_C6"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="horizontal" />
 
 
             </LinearLayout>

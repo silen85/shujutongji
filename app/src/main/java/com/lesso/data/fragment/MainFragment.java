@@ -1,30 +1,39 @@
 package com.lesso.data.fragment;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.lesso.data.R;
 import com.lesso.data.activity.MainActivity;
 import com.lesso.data.adapter.StoreAdapter;
-import com.lesso.data.ui.VerticalProgressBar;
+import com.lesso.data.common.Constant;
+import com.lesso.data.common.MD5;
+import com.lesso.data.common.Tools;
+import com.lesso.data.ui.BarView;
+import com.lesso.data.ui.XYLineView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
+import org.apache.http.Header;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +43,16 @@ import java.util.Map;
  */
 public class MainFragment extends Fragment implements View.OnClickListener {
 
+    private static String TAG = "com.lesso.data.fragment.MainFragment";
+
     int[] colors = new int[]{R.color.REPORT_TABLE_C1, R.color.REPORT_TABLE_C2, R.color.REPORT_TABLE_C3, R.color.REPORT_TABLE_C4, R.color.REPORT_TABLE_C5,
             R.color.REPORT_TABLE_C6, R.color.REPORT_TABLE_C7, R.color.REPORT_TABLE_C8};
 
     private int[] processbar_stys = {R.drawable.processbar_sty1, R.drawable.processbar_sty2, R.drawable.processbar_sty3,
             R.drawable.processbar_sty4, R.drawable.processbar_sty5, R.drawable.processbar_sty6,
             R.drawable.processbar_sty7, R.drawable.processbar_sty8};
+
+    private String sBeginDate, sEndDate, tomorrow;
 
     private LayoutInflater layoutInflater;
     private MainActivity activity;
@@ -48,11 +61,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private LinearLayout fragment_access, fragment_sales, fragment_store, fragment_user;
 
-    private List<Map<String, String>> salesList = new ArrayList<>();
     private List<Map<String, String>> storeList = new ArrayList<>();
 
     private LinearLayout data_view_access, data_view_sales, data_view_store, data_view_user;
-    private LineChart chart_access, chart_user;
+    private XYLineView chart_access, chart_user;
+    private BarView chart_sales;
     private ListView listview_store;
     private StoreAdapter storeAdapter;
 
@@ -63,11 +76,28 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         view = layoutInflater.inflate(R.layout.fragment_main, null);
 
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -30);
+
+        sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
+
+        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
+
+        calendar.add(Calendar.DAY_OF_MONTH, 31);
+        tomorrow = Constant.DATE_FORMAT_1.format(calendar.getTime());
+
         initView();
 
         initData();
-
-        return view;
     }
 
     private void initView() {
@@ -82,6 +112,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         fragment_store.setOnClickListener(this);
         fragment_user.setOnClickListener(this);
 
+        ((TextView) view.findViewById(R.id.fragment_access_date)).setText(sBeginDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_sales_date)).setText(sBeginDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(sEndDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_user_date)).setText(sBeginDate + " 至 " + sEndDate);
+
         initAccessView();
 
         initSalesView();
@@ -93,82 +128,50 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initData() {
-
-        initAccessData();
-
-
-        initStoreData();
-
-        initUserData();
+        requestStoreData();
     }
 
     private void initAccessView() {
 
         data_view_access = (LinearLayout) view.findViewById(R.id.data_view_access);
-        chart_access = (LineChart) data_view_access.findViewById(R.id.chart_access);
 
-        data_view_access.setOnClickListener(this);
+        chart_access = (XYLineView) data_view_access.findViewById(R.id.chart_access);
         chart_access.setOnClickListener(this);
+        chart_access.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
 
-        chart_access.setDrawGridBackground(false);
-        chart_access.setDescription("");
-        chart_access.setNoDataTextDescription("暂无数据显示");
-        chart_access.setHighlightEnabled(true);
-        chart_access.setTouchEnabled(true);
-        chart_access.setDragEnabled(false);
-        chart_access.setScaleEnabled(false);
-        chart_access.setPinchZoom(false);
-        chart_access.animateX(800, Easing.EasingOption.EaseInOutExpo);
-        chart_access.animateY(800, Easing.EasingOption.EaseInOutExpo);
-        chart_access.getLegend().setEnabled(false);
+                chart_access.getViewTreeObserver().removeOnPreDrawListener(this);
+                chart_access.setScreenWidth(chart_access.getWidth());
+                chart_access.setScreenHeight(chart_access.getHeight());
 
-        chart_access.enableScroll();
-        chart_access.canScrollHorizontally(1000);
+                return true;
+            }
+        });
 
-        YAxis leftAxis = chart_access.getAxisLeft();
-        leftAxis.removeAllLimitLines();
-        leftAxis.setEnabled(true);
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setStartAtZero(false);
-
-        YAxis rightAxis = chart_access.getAxisRight();
-        rightAxis.setEnabled(false);
-
-        XAxis xAxis = chart_access.getXAxis();
-        xAxis.removeAllLimitLines();
-        xAxis.setDrawGridLines(true);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        requestAccessData();
 
     }
 
     private void initSalesView() {
 
-        initSalesData();
-
         data_view_sales = (LinearLayout) view.findViewById(R.id.data_view_sales);
 
-        data_view_sales.setOnClickListener(this);
+        chart_sales = (BarView) data_view_sales.findViewById(R.id.chart_sales);
+        chart_sales.setOnClickListener(this);
+        chart_sales.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
 
-        for (int i = 0; i < salesList.size(); i++) {
+                chart_sales.getViewTreeObserver().removeOnPreDrawListener(this);
+                chart_sales.setScreenWidth(chart_sales.getWidth());
+                chart_sales.setScreenHeight(chart_sales.getHeight());
 
-            LinearLayout item = (LinearLayout) layoutInflater.inflate(R.layout.item_vprocessbar, null);
+                return true;
+            }
+        });
 
-            TextView amount = (TextView) item.findViewById(R.id.colum2);
-            VerticalProgressBar process = (VerticalProgressBar) item.findViewById(R.id.process);
-            TextView date = (TextView) item.findViewById(R.id.colum1);
-
-            process.setProgressDrawable
-                    (activity.getResources().getDrawable(processbar_stys[i % processbar_stys.length]));
-
-            int p = Integer.parseInt(salesList.get(i).get(process.getTag()));
-            process.setProgress(p);
-
-            amount.setText(salesList.get(i).get(amount.getTag()));
-            date.setText(salesList.get(i).get(date.getTag()));
-
-            data_view_sales.addView(item, i);
-
-        }
+        requestSalesData();
 
     }
 
@@ -190,288 +193,362 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private void initUserView() {
 
         data_view_user = (LinearLayout) view.findViewById(R.id.data_view_user);
-        chart_user = (LineChart) data_view_user.findViewById(R.id.chart_user);
 
-        data_view_user.setOnClickListener(this);
+        chart_user = (XYLineView) data_view_user.findViewById(R.id.chart_user);
         chart_user.setOnClickListener(this);
+        chart_user.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
 
-        chart_user.setDrawGridBackground(false);
-        chart_user.setDescription("");
-        chart_user.setNoDataTextDescription("暂无数据显示");
-        chart_user.setHighlightEnabled(true);
-        chart_user.setTouchEnabled(true);
-        chart_user.setDragEnabled(false);
-        chart_user.setScaleEnabled(false);
-        chart_user.setPinchZoom(false);
-        chart_user.animateX(800, Easing.EasingOption.EaseInOutExpo);
-        chart_user.animateY(800, Easing.EasingOption.EaseInOutExpo);
-        chart_user.getLegend().setEnabled(false);
+                chart_user.getViewTreeObserver().removeOnPreDrawListener(this);
+                chart_user.setScreenWidth(chart_user.getWidth());
+                chart_user.setScreenHeight(chart_user.getHeight());
 
-        chart_user.enableScroll();
-        chart_user.canScrollHorizontally(1000);
+                return true;
+            }
+        });
 
-        YAxis leftAxis = chart_user.getAxisLeft();
-        leftAxis.removeAllLimitLines();
-        leftAxis.setEnabled(true);
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setStartAtZero(false);
-
-        YAxis rightAxis = chart_user.getAxisRight();
-        rightAxis.setEnabled(false);
-
-        XAxis xAxis = chart_user.getXAxis();
-        xAxis.removeAllLimitLines();
-        xAxis.setDrawGridLines(true);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        requestUseData();
 
     }
 
-    private void initAccessData() {
+    private void initAccessData(String json) {
 
-        chart_access.getAxisLeft().setAxisMaxValue(2500);
-        chart_access.getAxisLeft().setAxisMinValue(800);
+        try {
+            Map result = Tools.json2Map(json);
 
-        List<String> xVals = new ArrayList<>();
-        for (int i = 0; i < 28; i++) {
-            xVals.add("8-" + (i + 1));
+            String status = (String) result.get("status");
+            //String desc = (String) result.get("msg");
+
+            if (Constant.ACCESS_STATUS_CODE_SUCCESS.equals(status)) {
+
+                List<Map<String, String>> dataList = (List<Map<String, String>>) result.get("data");
+                if (dataList != null && dataList.size() > 0) {
+
+                    String[] fields = new String[dataList.size()];
+                    float[] data = new float[dataList.size()];
+
+                    for (int i = 0; i < dataList.size(); i++) {
+
+                        String xdata = dataList.get(dataList.size() - 1 - i).get("created");
+                        String ydata = dataList.get(dataList.size() - 1 - i).get("uv");
+
+                        fields[i] = xdata.substring(6);
+                        data[i] = Float.parseFloat(ydata);
+
+                        if (sEndDate.equals(xdata)) {
+                            ((TextView) view.findViewById(R.id.fragment_access_amount)).setText(ydata);
+                        }
+
+                    }
+
+                    chart_access.setData(data);
+                    chart_access.setField(fields);
+                    chart_access.postInvalidate();
+                } else {
+
+
+                }
+            } else {
+
+
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void initSalesData(String json) {
+
+        try {
+
+            Map result = Tools.json2Map(json);
+
+            List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+
+            if (viewtable != null && viewtable.size() > 0) {
+
+                String[] fields = new String[viewtable.size()];
+                float[] data = new float[viewtable.size()];
+
+                for (int i = 0; i < viewtable.size(); i++) {
+
+                    String xdata = viewtable.get(i).get("ZDATE");
+                    String ydata = viewtable.get(i).get("ZTOTLE");
+
+                    fields[i] = xdata.substring(6);
+                    data[i] = Float.parseFloat(ydata);
+
+                    if (sEndDate.equals(xdata)) {
+                        ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText(((int) data[i]) + "");
+                    }
+                }
+
+                chart_sales.setData(data);
+                chart_sales.setField(fields);
+                chart_sales.postInvalidate();
+
+            } else {
+
+
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
 
-        List<Entry> yVals = new ArrayList<>();
-        yVals.add(new Entry(998, 0));
-        yVals.add(new Entry(1278, 1));
-        yVals.add(new Entry(1086, 2));
-        yVals.add(new Entry(1688, 3));
-        yVals.add(new Entry(2263, 4));
-        yVals.add(new Entry(1722, 5));
-        yVals.add(new Entry(1982, 6));
-        yVals.add(new Entry(1126, 7));
-        yVals.add(new Entry(998, 8));
-        yVals.add(new Entry(1278, 9));
-        yVals.add(new Entry(1086, 10));
-        yVals.add(new Entry(1688, 11));
-        yVals.add(new Entry(2263, 12));
-        yVals.add(new Entry(1722, 13));
-        yVals.add(new Entry(1982, 14));
-        yVals.add(new Entry(1546, 15));
-        yVals.add(new Entry(1996, 16));
-        yVals.add(new Entry(1236, 17));
-        yVals.add(new Entry(1982, 18));
-        yVals.add(new Entry(1126, 19));
-        yVals.add(new Entry(2254, 20));
-        yVals.add(new Entry(1098, 21));
-        yVals.add(new Entry(1446, 22));
-        yVals.add(new Entry(1348, 23));
-        yVals.add(new Entry(2003, 24));
-        yVals.add(new Entry(1232, 25));
-        yVals.add(new Entry(1762, 26));
-        yVals.add(new Entry(1996, 27));
+    }
 
-        int[] colorArr = new int[xVals.size()];
-        for (int i = 0; i < xVals.size(); i++) {
-            colorArr[i] = activity.getResources().getColor(colors[i % colors.length]);
+    private void initStoreData(String json) {
+
+        try {
+            Map result = Tools.json2Map(json);
+
+            List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+
+            if (viewtable != null && viewtable.size() > 0) {
+
+                storeList.clear();
+                int count = 0;
+                for (int i = 0; i < viewtable.size() && i < 8; i++) {
+
+                    Map<String, String> item = new HashMap();
+
+                    String coloum1 = "", coloum2 = "", coloum3 = "";
+                    try {
+                        coloum1 = new String(viewtable.get(i).get("prd_neme").getBytes(), "GB2312");
+                    } catch (UnsupportedEncodingException e) {
+                    }
+                    try {
+                        coloum2 = viewtable.get(i).get("number") + new String(viewtable.get(i).get("sales").getBytes(), "GB2312");
+                    } catch (UnsupportedEncodingException e) {
+                    }
+
+                    item.put("product_name", coloum1);
+                    item.put("product_num", coloum2);
+                    item.put("product_percent", ((int) ((Float.parseFloat(viewtable.get(i).get("number"))) / (Float.parseFloat(viewtable.get(0).get("number"))) * 100)) + "");
+
+                    count += Integer.parseInt(viewtable.get(i).get("number"));
+
+                    storeList.add(item);
+                }
+
+                ((TextView) view.findViewById(R.id.fragment_store_amount)).setText(count + "");
+
+                storeAdapter = new StoreAdapter(activity, storeList, R.layout.item_processbar);
+
+                listview_store.setAdapter(storeAdapter);
+
+
+            } else {
+
+
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
 
-        LineDataSet set1 = new LineDataSet(yVals, "");
-        set1.setColor(activity.getResources().getColor(R.color.REPORT_TABLE_C4));
-        set1.setCircleColors(colorArr);
-        set1.setLineWidth(1f);
-        set1.setCircleSize(3f);
-        set1.setDrawCircleHole(false);
-        set1.setValueTextSize(10);
-        set1.setDrawFilled(false);
-        set1.setFillAlpha(0);
-        set1.setFillColor(Color.WHITE);
-
-        List<LineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-
-        LineData data = new LineData(xVals, dataSets);
-
-        chart_access.setData(data);
 
     }
 
-    private void initSalesData() {
+    private void initUserData(String json) {
 
-        Map<String, String> item1 = new HashMap<String, String>();
-        item1.put("amount", "23564");
-        item1.put("process", "80");
-        item1.put("date", "8-11");
+        try {
 
-        Map<String, String> item2 = new HashMap<String, String>();
-        item2.put("amount", "32221");
-        item2.put("process", "36");
-        item2.put("date", "8-12");
+            Map result = Tools.json2Map(json);
 
-        Map<String, String> item3 = new HashMap<String, String>();
-        item3.put("amount", "28530");
-        item3.put("process", "44");
-        item3.put("date", "8-13");
+            List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
 
-        Map<String, String> item4 = new HashMap<String, String>();
-        item4.put("amount", "7865");
-        item4.put("process", "99");
-        item4.put("date", "8-14");
+            if (viewtable != null && viewtable.size() > 0) {
 
-        Map<String, String> item5 = new HashMap<String, String>();
-        item5.put("amount", "4534");
-        item5.put("process", "66");
-        item5.put("date", "8-15");
+                String[] fields = new String[viewtable.size()];
+                float[] data = new float[viewtable.size()];
 
-        Map<String, String> item6 = new HashMap<String, String>();
-        item6.put("amount", "67687");
-        item6.put("process", "55");
-        item6.put("date", "8-16");
+                for (int i = 0; i < viewtable.size(); i++) {
 
-        Map<String, String> item7 = new HashMap<String, String>();
-        item7.put("amount", "34343");
-        item7.put("process", "66");
-        item7.put("date", "8-17");
+                    String xdata = viewtable.get(viewtable.size() - 1 - i).get("CREATETIME");
+                    String ydata = viewtable.get(viewtable.size() - 1 - i).get("COUN");
 
-        Map<String, String> item8 = new HashMap<String, String>();
-        item8.put("amount", "34343");
-        item8.put("process", "20");
-        item8.put("date", "8-18");
+                    fields[i] = xdata.substring(6);
+                    data[i] = Float.parseFloat(ydata);
 
-        Map<String, String> item9 = new HashMap<String, String>();
-        item9.put("amount", "44656");
-        item9.put("process", "77");
-        item9.put("date", "8-19");
+                    if (sEndDate.equals(xdata)) {
+                        ((TextView) view.findViewById(R.id.fragment_user_amount)).setText(ydata);
+                    }
 
-        Map<String, String> item10 = new HashMap<String, String>();
-        item10.put("amount", "6565");
-        item10.put("process", "89");
-        item10.put("date", "8-20");
+                }
 
-        salesList.clear();
-        salesList.add(item1);
-        salesList.add(item2);
-        salesList.add(item3);
-        salesList.add(item4);
-        salesList.add(item5);
-        salesList.add(item6);
-        salesList.add(item7);
-        salesList.add(item8);
-        salesList.add(item9);
-        salesList.add(item10);
+                chart_user.setData(data);
+                chart_user.setField(fields);
+                chart_user.postInvalidate();
 
-    }
+            } else {
 
-    private void initStoreData() {
 
-        Map<String, String> item1 = new HashMap<String, String>();
-        item1.put("product_name", "万众型灯管");
-        item1.put("product_num", "9999 件");
-        item1.put("product_percent", "80");
-
-        Map<String, String> item2 = new HashMap<String, String>();
-        item2.put("product_name", "万众型");
-        item2.put("product_num", "8888 件");
-        item2.put("product_percent", "55");
-
-        Map<String, String> item3 = new HashMap<String, String>();
-        item3.put("product_name", "万t型");
-        item3.put("product_num", "44 件");
-        item3.put("product_percent", "44");
-
-        Map<String, String> item4 = new HashMap<String, String>();
-        item4.put("product_name", "万jj型");
-        item4.put("product_num", "44 件");
-        item4.put("product_percent", "70");
-
-        Map<String, String> item5 = new HashMap<String, String>();
-        item5.put("product_name", "万uy型");
-        item5.put("product_num", "44 件");
-        item5.put("product_percent", "99");
-
-        Map<String, String> item6 = new HashMap<String, String>();
-        item6.put("product_name", "万i型");
-        item6.put("product_num", "44 件");
-        item6.put("product_percent", "78");
-
-        Map<String, String> item7 = new HashMap<String, String>();
-        item7.put("product_name", "万yt型");
-        item7.put("product_num", "44 件");
-        item7.put("product_percent", "36");
-
-        storeList.add(item1);
-        storeList.add(item2);
-        storeList.add(item3);
-        storeList.add(item4);
-        storeList.add(item5);
-        storeList.add(item6);
-        storeList.add(item7);
-
-        storeAdapter = new StoreAdapter(activity, storeList, R.layout.item_processbar);
-
-        listview_store.setAdapter(storeAdapter);
-
-    }
-
-    private void initUserData() {
-
-        chart_user.getAxisLeft().setAxisMaxValue(2500);
-        chart_user.getAxisLeft().setAxisMinValue(800);
-
-        List<String> xVals = new ArrayList<>();
-        for (int i = 0; i < 28; i++) {
-            xVals.add("8-" + (i + 1));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
 
-        List<Entry> yVals = new ArrayList<>();
-        yVals.add(new Entry(998, 0));
-        yVals.add(new Entry(1278, 1));
-        yVals.add(new Entry(1086, 2));
-        yVals.add(new Entry(1688, 3));
-        yVals.add(new Entry(2263, 4));
-        yVals.add(new Entry(1722, 5));
-        yVals.add(new Entry(1982, 6));
-        yVals.add(new Entry(1126, 7));
-        yVals.add(new Entry(998, 8));
-        yVals.add(new Entry(1278, 9));
-        yVals.add(new Entry(1086, 10));
-        yVals.add(new Entry(1688, 11));
-        yVals.add(new Entry(2263, 12));
-        yVals.add(new Entry(1722, 13));
-        yVals.add(new Entry(1982, 14));
-        yVals.add(new Entry(1546, 15));
-        yVals.add(new Entry(1996, 16));
-        yVals.add(new Entry(1236, 17));
-        yVals.add(new Entry(1982, 18));
-        yVals.add(new Entry(1126, 19));
-        yVals.add(new Entry(2254, 20));
-        yVals.add(new Entry(1098, 21));
-        yVals.add(new Entry(1446, 22));
-        yVals.add(new Entry(1348, 23));
-        yVals.add(new Entry(2003, 24));
-        yVals.add(new Entry(1232, 25));
-        yVals.add(new Entry(1762, 26));
-        yVals.add(new Entry(1996, 27));
+    }
 
-        int[] colorArr = new int[xVals.size()];
-        for (int i = 0; i < xVals.size(); i++) {
-            colorArr[i] = activity.getResources().getColor(colors[i % colors.length]);
-        }
 
-        LineDataSet set1 = new LineDataSet(yVals, "");
-        set1.setColor(activity.getResources().getColor(R.color.REPORT_TABLE_C4));
-        set1.setCircleColors(colorArr);
-        set1.setLineWidth(1f);
-        set1.setCircleSize(3f);
-        set1.setDrawCircleHole(false);
-        set1.setValueTextSize(10);
-        set1.setDrawFilled(false);
-        set1.setFillAlpha(0);
-        set1.setFillColor(Color.WHITE);
+    private void requestAccessData() {
 
-        List<LineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
+        Map<String, String> parems = new HashMap();
+        parems.put("appkey", Constant.APP_KEY);
+        parems.put("timestamp", (System.currentTimeMillis() / 1000) + "");
 
-        LineData data = new LineData(xVals, dataSets);
+        String token = Constant.SECRET_KEY + Constant.DATE_FORMAT_1.format(new Date());
+        MD5 md5 = new MD5();
+        //token = Tools.md5(token);
+        token = md5.GetMD5Code(token);
+        parems.put("token", token);
 
-        chart_user.setData(data);
+        parems.put("st", sBeginDate);
+        parems.put("et", tomorrow);
+
+        sendRequest(parems, HANDLER_DATA_ACCESS);
 
     }
+
+    private void requestSalesData() {
+
+        Map<String, String> parems = new HashMap();
+
+        parems.put("VKORG", "1250");
+        parems.put("start", sBeginDate);
+        parems.put("end", tomorrow);
+        parems.put("VBELN", "00");
+        parems.put("type", "MONEY");
+
+        sendRequest(parems, HANDLER_DATA_SALES);
+
+    }
+
+    private void requestStoreData() {
+
+        Map<String, String> parems = new HashMap();
+
+        parems.put("uid", "39");
+        parems.put("type", "out");
+        parems.put("start", sEndDate);
+        parems.put("end", tomorrow);
+
+        parems.put("start", "2015-05-01");
+        parems.put("end", "2015-05-30");
+
+        sendRequest(parems, HANDLER_DATA_STORE);
+    }
+
+    private void requestUseData() {
+
+        Map<String, String> parems = new HashMap();
+
+        parems.put("type", "nuser");
+        parems.put("start", sBeginDate);
+        parems.put("end", tomorrow);
+
+        sendRequest(parems, HANDLER_DATA_USER);
+
+    }
+
+    private void sendRequest(Map<String, String> parems, int handlerType) {
+
+        String url;
+
+        if (handlerType == HANDLER_DATA_ACCESS) {
+            url = Constant.URL_REPORT_ACCESS;
+        } else if (handlerType == HANDLER_DATA_SALES) {
+            url = Constant.URL_REPORT_SALES;
+        } else if (handlerType == HANDLER_DATA_STORE) {
+            url = Constant.URL_REPORT_STORE;
+        } else if (handlerType == HANDLER_DATA_USER) {
+            url = Constant.URL_REPORT_USER;
+        } else {
+            return;
+        }
+
+        final int _handlerType = handlerType;
+
+        RequestParams requestParams = new RequestParams(parems);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(activity, url, requestParams, new TextHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG, responseString);
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_NETWORK_ERR;
+                message.sendToTarget();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d(TAG, responseString);
+
+                if (statusCode == 200) {
+                    Message message = mHandler.obtainMessage();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("json", responseString);
+                    message.what = _handlerType;
+                    message.setData(bundle);
+                    message.sendToTarget();
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+
+    }
+
+
+    private final int HANDLER_NETWORK_ERR = 0;
+    private final int HANDLER_DATA_ACCESS = 1;
+    private final int HANDLER_DATA_SALES = 2;
+    private final int HANDLER_DATA_STORE = 3;
+    private final int HANDLER_DATA_USER = 4;
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            String json = "";
+            switch (msg.what) {
+                case HANDLER_DATA_ACCESS:
+                    json = msg.getData().getString("json");
+                    initAccessData(json);
+                    break;
+                case HANDLER_DATA_SALES:
+                    json = msg.getData().getString("json");
+                    initSalesData(json);
+                    break;
+                case HANDLER_DATA_STORE:
+                    json = msg.getData().getString("json");
+                    initStoreData(json);
+                    break;
+                case HANDLER_DATA_USER:
+                    json = msg.getData().getString("json");
+                    initUserData(json);
+                    break;
+                case HANDLER_NETWORK_ERR:
+                    Toast.makeText(activity, "数据请求错误", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
 
     @Override
@@ -490,6 +567,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             case R.id.fragment_sales:
             case R.id.data_view_sales:
+            case R.id.chart_sales:
 
             case R.id.fragment_store:
             case R.id.data_view_store:
