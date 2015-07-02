@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120dp"
         android:layout_marginTop="@dimen/interval_C"
         android:background="@color/REPORT_UI_C6"
-        android:paddingBottom="80dp"
         android:paddingLeft="@dimen/interval_A"
         android:paddingRight="@dimen/interval_A">
 
@@ -21,17 +21,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@android:id/list"
+        <LinearLayout
+            android:id="@+id/list_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="48dp"
             android:background="@drawable/border_normal"
-            android:cacheColorHint="@color/TRANSPARENT"
-            android:divider="@color/TRANSPARENT"
-            android:padding="1dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:scrollbars="none"></ListView>
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:cacheColorHint="@null"
+                android:divider="@null"
+                android:scrollbars="none"></ListView>
+
+        </LinearLayout>
 
     </FrameLayout>
 
@@ -64,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/REPORT_UI_C6"
+                android:background="@drawable/tab_bg_x"
                 android:clickable="true"
                 android:orientation="vertical">
 
@@ -91,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/REPORT_UI_C5"
+                android:background="@drawable/tab_bg_x"
                 android:clickable="true"
                 android:orientation="vertical">
 
@@ -118,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/REPORT_UI_C5"
+                android:background="@drawable/tab_bg_x"
                 android:clickable="true"
                 android:orientation="vertical">
 
@@ -145,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/REPORT_UI_C5"
+                android:background="@drawable/tab_bg_x"
                 android:clickable="true"
                 android:orientation="vertical">
 

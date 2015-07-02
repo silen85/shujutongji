@@ -91,13 +91,8 @@
                     <LinearLayout
                         android:id="@+id/data_view_access"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/report_graph_size_height_access"
                         android:orientation="vertical">
-
-                        <com.lesso.data.ui.XYLineView
-                            android:id="@+id/chart_access"
-                            android:layout_width="match_parent"
-                            android:layout_height="250dp" />
 
                     </LinearLayout>
 
@@ -204,13 +199,8 @@
                     <LinearLayout
                         android:id="@+id/data_view_sales"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/report_graph_size_height_sales"
                         android:orientation="vertical">
-
-                        <com.lesso.data.ui.BarView
-                            android:id="@+id/chart_sales"
-                            android:layout_width="match_parent"
-                            android:layout_height="250dp" />
 
                     </LinearLayout>
 
@@ -305,16 +295,26 @@
             <LinearLayout
                 android:id="@+id/data_view_store"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/report_graph_size_height_store"
                 android:layout_marginTop="@dimen/interval_C"
                 android:gravity="center"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/data_view_store_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/no_data_tips"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F1"
+                    android:visibility="gone" />
 
 
                 <ListView
                     android:id="@+id/listview_store"
                     android:layout_width="match_parent"
-                    android:layout_height="480dp"
+                    android:layout_height="@dimen/report_graph_size_height_store"
                     android:cacheColorHint="@color/TRANSPARENT"
                     android:divider="@color/TRANSPARENT"
                     android:scrollbars="none"></ListView>
@@ -419,13 +419,8 @@
                     <LinearLayout
                         android:id="@+id/data_view_user"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/report_graph_size_height_user"
                         android:orientation="vertical">
-
-                        <com.lesso.data.ui.XYLineView
-                            android:id="@+id/chart_user"
-                            android:layout_width="match_parent"
-                            android:layout_height="250dp" />
 
                     </LinearLayout>
 

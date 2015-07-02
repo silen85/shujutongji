@@ -300,7 +300,7 @@ public class StoreDetailFragment extends ListFragment {
         parems.put("uid", "39");
 
         if (tabType == 3) {
-            Log.d(TAG,Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
+            Log.d(TAG, Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
             parems.put("txt", Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
         }
 
@@ -338,7 +338,7 @@ public class StoreDetailFragment extends ListFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d(TAG, responseString);
+                Log.e(TAG, responseString + throwable.getMessage());
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -382,20 +382,27 @@ public class StoreDetailFragment extends ListFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
-                    Map result = Tools.json2Map(json);
+                    try {
+                        Map result = Tools.json2Map(json);
+                        List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
 
-                    List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+                        if (viewtable != null && viewtable.size() > 0) {
 
-                    if (viewtable != null && viewtable.size() > 0) {
-
-                        List<Map<String, String>> dataCache = viewtable;
-                        fillData(dataCache);
-                    } else {
+                            List<Map<String, String>> dataCache = viewtable;
+                            fillData(dataCache);
+                        } else {
+                            if (list != null && list.size() > 0) {
+                                list.clear();
+                                adapter.notifyDataSetChanged();
+                            }
+                            Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();
                         }
-                        Toast.makeText(activity, "数据内容为空", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case HANDLER_SROAT:
@@ -413,7 +420,7 @@ public class StoreDetailFragment extends ListFragment {
                         list.clear();
                         adapter.notifyDataSetChanged();
                     }
-                    Toast.makeText(activity, "数据请求错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -455,6 +462,12 @@ public class StoreDetailFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = (MainActivity) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 
 

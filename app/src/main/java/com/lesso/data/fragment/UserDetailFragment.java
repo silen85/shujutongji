@@ -4,19 +4,39 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lesso.data.R;
 import com.lesso.data.activity.MainActivity;
+import com.lesso.data.common.Arith;
+import com.lesso.data.common.Constant;
+import com.lesso.data.common.Tools;
+import com.lesso.data.ui.TimeChooserDialog;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.apache.http.Header;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,26 +46,84 @@ import java.util.Map;
  */
 public class UserDetailFragment extends ListFragment {
 
+    private String TAG = "com.lesso.data.fragment.UserDetailFragment";
+
     private MainActivity activity;
+
+    private TimeChooserDialog timerDialog;
+    private int timeType = 1;
+    private RelativeLayout time_chooser;
+    private String sBeginDate, sEndDate;
 
     List<Map<String, String>> list = new ArrayList();
     private AccessDetailAdapter adapter;
+    private LinearLayout list_content;
+    private LinearLayout header;
+
+    private int tabType = 1;
+    private LinearLayout tab_user_new, tab_user_total, tab_user_supplier, tab_user_fivemetal;
 
     private View view;
 
+    private Animation roatAnim;
     private Button btn_toogle_fragment;
+
+    private int topMargin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_user_detail, null);
 
-        initView();
-
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initView();
+
+        initData();
+
+    }
+
     private void initView() {
+
+        list_content = (LinearLayout) view.findViewById(R.id.list_content);
+        list_content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                list_content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                topMargin = ((FrameLayout.LayoutParams) list_content.getLayoutParams()).topMargin;
+            }
+        });
+
+        time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
+        time_chooser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimerDialog();
+            }
+        });
+
+        sBeginDate = Constant.DATE_FORMAT_1.format(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6));
+        ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+        time_chooser.findViewById(R.id.time_chooser_f).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimerDialog();
+            }
+        });
+
+        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
+        ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+        time_chooser.findViewById(R.id.time_chooser_t).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimerDialog();
+            }
+        });
 
         btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
         btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
@@ -55,100 +133,384 @@ public class UserDetailFragment extends ListFragment {
             }
         });
 
+        tab_user_new = (LinearLayout) view.findViewById(R.id.tab_user_new);
+        tab_user_total = (LinearLayout) view.findViewById(R.id.tab_user_total);
+        tab_user_supplier = (LinearLayout) view.findViewById(R.id.tab_user_supplier);
+        tab_user_fivemetal = (LinearLayout) view.findViewById(R.id.tab_user_fivemetal);
+
+        toogleTab(tabType);
+
+        tab_user_new.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (tabType != 1) {
+                    tabType = 1;
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    sendRequest(generateParam());
+                }
+            }
+        });
+
+        tab_user_total.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (tabType != 2) {
+                    tabType = 2;
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    sendRequest(generateParam());
+                }
+            }
+        });
+
+        tab_user_supplier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (tabType != 3) {
+                    tabType = 3;
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    sendRequest(generateParam());
+                }
+            }
+        });
+
+        tab_user_fivemetal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (tabType != 4) {
+                    tabType = 4;
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    sendRequest(generateParam());
+
+                }
+            }
+        });
+
+    }
+
+    private void toogleHeader(int tabType) {
+
+        if (header != null) {
+            list_content.removeView(header);
+        }
+
+        if (tabType == 2) {
+            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
+        } else if (tabType == 3) {
+            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
+        } else if (tabType == 4) {
+            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
+        } else {
+            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
+        }
+
+        TextView a = ((TextView) header.findViewById(R.id.colum1));
+        a.setText(tabType == 2 ? "用户类别" : tabType == 3 ? "供应商所在地" : tabType == 4 ? "门店所在地" : "日期");
+        a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+        TextView b = ((TextView) header.findViewById(R.id.colum2));
+        b.setText(tabType == 2 || tabType == 3 || tabType == 4 ? "数量" : "新增用户");
+        b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+
+        if (tabType == 2 || tabType == 3 || tabType == 4) {
+            TextView c = ((TextView) header.findViewById(R.id.colum3));
+            c.setText("比例");
+            c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            c.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+        }
+
+        list_content.addView(header, 0);
+
+    }
+
+    private void toogleTab(int tabType) {
+
+        tab_user_new.setSelected(tabType == 2 || tabType == 3 || tabType == 4 ? false : true);
+        tab_user_total.setSelected(tabType == 2 ? true : false);
+        tab_user_supplier.setSelected(tabType == 3 ? true : false);
+        tab_user_fivemetal.setSelected(tabType == 4 ? true : false);
+
+        if (tabType == 2 || tabType == 3 || tabType == 4) {
+            time_chooser.setVisibility(View.GONE);
+            ((FrameLayout.LayoutParams) list_content.getLayoutParams()).setMargins(0, 0, 0, 0);
+        } else {
+            time_chooser.setVisibility(View.VISIBLE);
+            if (topMargin > 0) {
+                ((FrameLayout.LayoutParams) list_content.getLayoutParams()).setMargins(0, topMargin, 0, 0);
+            }
+        }
+
     }
 
     private void initData() {
 
-        LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
+        toogleHeader(tabType);
 
-        TextView a = ((TextView) header.findViewById(R.id.colum1));
-        a.setText("日期");
-        a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-        TextView b = ((TextView) header.findViewById(R.id.colum2));
-        b.setText("访问量");
-        b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        b.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-
-        Map<String, String> item1 = new HashMap<String, String>();
-        item1.put("colum1", "2015-08-15");
-        item1.put("colum2", "895654");
-
-        Map<String, String> item2 = new HashMap<String, String>();
-        item2.put("colum1", "2015-08-16");
-        item2.put("colum2", "8953454");
-
-        Map<String, String> item3 = new HashMap<String, String>();
-        item3.put("colum1", "2015-08-17");
-        item3.put("colum2", "894454");
-
-        Map<String, String> item4 = new HashMap<String, String>();
-        item4.put("colum1", "2015-08-18");
-        item4.put("colum2", "895354");
-
-        Map<String, String> item5 = new HashMap<String, String>();
-        item5.put("colum1", "2015-08-19");
-        item5.put("colum2", "895234");
-
-        Map<String, String> item6 = new HashMap<String, String>();
-        item6.put("colum1", "2015-08-20");
-        item6.put("colum2", "895674");
-
-        Map<String, String> item7 = new HashMap<String, String>();
-        item7.put("colum1", "2015-08-21");
-        item7.put("colum2", "895600");
-
-        Map<String, String> item8 = new HashMap<String, String>();
-        item8.put("colum1", "2015-08-22");
-        item8.put("colum2", "896754");
-
-        Map<String, String> item9 = new HashMap<String, String>();
-        item9.put("colum1", "2015-08-23");
-        item9.put("colum2", "895654");
-
-        Map<String, String> item10 = new HashMap<String, String>();
-        item10.put("colum1", "2015-08-24");
-        item10.put("colum2", "89094");
-
-        Map<String, String> item11 = new HashMap<String, String>();
-        item11.put("colum1", "2015-08-25");
-        item11.put("colum2", "83494");
-
-        Map<String, String> item12 = new HashMap<String, String>();
-        item12.put("colum1", "2015-08-26");
-        item12.put("colum2", "89089");
-
-        Map<String, String> item13 = new HashMap<String, String>();
-        item13.put("colum1", "2015-08-27");
-        item13.put("colum2", "89794");
-
-        list.add(item1);
-        list.add(item2);
-        list.add(item3);
-        list.add(item4);
-        list.add(item5);
-        list.add(item6);
-        list.add(item7);
-        list.add(item8);
-        list.add(item9);
-        list.add(item10);
-        list.add(item11);
-        list.add(item12);
-        list.add(item13);
-
-        adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
-
-        getListView().addHeaderView(header);
-        setListAdapter(adapter);
+        /**
+         * 发送请求
+         */
+        sendRequest(generateParam());
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-        initData();
+    public void fillData(List<Map<String, String>> data) {
 
+        if (data != null && data.size() > 0) {
+
+            boolean flag = (tabType == 2 || tabType == 3 || tabType == 4 ? true : false);
+            list.clear();
+            for (int i = 0; i < data.size(); i++) {
+
+                Map<String, String> item = new HashMap();
+
+                String coloum1 = "", coloum2 = "", coloum3 = "";
+
+                if (tabType == 2) {
+                    coloum1 = data.get(i).get("CUSTOMTYPE");
+                    coloum2 = data.get(i).get("COUN");
+                    try {
+                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                    } catch (Exception e) {
+                    }
+                } else if (tabType == 3) {
+                    coloum1 = data.get(i).get("NAME");
+                    coloum2 = data.get(i).get("COUN");
+                    try {
+                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                    } catch (Exception e) {
+                    }
+                } else if (tabType == 4) {
+                    coloum1 = data.get(i).get("NAME");
+                    coloum2 = data.get(i).get("COUN");
+                    try {
+                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                    } catch (Exception e) {
+                    }
+                } else {
+                    if (timeType == 2) {
+                        coloum1 = data.get(i).get("CREATETIME");
+                        coloum2 = data.get(i).get("COUN");
+                    } else {
+                        coloum1 = data.get(i).get("CREATETIME");
+                        coloum2 = data.get(i).get("COUN");
+                    }
+                }
+
+                item.put("colum1", coloum1);
+                item.put("colum2", coloum2);
+
+                if (flag) {
+                    item.put("colum3", coloum3);
+                }
+
+                list.add(item);
+            }
+
+            if (adapter == null) {
+
+                adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
+                adapter.setColoumCount(2);
+                setListAdapter(adapter);
+
+            } else {
+
+                if (adapter.getColoumCount() == 2) {
+
+                    if (flag) {
+                        adapter.notifyDataSetInvalidated();
+                        adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid);
+                        adapter.setColoumCount(3);
+                        setListAdapter(adapter);
+                    }
+
+                } else if (adapter.getColoumCount() == 3) {
+
+                    if (!flag) {
+
+                        adapter.notifyDataSetInvalidated();
+                        adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
+                        adapter.setColoumCount(2);
+                        setListAdapter(adapter);
+                    }
+
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private Map<String, String> generateParam() {
+
+        Map<String, String> parems = new HashMap();
+
+        if (tabType == 2) {
+            parems.put("type", "Tatol");
+        } else if (tabType == 3) {
+            parems.put("type", "supplier");
+        } else if (tabType == 4) {
+            parems.put("type", "store");
+        } else {
+            parems.put("type", "nuser");
+            if (sBeginDate != null && !"".equals(sBeginDate.trim()))
+                parems.put("start", sBeginDate);
+            if (sEndDate != null && !"".equals(sEndDate.trim()))
+                parems.put("end", sEndDate);
+
+            if (timeType == 2) {
+                // parems.put("type", "nuser");
+            } else {
+                // parems.put("type", "nuser");
+            }
+        }
+
+        return parems;
+
+    }
+
+    private void sendRequest(Map<String, String> parems) {
+
+        RequestParams requestParams = new RequestParams(parems);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(activity, Constant.URL_REPORT_USER, requestParams, new TextHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_SROAT;
+                message.sendToTarget();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e(TAG, responseString + throwable.getMessage());
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_NETWORK_ERR;
+                message.sendToTarget();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d(TAG, responseString);
+
+                if (statusCode == 200) {
+                    Message message = mHandler.obtainMessage();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("json", responseString);
+                    message.what = HANDLER_DATA;
+                    message.setData(bundle);
+                    message.sendToTarget();
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                Message message = mHandler.obtainMessage();
+                message.what = HANDLER_EROAT;
+                message.sendToTarget();
+            }
+        });
+
+    }
+
+    private final int HANDLER_DATA = 1;
+    private final int HANDLER_SROAT = 2;
+    private final int HANDLER_EROAT = 3;
+    private final int HANDLER_NETWORK_ERR = 4;
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HANDLER_DATA:
+
+                    String json = msg.getData().getString("json");
+
+                    try {
+
+                        Map result = Tools.json2Map(json);
+
+                        List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+
+                        if (viewtable != null && viewtable.size() > 0) {
+                            List<Map<String, String>> dataCache = viewtable;
+                            fillData(dataCache);
+                        } else {
+                            if (list != null && list.size() > 0) {
+                                list.clear();
+                                adapter.notifyDataSetChanged();
+                            }
+                            Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        if (list != null && list.size() > 0) {
+                            list.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                        Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case HANDLER_SROAT:
+                    if (roatAnim == null) {
+                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
+                        roatAnim.setInterpolator(new LinearInterpolator());
+                    }
+                    btn_toogle_fragment.startAnimation(roatAnim);
+                    break;
+                case HANDLER_EROAT:
+                    btn_toogle_fragment.clearAnimation();
+                    break;
+                case HANDLER_NETWORK_ERR:
+                    if (list != null && list.size() > 0) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    private void showTimerDialog() {
+
+        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+        timerDialog.setCanceledOnTouchOutside(true);
+        timerDialog.show();
+        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+            @Override
+            public void doFinish() {
+
+                if (timeType != timerDialog.getType()) {
+                    timeType = timerDialog.getType();
+                }
+                sBeginDate = timerDialog.getsBeaginDate();
+                sEndDate = timerDialog.getsEndDate();
+
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+
+                /**
+                 * 发送请求
+                 */
+                sendRequest(generateParam());
+
+            }
+        });
     }
 
 
@@ -158,7 +520,15 @@ public class UserDetailFragment extends ListFragment {
         this.activity = (MainActivity) activity;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
     class AccessDetailAdapter extends BaseAdapter {
+
+        private int coloumCount = 2;
 
         private Context context;
         private LayoutInflater layoutInflater;
@@ -205,22 +575,41 @@ public class UserDetailFragment extends ListFragment {
 
             Map<String, String> map = (Map<String, String>) getItem(position);
 
-            TextView date = (TextView) listviewitem.findViewById(R.id.colum1);
-            TextView amount = (TextView) listviewitem.findViewById(R.id.colum2);
+            TextView colum1 = (TextView) listviewitem.findViewById(R.id.colum1);
+            TextView colum2 = (TextView) listviewitem.findViewById(R.id.colum2);
 
-            date.setText(map.get(date.getTag()));
-            amount.setText(map.get(amount.getTag()));
+            colum1.setText(map.get(colum1.getTag()));
+            colum2.setText(map.get(colum2.getTag()));
 
             if (position % 2 > 0) {
-                date.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-                amount.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+                colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+                colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
             } else {
-                date.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
-                amount.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
+                colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
+                colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
             }
 
+
+            if (getColoumCount() == 3) {
+
+                TextView colum3 = (TextView) listviewitem.findViewById(R.id.colum3);
+                colum3.setText(map.get(colum3.getTag()));
+
+                if (position % 2 > 0) {
+                    colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+                } else {
+                    colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
+                }
+            }
         }
 
+        public int getColoumCount() {
+            return coloumCount;
+        }
+
+        public void setColoumCount(int coloumCount) {
+            this.coloumCount = coloumCount;
+        }
     }
 
 }

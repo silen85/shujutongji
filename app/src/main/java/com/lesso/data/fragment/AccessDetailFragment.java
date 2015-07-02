@@ -245,7 +245,7 @@ public class AccessDetailFragment extends ListFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d(TAG, responseString);
+                Log.e(TAG, responseString + throwable.getMessage());
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -289,24 +289,32 @@ public class AccessDetailFragment extends ListFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
-                    Map result = Tools.json2Map(json);
 
-                    String status = (String) result.get("status");
-                    //String desc = (String) result.get("msg");
+                    try {
+                        Map result = Tools.json2Map(json);
+                        String status = (String) result.get("status");
+                        //String desc = (String) result.get("msg");
 
-                    if (Constant.ACCESS_STATUS_CODE_SUCCESS.equals(status)) {
-                        dataCache = (List<Map<String, String>>) result.get("data");
-                        fillData(dataCache);
-                    } else {
+                        if (Constant.ACCESS_STATUS_CODE_SUCCESS.equals(status)) {
+                            dataCache = (List<Map<String, String>>) result.get("data");
+                            fillData(dataCache);
+                        } else {
+                            if (list != null && list.size() > 0) {
+                                list.clear();
+                                adapter.notifyDataSetChanged();
+                            }
+                            Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();
                         }
-                        Toast.makeText(activity, "数据内容为空", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case HANDLER_SROAT:
-                    if(roatAnim==null){
+                    if (roatAnim == null) {
                         roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
                         roatAnim.setInterpolator(new LinearInterpolator());
                     }
@@ -320,7 +328,7 @@ public class AccessDetailFragment extends ListFragment {
                         list.clear();
                         adapter.notifyDataSetChanged();
                     }
-                    Toast.makeText(activity, "数据请求错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -381,6 +389,12 @@ public class AccessDetailFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = (MainActivity) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 
 

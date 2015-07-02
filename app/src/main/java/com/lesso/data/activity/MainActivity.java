@@ -152,12 +152,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             case R.id.fragment_access:
             case R.id.data_view_access:
-            case R.id.chart_access:
                 fragment = accessFragment;
                 break;
             case R.id.fragment_sales:
             case R.id.data_view_sales:
-            case R.id.chart_sales:
                 fragment = salesFragment;
                 break;
             case R.id.fragment_store:
@@ -167,7 +165,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.fragment_user:
             case R.id.data_view_user:
-            case R.id.chart_user:
                 fragment = userFragment;
                 break;
             default:

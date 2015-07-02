@@ -28,4 +28,9 @@
     <dimen name="interval_F">4dp</dimen>   <!--  EditText文字上间距  -->
     <dimen name="interval_G">4dp</dimen>   <!--  EditText文字下间距  -->
 
+    <dimen name="report_graph_size_height_access">250dp</dimen>
+    <dimen name="report_graph_size_height_sales">250dp</dimen>
+    <dimen name="report_graph_size_height_store">480dp</dimen>
+    <dimen name="report_graph_size_height_user">250dp</dimen>
+
 </resources>

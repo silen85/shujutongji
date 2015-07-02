@@ -45,14 +45,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private static String TAG = "com.lesso.data.fragment.MainFragment";
 
-    int[] colors = new int[]{R.color.REPORT_TABLE_C1, R.color.REPORT_TABLE_C2, R.color.REPORT_TABLE_C3, R.color.REPORT_TABLE_C4, R.color.REPORT_TABLE_C5,
-            R.color.REPORT_TABLE_C6, R.color.REPORT_TABLE_C7, R.color.REPORT_TABLE_C8};
-
     private int[] processbar_stys = {R.drawable.processbar_sty1, R.drawable.processbar_sty2, R.drawable.processbar_sty3,
             R.drawable.processbar_sty4, R.drawable.processbar_sty5, R.drawable.processbar_sty6,
             R.drawable.processbar_sty7, R.drawable.processbar_sty8};
 
-    private String sBeginDate, sEndDate, tomorrow;
+    private String sBeginDate, sEndDate, yesterday, tomorrow;
 
     private LayoutInflater layoutInflater;
     private MainActivity activity;
@@ -63,6 +60,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private List<Map<String, String>> storeList = new ArrayList<>();
 
+    private int chart_access_width, chart_sales_width, chart_user_width;
     private LinearLayout data_view_access, data_view_sales, data_view_store, data_view_user;
     private XYLineView chart_access, chart_user;
     private BarView chart_sales;
@@ -92,7 +90,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         sEndDate = Constant.DATE_FORMAT_1.format(new Date());
 
-        calendar.add(Calendar.DAY_OF_MONTH, 31);
+        calendar.add(Calendar.DAY_OF_MONTH, 29);
+        yesterday = Constant.DATE_FORMAT_1.format(calendar.getTime());
+
+        calendar.add(Calendar.DAY_OF_MONTH, 2);
         tomorrow = Constant.DATE_FORMAT_1.format(calendar.getTime());
 
         initView();
@@ -114,7 +115,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         ((TextView) view.findViewById(R.id.fragment_access_date)).setText(sBeginDate + " 至 " + sEndDate);
         ((TextView) view.findViewById(R.id.fragment_sales_date)).setText(sBeginDate + " 至 " + sEndDate);
-        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(sEndDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(yesterday + " 至 " + yesterday);
         ((TextView) view.findViewById(R.id.fragment_user_date)).setText(sBeginDate + " 至 " + sEndDate);
 
         initAccessView();
@@ -134,17 +135,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private void initAccessView() {
 
         data_view_access = (LinearLayout) view.findViewById(R.id.data_view_access);
-
-        chart_access = (XYLineView) data_view_access.findViewById(R.id.chart_access);
-        chart_access.setOnClickListener(this);
-        chart_access.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        data_view_access.setOnClickListener(this);
+        data_view_access.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-
-                chart_access.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_access.setScreenWidth(chart_access.getWidth());
-                chart_access.setScreenHeight(chart_access.getHeight());
-
+                data_view_access.getViewTreeObserver().removeOnPreDrawListener(this);
+                chart_access_width = data_view_access.getWidth();
+                Log.d(TAG, "chart_access_width;" + chart_access_width);
                 return true;
             }
         });
@@ -156,17 +153,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private void initSalesView() {
 
         data_view_sales = (LinearLayout) view.findViewById(R.id.data_view_sales);
-
-        chart_sales = (BarView) data_view_sales.findViewById(R.id.chart_sales);
-        chart_sales.setOnClickListener(this);
-        chart_sales.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        data_view_sales.setOnClickListener(this);
+        data_view_sales.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-
-                chart_sales.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_sales.setScreenWidth(chart_sales.getWidth());
-                chart_sales.setScreenHeight(chart_sales.getHeight());
-
+                data_view_sales.getViewTreeObserver().removeOnPreDrawListener(this);
+                chart_sales_width = data_view_sales.getWidth();
+                Log.d(TAG, "chart_sales_width;" + chart_sales_width);
                 return true;
             }
         });
@@ -193,17 +186,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private void initUserView() {
 
         data_view_user = (LinearLayout) view.findViewById(R.id.data_view_user);
-
-        chart_user = (XYLineView) data_view_user.findViewById(R.id.chart_user);
-        chart_user.setOnClickListener(this);
-        chart_user.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        data_view_user.setOnClickListener(this);
+        data_view_user.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-
-                chart_user.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_user.setScreenWidth(chart_user.getWidth());
-                chart_user.setScreenHeight(chart_user.getHeight());
-
+                data_view_user.getViewTreeObserver().removeOnPreDrawListener(this);
+                chart_user_width = data_view_user.getWidth();
+                Log.d(TAG, "chart_user_width;" + chart_user_width);
                 return true;
             }
         });
@@ -213,6 +202,21 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initAccessData(String json) {
+
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_access_width,
+                (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_access));
+        chart_access = new XYLineView(activity);
+        chart_access.setLayoutParams(lp);
+        chart_access.setScreenWidth(chart_access_width);
+        chart_access.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_access));
+        chart_access.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                data_view_access.performClick();
+            }
+        });
+
+        data_view_access.addView(chart_access);
 
         try {
             Map result = Tools.json2Map(json);
@@ -236,29 +240,45 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         fields[i] = xdata.substring(6);
                         data[i] = Float.parseFloat(ydata);
 
-                        if (sEndDate.equals(xdata)) {
+                        if (yesterday.equals(xdata)) {
                             ((TextView) view.findViewById(R.id.fragment_access_amount)).setText(ydata);
                         }
 
                     }
-
                     chart_access.setData(data);
                     chart_access.setField(fields);
-                    chart_access.postInvalidate();
                 } else {
-
-
+                    chart_access.setData(new float[]{});
+                    chart_access.setField(new String[]{});
                 }
             } else {
-
-
+                chart_access.setData(new float[]{});
+                chart_access.setField(new String[]{});
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG + ":initAccessData", e.getMessage());
+            chart_access.setData(new float[]{});
+            chart_access.setField(new String[]{});
         }
+        chart_access.postInvalidate();
     }
 
     private void initSalesData(String json) {
+
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_sales_width,
+                (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_sales));
+        chart_sales = new BarView(activity);
+        chart_sales.setLayoutParams(lp);
+        chart_sales.setScreenWidth(chart_sales_width);
+        chart_sales.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_sales));
+        chart_sales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                data_view_sales.performClick();
+            }
+        });
+
+        data_view_sales.addView(chart_sales);
 
         try {
 
@@ -279,23 +299,22 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     fields[i] = xdata.substring(6);
                     data[i] = Float.parseFloat(ydata);
 
-                    if (sEndDate.equals(xdata)) {
+                    if (yesterday.equals(xdata)) {
                         ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText(((int) data[i]) + "");
                     }
                 }
-
                 chart_sales.setData(data);
                 chart_sales.setField(fields);
-                chart_sales.postInvalidate();
-
             } else {
-
-
+                chart_sales.setData(new float[]{});
+                chart_sales.setField(new String[]{});
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG + ":initSalesData", e.getMessage());
+            chart_sales.setData(new float[]{});
+            chart_sales.setField(new String[]{});
         }
-
+        chart_sales.postInvalidate();
     }
 
     private void initStoreData(String json) {
@@ -338,19 +357,39 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 listview_store.setAdapter(storeAdapter);
 
+                listview_store.setVisibility(View.VISIBLE);
+                view.findViewById(R.id.data_view_store_tips).setVisibility(View.GONE);
 
             } else {
-
-
+                listview_store.setVisibility(View.GONE);
+                view.findViewById(R.id.data_view_store_tips).setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG + ":initStoreData", e.getMessage());
+
+            listview_store.setVisibility(View.GONE);
+            view.findViewById(R.id.data_view_store_tips).setVisibility(View.VISIBLE);
         }
 
 
     }
 
     private void initUserData(String json) {
+
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_user_width,
+                (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
+        chart_user = new XYLineView(activity);
+        chart_user.setLayoutParams(lp);
+        chart_user.setScreenWidth(chart_user_width);
+        chart_user.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
+        chart_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                data_view_user.performClick();
+            }
+        });
+
+        data_view_user.addView(chart_user);
 
         try {
 
@@ -371,24 +410,23 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     fields[i] = xdata.substring(6);
                     data[i] = Float.parseFloat(ydata);
 
-                    if (sEndDate.equals(xdata)) {
+                    if (yesterday.equals(xdata)) {
                         ((TextView) view.findViewById(R.id.fragment_user_amount)).setText(ydata);
                     }
 
                 }
-
                 chart_user.setData(data);
                 chart_user.setField(fields);
-                chart_user.postInvalidate();
-
             } else {
-
-
+                chart_user.setData(new float[]{});
+                chart_user.setField(new String[]{});
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG + ":initUserData", e.getMessage());
+            chart_user.setData(new float[]{});
+            chart_user.setField(new String[]{});
         }
-
+        chart_user.postInvalidate();
     }
 
 
@@ -407,6 +445,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("st", sBeginDate);
         parems.put("et", tomorrow);
 
+       // parems.put("st", "2019-05-01");
+       // parems.put("et", "2019-05-30");
+
         sendRequest(parems, HANDLER_DATA_ACCESS);
 
     }
@@ -421,6 +462,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("VBELN", "00");
         parems.put("type", "MONEY");
 
+      //  parems.put("start", "2019-05-01");
+       // parems.put("end", "2019-05-30");
+
         sendRequest(parems, HANDLER_DATA_SALES);
 
     }
@@ -431,11 +475,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         parems.put("uid", "39");
         parems.put("type", "out");
-        parems.put("start", sEndDate);
-        parems.put("end", tomorrow);
+        parems.put("start", yesterday);
+        parems.put("end", yesterday);
 
-        parems.put("start", "2015-05-01");
-        parems.put("end", "2015-05-30");
+      //  parems.put("start", "2019-05-01");
+      //  parems.put("end", "2019-05-30");
 
         sendRequest(parems, HANDLER_DATA_STORE);
     }
@@ -447,6 +491,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("type", "nuser");
         parems.put("start", sBeginDate);
         parems.put("end", tomorrow);
+
+      //  parems.put("start", "2019-05-01");
+      //  parems.put("end", "2019-05-30");
 
         sendRequest(parems, HANDLER_DATA_USER);
 
@@ -482,7 +529,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d(TAG, responseString);
+                Log.e(TAG, responseString + throwable.getMessage());
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -526,22 +573,26 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             switch (msg.what) {
                 case HANDLER_DATA_ACCESS:
                     json = msg.getData().getString("json");
+                    Log.d(TAG, "HANDLER_DATA_ACCESS:" + json);
                     initAccessData(json);
                     break;
                 case HANDLER_DATA_SALES:
                     json = msg.getData().getString("json");
+                    Log.d(TAG, "HANDLER_DATA_SALES:" + json);
                     initSalesData(json);
                     break;
                 case HANDLER_DATA_STORE:
                     json = msg.getData().getString("json");
+                    Log.d(TAG, "HANDLER_DATA_STORE:" + json);
                     initStoreData(json);
                     break;
                 case HANDLER_DATA_USER:
                     json = msg.getData().getString("json");
+                    Log.d(TAG, "HANDLER_DATA_USER:" + json);
                     initUserData(json);
                     break;
                 case HANDLER_NETWORK_ERR:
-                    Toast.makeText(activity, "数据请求错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -563,11 +614,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.fragment_access:
             case R.id.data_view_access:
-            case R.id.chart_access:
 
             case R.id.fragment_sales:
             case R.id.data_view_sales:
-            case R.id.chart_sales:
 
             case R.id.fragment_store:
             case R.id.data_view_store:
