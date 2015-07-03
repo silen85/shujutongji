@@ -25,12 +25,12 @@ import com.lesso.data.common.Tools;
 import com.lesso.data.ui.BarView;
 import com.lesso.data.ui.XYLineView;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -332,15 +332,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                     Map<String, String> item = new HashMap();
 
-                    String coloum1 = "", coloum2 = "", coloum3 = "";
-                    try {
-                        coloum1 = new String(viewtable.get(i).get("prd_neme").getBytes(), "GB2312");
-                    } catch (UnsupportedEncodingException e) {
-                    }
-                    try {
-                        coloum2 = viewtable.get(i).get("number") + new String(viewtable.get(i).get("sales").getBytes(), "GB2312");
-                    } catch (UnsupportedEncodingException e) {
-                    }
+                    String coloum1, coloum2;
+
+                    coloum1 = viewtable.get(i).get("prd_neme");
+                    coloum2 = viewtable.get(i).get("number") + viewtable.get(i).get("sales");
 
                     item.put("product_name", coloum1);
                     item.put("product_num", coloum2);
@@ -445,8 +440,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("st", sBeginDate);
         parems.put("et", tomorrow);
 
-       // parems.put("st", "2019-05-01");
-       // parems.put("et", "2019-05-30");
+        // parems.put("st", "2019-05-01");
+        // parems.put("et", "2019-05-30");
 
         sendRequest(parems, HANDLER_DATA_ACCESS);
 
@@ -462,8 +457,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("VBELN", "00");
         parems.put("type", "MONEY");
 
-      //  parems.put("start", "2019-05-01");
-       // parems.put("end", "2019-05-30");
+        //  parems.put("start", "2019-05-01");
+        // parems.put("end", "2019-05-30");
 
         sendRequest(parems, HANDLER_DATA_SALES);
 
@@ -476,10 +471,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("uid", "39");
         parems.put("type", "out");
         parems.put("start", yesterday);
-        parems.put("end", yesterday);
+        parems.put("end", sEndDate);
 
-      //  parems.put("start", "2019-05-01");
-      //  parems.put("end", "2019-05-30");
+        parems.put("start", "2015-05-01");
+        parems.put("end", "2015-05-30");
 
         sendRequest(parems, HANDLER_DATA_STORE);
     }
@@ -492,8 +487,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("start", sBeginDate);
         parems.put("end", tomorrow);
 
-      //  parems.put("start", "2019-05-01");
-      //  parems.put("end", "2019-05-30");
+        //  parems.put("start", "2019-05-01");
+        //  parems.put("end", "2019-05-30");
 
         sendRequest(parems, HANDLER_DATA_USER);
 
@@ -519,8 +514,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         RequestParams requestParams = new RequestParams(parems);
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.post(activity, url, requestParams, new TextHttpResponseHandler() {
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -554,7 +548,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             public void onFinish() {
                 super.onFinish();
             }
-        });
+        };
+
+        asyncHttpResponseHandler.setCharset("GBK");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(activity, url, requestParams, asyncHttpResponseHandler);
 
     }
 

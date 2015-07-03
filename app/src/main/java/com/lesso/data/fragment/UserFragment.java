@@ -34,6 +34,7 @@ import com.lesso.data.common.Tools;
 import com.lesso.data.ui.TimeChooserDialog;
 import com.lesso.data.ui.XYLineView;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -67,7 +68,7 @@ public class UserFragment extends Fragment {
 
     private View view;
 
-    private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> list = new ArrayList();
 
     private LinearLayout data_view, chart_xy_container, data_view_user;
     private XYLineView chart_xy;
@@ -87,6 +88,8 @@ public class UserFragment extends Fragment {
 
         view = layoutInflater.inflate(R.layout.fragment_user, null);
 
+        initView();
+
         return view;
     }
 
@@ -94,29 +97,11 @@ public class UserFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initView();
-
         initData();
 
     }
 
     private void initView() {
-
-        data_view = (LinearLayout) view.findViewById(R.id.data_view);
-        chart_xy_container = (LinearLayout) view.findViewById(R.id.chart_xy_container);
-
-        mChart = (PieChart) data_view.findViewById(R.id.pieChart);
-
-        data_view_user = (LinearLayout) view.findViewById(R.id.data_view_user);
-        data_view_user.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                data_view_user.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_user_width = data_view_user.getWidth();
-                Log.d(TAG, "chart_user_width;" + chart_user_width);
-                return true;
-            }
-        });
 
         time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
         time_chooser.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +126,44 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 showTimerDialog();
+            }
+        });
+
+        data_view = (LinearLayout) view.findViewById(R.id.data_view);
+        chart_xy_container = (LinearLayout) view.findViewById(R.id.chart_xy_container);
+        data_view_user = (LinearLayout) view.findViewById(R.id.data_view_user);
+        data_view_user.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                data_view_user.getViewTreeObserver().removeOnPreDrawListener(this);
+                chart_user_width = data_view_user.getWidth();
+                Log.d(TAG, "chart_user_width;" + chart_user_width);
+                return true;
+            }
+        });
+
+        mChart = (PieChart) data_view.findViewById(R.id.pieChart);
+        mChart.setUsePercentValues(true);
+        mChart.setDescription("");
+        mChart.setNoDataText("");
+        mChart.setDrawCenterText(false);
+        mChart.highlightValues(null);
+        mChart.setDragDecelerationFrictionCoef(0.95f);
+        mChart.setDrawHoleEnabled(false);
+        mChart.setHoleColorTransparent(false);
+        mChart.setTransparentCircleColor(Color.WHITE);
+        mChart.setRotationAngle(0);
+        mChart.setRotationEnabled(true);
+        mChart.animateY(800, Easing.EasingOption.EaseInOutExpo);
+        mChart.animateX(800, Easing.EasingOption.EaseInOutExpo);
+        mChart.getLegend().setEnabled(false);
+
+
+        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
+        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.toogleFragment(UserFragment.this);
             }
         });
 
@@ -201,29 +224,6 @@ public class UserFragment extends Fragment {
             }
         });
 
-        mChart.setUsePercentValues(true);
-        mChart.setDescription("");
-        mChart.setDrawCenterText(false);
-        mChart.highlightValues(null);
-        mChart.setDragDecelerationFrictionCoef(0.95f);
-        mChart.setDrawHoleEnabled(false);
-        mChart.setHoleColorTransparent(false);
-        mChart.setTransparentCircleColor(Color.WHITE);
-        mChart.setRotationAngle(0);
-        mChart.setRotationEnabled(true);
-        mChart.animateY(800, Easing.EasingOption.EaseInOutExpo);
-        mChart.animateX(800, Easing.EasingOption.EaseInOutExpo);
-        mChart.getLegend().setEnabled(false);
-
-
-        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
-        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.toogleFragment(UserFragment.this);
-            }
-        });
-
     }
 
     private void toogleTab(int tabType) {
@@ -255,10 +255,10 @@ public class UserFragment extends Fragment {
 
     public void fillData(List<Map<String, String>> data) {
 
+        list.clear();
         if (data != null && data.size() > 0) {
 
             boolean flag = (tabType == 2 || tabType == 3 || tabType == 4 ? true : false);
-            list.clear();
             for (int i = 0; i < data.size(); i++) {
 
                 Map<String, String> item = new HashMap();
@@ -269,21 +269,21 @@ public class UserFragment extends Fragment {
                     coloum1 = data.get(i).get("CUSTOMTYPE");
                     coloum2 = data.get(i).get("COUN");
                     try {
-                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                        coloum3 = Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 2) + "";
                     } catch (Exception e) {
                     }
                 } else if (tabType == 3) {
                     coloum1 = data.get(i).get("NAME");
                     coloum2 = data.get(i).get("COUN");
                     try {
-                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                        coloum3 = Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 2) + "";
                     } catch (Exception e) {
                     }
                 } else if (tabType == 4) {
                     coloum1 = data.get(i).get("NAME");
                     coloum2 = data.get(i).get("COUN");
                     try {
-                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                        coloum3 = Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 2) + "";
                     } catch (Exception e) {
                     }
                 } else {
@@ -305,7 +305,11 @@ public class UserFragment extends Fragment {
 
                 list.add(item);
             }
+        }
 
+        if (tabType == 2 || tabType == 3 || tabType == 4) {
+            fillPieChartData(list);
+        } else {
             if (chart_xy == null) {
 
                 ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_user_width,
@@ -314,28 +318,13 @@ public class UserFragment extends Fragment {
                 chart_xy.setLayoutParams(lp);
                 chart_xy.setScreenWidth(chart_user_width);
                 chart_xy.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
-                chart_xy.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        data_view_user.performClick();
-                    }
-                });
                 data_view_user.addView(chart_xy);
-
-                fillNewuserData(list);
-
-            } else {
-                if (tabType == 2 || tabType == 3 || tabType == 4) {
-                    fillPieChartData(list);
-                } else {
-                    fillNewuserData(list);
-                }
             }
+            fillXYLineData(list);
         }
     }
 
-    private void fillNewuserData(List<Map<String, String>> list) {
-
+    private void fillXYLineData(List<Map<String, String>> list) {
 
         if (list != null && list.size() > 0) {
 
@@ -358,48 +347,42 @@ public class UserFragment extends Fragment {
             chart_xy.setField(new String[]{});
         }
         chart_xy.postInvalidate();
-
     }
 
     private void fillPieChartData(List<Map<String, String>> list) {
 
+        ArrayList<Entry> yVals = new ArrayList<>(list.size());
+        ArrayList<String> xVals = new ArrayList<>(list.size());
         if (list != null && list.size() > 0) {
-
-            ArrayList<Entry> yVals = new ArrayList<>(list.size());
-            ArrayList<String> xVals = new ArrayList<>(list.size());
             for (int i = 0; i < list.size(); i++) {
 
-                String xdata = list.get(i).get("colum1") + "  " + list.get(i).get("colum2");
+                String xdata = list.get(i).get("colum1") + " " + list.get(i).get("colum2");
                 String ydata = list.get(i).get("colum3");
 
                 xVals.add(xdata);
                 yVals.add(new Entry(Float.parseFloat(ydata), i));
 
             }
-
-            PieDataSet dataSet = new PieDataSet(yVals, "");
-            dataSet.setSliceSpace(3f);
-            dataSet.setSelectionShift(5f);
-
-            int[] colorArr = new int[xVals.size()];
-            for (int i = 0; i < xVals.size(); i++) {
-                colorArr[i] = activity.getResources().getColor(colors[i % colors.length]);
-            }
-            dataSet.setColors(colorArr);
-
-            PieData data = new PieData(xVals, dataSet);
-            data.setValueFormatter(new PercentFormatter());
-            data.setValueTextSize(10f);
-            data.setValueTextColor(activity.getResources().getColor(R.color.REPORT_UI_C2));
-
-            mChart.setData(data);
-            mChart.invalidate();
-
-        } else {
-
-
         }
 
+        PieDataSet dataSet = new PieDataSet(yVals, "");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setValueTextColor(activity.getResources().getColor(R.color.REPORT_UI_C2));
+
+        int[] colorArr = new int[xVals.size()];
+        for (int i = 0; i < xVals.size(); i++) {
+            colorArr[i] = activity.getResources().getColor(colors[i % colors.length]);
+        }
+        dataSet.setColors(colorArr);
+
+        PieData data = new PieData(xVals, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(10f);
+        data.setValueTextColor(activity.getResources().getColor(R.color.REPORT_UI_C2));
+
+        mChart.setData(data);
+        mChart.invalidate();
     }
 
     private Map<String, String> generateParam() {
@@ -434,8 +417,7 @@ public class UserFragment extends Fragment {
 
         RequestParams requestParams = new RequestParams(parems);
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.post(activity, Constant.URL_REPORT_USER, requestParams, new TextHttpResponseHandler() {
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -455,8 +437,8 @@ public class UserFragment extends Fragment {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.d(TAG, responseString);
 
+                Log.d(TAG, responseString);
                 if (statusCode == 200) {
                     Message message = mHandler.obtainMessage();
                     Bundle bundle = new Bundle();
@@ -475,7 +457,11 @@ public class UserFragment extends Fragment {
                 message.what = HANDLER_EROAT;
                 message.sendToTarget();
             }
-        });
+        };
+        asyncHttpResponseHandler.setCharset("GBK");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(activity, Constant.URL_REPORT_USER, requestParams, asyncHttpResponseHandler);
 
     }
 
@@ -491,27 +477,14 @@ public class UserFragment extends Fragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
-
                     try {
-
                         Map result = Tools.json2Map(json);
-
                         List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
-
-                        if (viewtable != null && viewtable.size() > 0) {
-                            List<Map<String, String>> dataCache = viewtable;
-                            fillData(dataCache);
-                        } else {
-                            if (list != null && list.size() > 0) {
-                                list.clear();
-                            }
-                            Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
-                        }
+                        fillData(viewtable);
                     } catch (Exception e) {
-                        if (list != null && list.size() > 0) {
-                            list.clear();
-                        }
-                        Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, e.getMessage() + json);
+                        fillData(null);
+                        Toast.makeText(activity, getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case HANDLER_SROAT:
@@ -525,10 +498,8 @@ public class UserFragment extends Fragment {
                     btn_toogle_fragment.clearAnimation();
                     break;
                 case HANDLER_NETWORK_ERR:
-                    if (list != null && list.size() > 0) {
-                        list.clear();
-                    }
-                    Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
+                    fillData(null);
+                    Toast.makeText(activity, getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -539,29 +510,29 @@ public class UserFragment extends Fragment {
 
     private void showTimerDialog() {
 
-        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-        timerDialog.setCanceledOnTouchOutside(true);
-        timerDialog.show();
-        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-            @Override
-            public void doFinish() {
+        if (timerDialog == null) {
+            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+            timerDialog.setCanceledOnTouchOutside(true);
+            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+                @Override
+                public void doFinish() {
 
-                if (timeType != timerDialog.getType()) {
                     timeType = timerDialog.getType();
+                    sBeginDate = timerDialog.getsBeaginDate();
+                    sEndDate = timerDialog.getsEndDate();
+
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+
+                    /**
+                     * 发送请求
+                     */
+                    sendRequest(generateParam());
+
                 }
-                sBeginDate = timerDialog.getsBeaginDate();
-                sEndDate = timerDialog.getsEndDate();
-
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                /**
-                 * 发送请求
-                 */
-                sendRequest(generateParam());
-
-            }
-        });
+            });
+        }
+        timerDialog.show();
     }
 
 
@@ -569,6 +540,12 @@ public class UserFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = (MainActivity) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 
 }

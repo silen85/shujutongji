@@ -70,6 +70,42 @@ public class BarView extends View {
         super(context, attrs, defStyleAttr);
     }
 
+    private void initSize(){
+
+        if (field == null || data == null) {
+            return;
+        }
+
+        if (screenWidth <= 0 || screenHeight <= 0) {
+            return;
+        }
+
+        if (field.length == 0 || field.length > CONSTANTS_COUNT_X) {
+            countX = CONSTANTS_COUNT_X;
+        } else {
+            countX = field.length;
+        }
+
+        countY = CONSTANTS_COUNT_Y;
+
+
+        mSingleWidth = screenWidth / countX;
+        mPaddingLeft = mPaddingRight = mSingleWidth / 2;
+        mWidth = mCalculateWidth = screenWidth - mPaddingLeft - mPaddingRight;
+
+        mSingleHeight = screenHeight / countY;
+        mHeight = screenHeight / CONSTANTS_COUNT_Y * (CONSTANTS_COUNT_Y - 1);
+        mTextHeight = mSingleHeight / 2;
+        mHeightOffset = mTextHeight / 2f;
+
+        mSaveOffset = mDrawOffset = mWidth - mCalculateWidth;
+
+        mCalculateWidth = mSingleWidth * (data.length - 1);
+
+        Log.d(TAG, "initSize :" + screenWidth + screenHeight);
+
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -102,7 +138,7 @@ public class BarView extends View {
             Log.d(TAG, "data.length=" + data.length + " field.length=" + field.length);
 
             Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setTextSize(mTextHeight / 2.5f);
+            mPaint.setTextSize(mTextHeight / 2.1f);
 
             /**
              * 画坐标图
@@ -176,39 +212,9 @@ public class BarView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        Log.d(TAG, "onMeasure");
-
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        if (field == null || data == null) {
-            return;
-        }
-
-        if (screenWidth <= 0 || screenHeight <= 0) {
-            return;
-        }
-
-        if (field.length == 0 || field.length > CONSTANTS_COUNT_X) {
-            countX = CONSTANTS_COUNT_X;
-        } else {
-            countX = field.length;
-        }
-
-        countY = CONSTANTS_COUNT_Y;
-
-
-        mSingleWidth = screenWidth / countX;
-        mPaddingLeft = mPaddingRight = mSingleWidth / 2;
-        mWidth = mCalculateWidth = screenWidth - mPaddingLeft - mPaddingRight;
-
-        mSingleHeight = screenHeight / countY;
-        mHeight = screenHeight / CONSTANTS_COUNT_Y * (CONSTANTS_COUNT_Y - 1);
-        mTextHeight = mSingleHeight / 2;
-        mHeightOffset = mTextHeight / 2f;
-
-        mSaveOffset = mDrawOffset = mWidth - mCalculateWidth;
-
-        mCalculateWidth = mSingleWidth * (data.length - 1);
+        initSize();
 
         Log.d(TAG, "onMeasure :" + screenWidth + screenHeight);
 
@@ -262,10 +268,12 @@ public class BarView extends View {
 
     public void setData(float[] data) {
         this.data = data;
+        initSize();
     }
 
     public void setField(String[] field) {
         this.field = field;
+        initSize();
     }
 
     public void setScreenWidth(int screenWidth) {

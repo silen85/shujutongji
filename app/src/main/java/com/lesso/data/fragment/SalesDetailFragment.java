@@ -23,10 +23,12 @@ import android.widget.Toast;
 
 import com.lesso.data.R;
 import com.lesso.data.activity.MainActivity;
+import com.lesso.data.common.Arith;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
 import com.lesso.data.ui.TimeChooserDialog;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -65,6 +67,7 @@ public class SalesDetailFragment extends ListFragment {
     private Animation roatAnim;
     private Button btn_toogle_fragment;
 
+    private float classTotal = 0.00f;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -186,37 +189,24 @@ public class SalesDetailFragment extends ListFragment {
     private void toogleHeader(int tabType) {
 
         list_content = (LinearLayout) view.findViewById(R.id.list_content);
-        if (header != null) {
-            list_content.removeView(header);
-        }
+        if (header == null) {
 
-        if (tabType == 2) {
             header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
-        } else if (tabType == 3) {
-            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
-        } else if (tabType == 4) {
-            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
+
+            TextView a = ((TextView) header.findViewById(R.id.colum1));
+            a.setText(tabType == 4 ? "物料组" : tabType == 3 ? "车牌号码" : "日期");
+            a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+            TextView b = ((TextView) header.findViewById(R.id.colum2));
+            b.setText(tabType == 2 ? "单据量" : tabType == 3 ? "车次量" : tabType == 4 ? "占比" : "销售额");
+            b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+
+            list_content.addView(header, 0);
         } else {
-            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
+            ((TextView) (header.findViewById(R.id.colum1))).setText(tabType == 4 ? "物料组" : tabType == 3 ? "车牌号码" : "日期");
+            ((TextView) (header.findViewById(R.id.colum2))).setText(tabType == 2 ? "单据量" : tabType == 3 ? "车次量" : tabType == 4 ? "占比" : "销售额");
         }
-
-        TextView a = ((TextView) header.findViewById(R.id.colum1));
-        a.setText(tabType == 4 ? "物料组" : "日期");
-        a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-        TextView b = ((TextView) header.findViewById(R.id.colum2));
-        b.setText(tabType == 2 ? "单据量" : tabType == 3 ? "车牌号码" : tabType == 4 ? "占比" : "销售额");
-        b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
-
-        if (tabType == 3) {
-            TextView c = ((TextView) header.findViewById(R.id.colum3));
-            c.setText("车次量");
-            c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-            c.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
-        }
-
-        list_content.addView(header, 0);
 
     }
 
@@ -244,13 +234,13 @@ public class SalesDetailFragment extends ListFragment {
 
         if (data != null && data.size() > 0) {
 
-            boolean flag = (tabType == 3 ? true : false);
             list.clear();
+            classTotal = 0f;
             for (int i = 0; i < data.size(); i++) {
 
                 Map<String, String> item = new HashMap();
 
-                String coloum1 = "", coloum2 = "", coloum3 = "";
+                String coloum1 = "", coloum2 = "";
 
                 if (tabType == 2) {
                     if (timeType == 2) {
@@ -261,12 +251,13 @@ public class SalesDetailFragment extends ListFragment {
                         coloum2 = data.get(i).get("ZTOTLE");
                     }
                 } else if (tabType == 3) {
-                    coloum1 = data.get(i).get("ERDAT");
-                    coloum2 = data.get(i).get("ZZCHHAO");
-                    coloum3 = data.get(i).get("ZCOUNT");
+                    coloum1 = data.get(i).get("ZZCHHAO");
+                    coloum2 = data.get(i).get("ZCOUNT");
                 } else if (tabType == 4) {
                     coloum1 = data.get(i).get("MATKL");
                     coloum2 = data.get(i).get("ZTOTLE");
+
+                    classTotal += Float.parseFloat(coloum2);
                 } else {
                     if (timeType == 2) {
                         coloum1 = data.get(i).get("ZDATE");
@@ -280,41 +271,12 @@ public class SalesDetailFragment extends ListFragment {
                 item.put("colum1", coloum1);
                 item.put("colum2", coloum2);
 
-                if (flag) {
-                    item.put("colum3", coloum3);
-                }
-
                 list.add(item);
             }
 
             if (adapter == null) {
-
                 adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid1);
-                adapter.setColoumCount(2);
                 setListAdapter(adapter);
-
-            } else {
-
-                if (adapter.getColoumCount() == 2) {
-
-                    if (flag) {
-                        adapter.notifyDataSetInvalidated();
-                        adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid);
-                        adapter.setColoumCount(3);
-                        setListAdapter(adapter);
-                    }
-
-                } else if (adapter.getColoumCount() == 3) {
-
-                    if (!flag) {
-
-                        adapter.notifyDataSetInvalidated();
-                        adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid1);
-                        adapter.setColoumCount(2);
-                        setListAdapter(adapter);
-                    }
-
-                }
             }
             adapter.notifyDataSetChanged();
         }
@@ -361,8 +323,7 @@ public class SalesDetailFragment extends ListFragment {
 
         RequestParams requestParams = new RequestParams(parems);
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.post(activity, Constant.URL_REPORT_SALES, requestParams, new TextHttpResponseHandler() {
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -402,7 +363,13 @@ public class SalesDetailFragment extends ListFragment {
                 message.what = HANDLER_EROAT;
                 message.sendToTarget();
             }
-        });
+
+        };
+
+        asyncHttpResponseHandler.setCharset("GBK");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(activity, Constant.URL_REPORT_SALES, requestParams, asyncHttpResponseHandler);
 
     }
 
@@ -434,6 +401,7 @@ public class SalesDetailFragment extends ListFragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
+                        Log.e(TAG, e.getMessage() + json);
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();
@@ -467,29 +435,29 @@ public class SalesDetailFragment extends ListFragment {
 
     private void showTimerDialog() {
 
-        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-        timerDialog.setCanceledOnTouchOutside(true);
-        timerDialog.show();
-        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-            @Override
-            public void doFinish() {
+        if (timerDialog == null) {
+            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+            timerDialog.setCanceledOnTouchOutside(true);
+            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+                @Override
+                public void doFinish() {
 
-                if (timeType != timerDialog.getType()) {
                     timeType = timerDialog.getType();
+                    sBeginDate = timerDialog.getsBeaginDate();
+                    sEndDate = timerDialog.getsEndDate();
+
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+
+                    /**
+                     * 发送请求
+                     */
+                    sendRequest(generateParam());
+
                 }
-                sBeginDate = timerDialog.getsBeaginDate();
-                sEndDate = timerDialog.getsEndDate();
-
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                /**
-                 * 发送请求
-                 */
-                sendRequest(generateParam());
-
-            }
-        });
+            });
+        }
+        timerDialog.show();
     }
 
 
@@ -506,8 +474,6 @@ public class SalesDetailFragment extends ListFragment {
     }
 
     class SalesDetailAdapter extends BaseAdapter {
-
-        private int coloumCount = 2;
 
         private Context context;
         private LayoutInflater layoutInflater;
@@ -558,7 +524,12 @@ public class SalesDetailFragment extends ListFragment {
             TextView colum2 = (TextView) listviewitem.findViewById(R.id.colum2);
 
             colum1.setText(map.get(colum1.getTag()));
-            colum2.setText(map.get(colum2.getTag()));
+
+            if (tabType == 4) {
+                colum2.setText(Arith.round(Float.parseFloat(map.get(colum2.getTag())) / classTotal * 100, 2) + "%");
+            } else {
+                colum2.setText(map.get(colum2.getTag()));
+            }
 
             if (position % 2 > 0) {
                 colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
@@ -567,27 +538,6 @@ public class SalesDetailFragment extends ListFragment {
                 colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
                 colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
             }
-
-
-            if (getColoumCount() == 3) {
-
-                TextView colum3 = (TextView) listviewitem.findViewById(R.id.colum3);
-                colum3.setText(map.get(colum3.getTag()));
-
-                if (position % 2 > 0) {
-                    colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
-                } else {
-                    colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
-                }
-            }
-        }
-
-        public int getColoumCount() {
-            return coloumCount;
-        }
-
-        public void setColoumCount(int coloumCount) {
-            this.coloumCount = coloumCount;
         }
     }
 

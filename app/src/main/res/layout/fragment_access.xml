@@ -32,13 +32,32 @@
         android:paddingLeft="@dimen/interval_A"
         android:paddingRight="@dimen/interval_A">
 
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
+        <LinearLayout
+            android:id="@+id/chart_xy_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"
-            android:background="@color/REPORT_UI_C6" />
+            android:layout_height="250dp"
+            android:layout_marginTop="@dimen/interval_C"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.lesso.data.ui.RecordScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/data_view_access"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/report_graph_size_height_access"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
+            </com.lesso.data.ui.RecordScrollView>
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -73,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/REPORT_UI_C6"
+                android:background="@drawable/tab_bg_x"
                 android:clickable="true"
                 android:orientation="vertical">
 
@@ -100,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/REPORT_UI_C5"
+                android:background="@drawable/tab_bg_x"
                 android:clickable="true"
                 android:orientation="vertical">
 

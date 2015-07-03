@@ -30,6 +30,7 @@ import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
 import com.lesso.data.ui.TimeChooserDialog;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -278,21 +279,21 @@ public class UserDetailFragment extends ListFragment {
                     coloum1 = data.get(i).get("CUSTOMTYPE");
                     coloum2 = data.get(i).get("COUN");
                     try {
-                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                        coloum3 = Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 2) + "%";
                     } catch (Exception e) {
                     }
                 } else if (tabType == 3) {
                     coloum1 = data.get(i).get("NAME");
                     coloum2 = data.get(i).get("COUN");
                     try {
-                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                        coloum3 = Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 2) + "%";
                     } catch (Exception e) {
                     }
                 } else if (tabType == 4) {
                     coloum1 = data.get(i).get("NAME");
                     coloum2 = data.get(i).get("COUN");
                     try {
-                        coloum3 = ((int) Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 0)) + "%";
+                        coloum3 = Arith.round(Double.parseDouble(data.get(i).get("PROPORTION")), 2) + "%";
                     } catch (Exception e) {
                     }
                 } else {
@@ -380,9 +381,7 @@ public class UserDetailFragment extends ListFragment {
 
         RequestParams requestParams = new RequestParams(parems);
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.post(activity, Constant.URL_REPORT_USER, requestParams, new TextHttpResponseHandler() {
-
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -421,7 +420,11 @@ public class UserDetailFragment extends ListFragment {
                 message.what = HANDLER_EROAT;
                 message.sendToTarget();
             }
-        });
+        };
+        asyncHttpResponseHandler.setCharset("GBK");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(activity, Constant.URL_REPORT_USER, requestParams, asyncHttpResponseHandler);
 
     }
 
@@ -455,6 +458,7 @@ public class UserDetailFragment extends ListFragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
+                        Log.e(TAG, e.getMessage() + json);
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();
@@ -488,29 +492,29 @@ public class UserDetailFragment extends ListFragment {
 
     private void showTimerDialog() {
 
-        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-        timerDialog.setCanceledOnTouchOutside(true);
-        timerDialog.show();
-        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-            @Override
-            public void doFinish() {
+        if (timerDialog == null) {
+            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+            timerDialog.setCanceledOnTouchOutside(true);
+            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+                @Override
+                public void doFinish() {
 
-                if (timeType != timerDialog.getType()) {
                     timeType = timerDialog.getType();
+                    sBeginDate = timerDialog.getsBeaginDate();
+                    sEndDate = timerDialog.getsEndDate();
+
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+
+                    /**
+                     * 发送请求
+                     */
+                    sendRequest(generateParam());
+
                 }
-                sBeginDate = timerDialog.getsBeaginDate();
-                sEndDate = timerDialog.getsEndDate();
-
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                /**
-                 * 发送请求
-                 */
-                sendRequest(generateParam());
-
-            }
-        });
+            });
+        }
+        timerDialog.show();
     }
 
 

@@ -58,6 +58,7 @@ public class AccessDetailFragment extends ListFragment {
     List<Map<String, String>> list = new ArrayList();
     private AccessDetailAdapter adapter;
     private LinearLayout list_content;
+    private LinearLayout header;
 
     private int tabType = 1;
     private LinearLayout tab_uv, tab_pv;
@@ -112,6 +113,9 @@ public class AccessDetailFragment extends ListFragment {
             }
         });
 
+        adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
+        setListAdapter(adapter);
+
         btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
         btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,13 +128,8 @@ public class AccessDetailFragment extends ListFragment {
         tab_uv = (LinearLayout) view.findViewById(R.id.tab_uv);
         tab_pv = (LinearLayout) view.findViewById(R.id.tab_pv);
 
-        if (tabType == 2) {
-            tab_uv.setSelected(false);
-            tab_pv.setSelected(true);
-        } else {
-            tab_uv.setSelected(true);
-            tab_pv.setSelected(false);
-        }
+        toogleHeader(tabType);
+        toogleTab(tabType);
 
         tab_uv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,8 +137,7 @@ public class AccessDetailFragment extends ListFragment {
 
                 if (tabType != 1) {
                     tabType = 1;
-                    tab_uv.setSelected(true);
-                    tab_pv.setSelected(false);
+                    toogleTab(tabType);
                     fillData(dataCache);
                 }
             }
@@ -150,8 +148,7 @@ public class AccessDetailFragment extends ListFragment {
             public void onClick(View view) {
                 if (tabType != 2) {
                     tabType = 2;
-                    tab_uv.setSelected(false);
-                    tab_pv.setSelected(true);
+                    toogleTab(tabType);
                     fillData(dataCache);
                 }
             }
@@ -159,14 +156,14 @@ public class AccessDetailFragment extends ListFragment {
 
     }
 
-    private void initData() {
-
-        /**
-         * 初始化列表
-         */
+    private void toogleHeader(int tabType) {
 
         list_content = (LinearLayout) view.findViewById(R.id.list_content);
-        LinearLayout header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
+        if (header != null) {
+            list_content.removeView(header);
+        }
+
+        header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
         TextView a = ((TextView) header.findViewById(R.id.colum1));
         a.setText("日期");
@@ -178,9 +175,42 @@ public class AccessDetailFragment extends ListFragment {
         b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
 
         list_content.addView(header, 0);
-        adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
-        setListAdapter(adapter);
 
+    }
+
+    private void toogleTab(int tabType) {
+        tab_uv.setSelected(tabType != 2 ? true : false);
+        tab_pv.setSelected(tabType == 2 ? true : false);
+    }
+
+    private void initData() {
+
+        sendRequest(generateParam());
+
+    }
+
+    public void fillData(List<Map<String, String>> data) {
+
+        list.clear();
+        if (data != null && data.size() > 0) {
+            for (int i = 0; i < data.size(); i++) {
+
+                Map<String, String> item = new HashMap();
+
+                item.put("colum1", data.get(i).get("created"));
+
+                if (tabType == 2)
+                    item.put("colum2", data.get(i).get("pv"));
+                else
+                    item.put("colum2", data.get(i).get("uv"));
+
+                list.add(item);
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private Map<String, String> generateParam() {
 
         /**
          * 发送请求
@@ -203,29 +233,8 @@ public class AccessDetailFragment extends ListFragment {
         if (sEndDate != null && !"".equals(sEndDate.trim()))
             parems.put("et", sEndDate);
 
-        sendRequest(parems);
+        return parems;
 
-    }
-
-    public void fillData(List<Map<String, String>> data) {
-
-        if (data != null && data.size() > 0) {
-            list.clear();
-            for (int i = 0; i < data.size(); i++) {
-
-                Map<String, String> item = new HashMap();
-
-                item.put("colum1", data.get(i).get("created"));
-
-                if (tabType == 2)
-                    item.put("colum2", data.get(i).get("pv"));
-                else
-                    item.put("colum2", data.get(i).get("uv"));
-
-                list.add(item);
-            }
-            adapter.notifyDataSetChanged();
-        }
     }
 
     private void sendRequest(Map<String, String> parems) {
@@ -306,6 +315,7 @@ public class AccessDetailFragment extends ListFragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
+                        Log.e(TAG, e.getMessage() + json);
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();
@@ -339,45 +349,30 @@ public class AccessDetailFragment extends ListFragment {
 
     private void showTimerDialog() {
 
-        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-        timerDialog.setCanceledOnTouchOutside(true);
+        if (timerDialog == null) {
+            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+            timerDialog.setCanceledOnTouchOutside(true);
+            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+                @Override
+                public void doFinish() {
+
+                    timeType = timerDialog.getType();
+                    sBeginDate = timerDialog.getsBeaginDate();
+                    sEndDate = timerDialog.getsEndDate();
+
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+
+                    /**
+                     * 发送请求
+                     */
+
+                    sendRequest(generateParam());
+
+                }
+            });
+        }
         timerDialog.show();
-        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-            @Override
-            public void doFinish() {
-
-                timeType = timerDialog.getType();
-                sBeginDate = timerDialog.getsBeaginDate();
-                sEndDate = timerDialog.getsEndDate();
-
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                /**
-                 * 发送请求
-                 */
-                Map<String, String> parems = new HashMap();
-                parems.put("appkey", Constant.APP_KEY);
-                parems.put("timestamp", (System.currentTimeMillis() / 1000) + "");
-
-                String token = Constant.SECRET_KEY + Constant.DATE_FORMAT_1.format(new Date());
-                MD5 md5 = new MD5();
-                //token = Tools.md5(token);
-                token = md5.GetMD5Code(token);
-                parems.put("token", token);
-
-                if (timeType == 2)
-                    parems.put("type", "month");
-
-                if (sBeginDate != null && !"".equals(sBeginDate.trim()))
-                    parems.put("st", sBeginDate);
-                if (sEndDate != null && !"".equals(sEndDate.trim()))
-                    parems.put("et", sEndDate);
-
-                sendRequest(parems);
-
-            }
-        });
     }
 
     @Override

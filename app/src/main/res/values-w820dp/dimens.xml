@@ -6,7 +6,7 @@
 
     <dimen name="report_graph_size_height_access">250dp</dimen>
     <dimen name="report_graph_size_height_sales">250dp</dimen>
-    <dimen name="report_graph_size_height_store">480dp</dimen>
+    <dimen name="report_graph_size_height_store">380dp</dimen>
     <dimen name="report_graph_size_height_user">250dp</dimen>
 
 </resources>
