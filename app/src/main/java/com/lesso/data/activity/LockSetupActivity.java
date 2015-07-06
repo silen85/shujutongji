@@ -2,34 +2,45 @@ package com.lesso.data.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
+import com.lesso.data.common.Constant;
+import com.lesso.data.common.Tools;
 import com.lesso.data.ui.LockPatternView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LockSetupActivity extends Activity implements
-        LockPatternView.OnPatternListener, OnClickListener {
+        LockPatternView.OnPatternListener {
 
     private static final String TAG = "LockSetupActivity";
+
+    private LessoApplication.LoginUser loginUser;
+
     private LockPatternView lockPatternView;
-    private Button leftButton;
-    private Button rightButton;
 
     private static final int STEP_1 = 1; // 开始
     private static final int STEP_2 = 2; // 第一次设置手势完成
-    private static final int STEP_3 = 3; // 按下继续按钮
+    private static final int STEP_3 = 3; // 继续
     private static final int STEP_4 = 4; // 第二次设置手势完成
-    private static final int SETP_5 = 4; // 按确认按钮
 
     private int step;
 
@@ -37,16 +48,26 @@ public class LockSetupActivity extends Activity implements
 
     private boolean confirm = false;
 
+    private Animation shakeAnim;
+    private TextView setup_tips;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock_setup);
+
+        loginUser = ((LessoApplication) getApplication()).getLoginUser();
+        if (loginUser == null){
+            finish();
+            return;
+        }
+
         lockPatternView = (LockPatternView) findViewById(R.id.lock_pattern);
         lockPatternView.setOnPatternListener(this);
 
-        leftButton = (Button) findViewById(R.id.left_btn);
-        rightButton = (Button) findViewById(R.id.right_btn);
-
+        setup_tips = (TextView) findViewById(R.id.setup_tips);
+        shakeAnim = AnimationUtils.loadAnimation(this, R.anim.shake);
+        shakeAnim.setInterpolator(new LinearInterpolator());
 
         step = STEP_1;
         updateView();
@@ -55,38 +76,35 @@ public class LockSetupActivity extends Activity implements
     private void updateView() {
         switch (step) {
             case STEP_1:
-                leftButton.setText(R.string.cancel);
-                rightButton.setText("");
-                rightButton.setEnabled(false);
                 choosePattern = null;
                 confirm = false;
                 lockPatternView.clearPattern();
                 lockPatternView.enableInput();
                 break;
             case STEP_2:
-                leftButton.setText(R.string.try_again);
-                rightButton.setText(R.string.goon);
-                rightButton.setEnabled(true);
+                setup_tips.setText(getString(R.string.text_lock_setup_again));
                 lockPatternView.disableInput();
+                step = STEP_3;
+                updateView();
                 break;
             case STEP_3:
-                leftButton.setText(R.string.cancel);
-                rightButton.setText("");
-                rightButton.setEnabled(false);
                 lockPatternView.clearPattern();
                 lockPatternView.enableInput();
                 break;
             case STEP_4:
-                leftButton.setText(R.string.cancel);
                 if (confirm) {
-                    rightButton.setText(R.string.confirm);
-                    rightButton.setEnabled(true);
                     lockPatternView.disableInput();
+                    setupScratPWD();
                 } else {
-                    rightButton.setText("");
+
+                    setup_tips.setText(getString(R.string.text_lock_setup_wrong));
+                    setup_tips.startAnimation(shakeAnim);
+
                     lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
                     lockPatternView.enableInput();
-                    rightButton.setEnabled(false);
+
+                    step = STEP_3;
+                    updateView();
                 }
 
                 break;
@@ -96,44 +114,63 @@ public class LockSetupActivity extends Activity implements
         }
     }
 
-    @Override
-    public void onClick(View v) {
+    private void setupScratPWD() {
 
-        switch (v.getId()) {
-            case R.id.left_btn:
-                if (step == STEP_1 || step == STEP_3 || step == STEP_4) {
-                    finish();
-                } else if (step == STEP_2) {
+        if (loginUser == null) {
+            finish();
+            return;
+        }
+
+        final String pattern = LockPatternView.patternToString(choosePattern);
+
+        Map<String, String> parems = new HashMap();
+
+        parems.put("type", "ScratUP");
+        parems.put("id", loginUser.getUserid());
+        parems.put("Scrat",pattern);
+
+        RequestParams requestParams = new RequestParams(parems);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e(TAG, responseString + throwable.getMessage());
+                Toast.makeText(LockSetupActivity.this, getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d(TAG, responseString);
+
+                try {
+                    if (statusCode == Constant.HTTP_STATUS_CODE_SUCCESS) {
+                        Map result = Tools.json2Map(responseString);
+                        JSONObject viewtable = (JSONObject) result.get("viewtable");
+                        int state = Integer.parseInt((String) viewtable.get("state"));
+                        if (state > 0) {
+                            loginUser.setScratchable_PWD(pattern);
+                            Intent intent = new Intent(LockSetupActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
+                        } else {
+                            Toast.makeText(LockSetupActivity.this, getResources().getString(R.string.text_scratpwd_failed_setup), Toast.LENGTH_SHORT).show();
+                            step = STEP_1;
+                            updateView();
+                        }
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(LockSetupActivity.this, getResources().getString(R.string.text_scratpwd_failed_setup), Toast.LENGTH_SHORT).show();
                     step = STEP_1;
                     updateView();
                 }
-                break;
-
-            case R.id.right_btn:
-                if (step == STEP_2) {
-                    step = STEP_3;
-                    updateView();
-                } else if (step == STEP_4) {
-
-                    SharedPreferences preferences = getSharedPreferences(
-                            SplashLoginActivity.LOCK, MODE_PRIVATE);
-                    preferences
-                            .edit()
-                            .putString(SplashLoginActivity.LOCK_KEY,
-                                    LockPatternView.patternToString(choosePattern))
-                            .commit();
-
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-                break;
-
-            default:
-                break;
-        }
-
+            }
+        };
+        asyncHttpResponseHandler.setCharset("GBK");
+        client.post(this, Constant.URL_SETUP_SCRATPWD, requestParams, asyncHttpResponseHandler);
     }
 
     @Override
@@ -156,34 +193,22 @@ public class LockSetupActivity extends Activity implements
         Log.d(TAG, "onPatternDetected");
 
         if (pattern.size() < LockPatternView.MIN_LOCK_PATTERN_SIZE) {
-            Toast.makeText(this,
-                    R.string.lockpattern_recording_incorrect_too_short,
-                    Toast.LENGTH_LONG).show();
+
+            setup_tips.setText(getString(R.string.text_lock_setup_too_short));
+            setup_tips.startAnimation(shakeAnim);
+
             lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
             return;
         }
 
         if (choosePattern == null) {
-            choosePattern = new ArrayList<LockPatternView.Cell>(pattern);
-            //      Log.d(TAG, "choosePattern = "+choosePattern.toString());
-            //      Log.d(TAG, "choosePattern.size() = "+choosePattern.size());
-            Log.d(TAG, "choosePattern = " + Arrays.toString(choosePattern.toArray()));
-
+            choosePattern = new ArrayList(pattern);
             step = STEP_2;
             updateView();
             return;
         }
-        //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
-        //[(row=1,clmn=0), (row=2,clmn=0), (row=1,clmn=1), (row=0,clmn=2)]
-
-        Log.d(TAG, "choosePattern = " + Arrays.toString(choosePattern.toArray()));
-        Log.d(TAG, "pattern = " + Arrays.toString(pattern.toArray()));
 
         if (choosePattern.equals(pattern)) {
-//            Log.d(TAG, "pattern = "+pattern.toString());
-//            Log.d(TAG, "pattern.size() = "+pattern.size());
-            Log.d(TAG, "pattern = " + Arrays.toString(pattern.toArray()));
-
             confirm = true;
         } else {
             confirm = false;

@@ -2,39 +2,48 @@ package com.lesso.data.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
 
+import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
 import com.lesso.data.ui.LockPatternView;
 
 import java.util.List;
 
 
-public class LockActivity extends Activity implements
-        LockPatternView.OnPatternListener {
+public class LockActivity extends Activity implements LockPatternView.OnPatternListener {
+
     private static final String TAG = "LockActivity";
+
+    private LessoApplication.LoginUser loginUser;
 
     private List<LockPatternView.Cell> lockPattern;
     private LockPatternView lockPatternView;
+
+    private Animation shakeAnim;
+    private TextView lock_input_tips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences preferences = getSharedPreferences(SplashLoginActivity.LOCK,
-                MODE_PRIVATE);
-        String patternString = preferences.getString(SplashLoginActivity.LOCK_KEY,
-                null);
-        if (patternString == null) {
+        loginUser = ((LessoApplication) getApplication()).getLoginUser();
+        if (loginUser == null || loginUser.getScratchable_PWD() == null){
             finish();
             return;
         }
-        lockPattern = LockPatternView.stringToPattern(patternString);
+
         setContentView(R.layout.activity_lock);
+
+        lock_input_tips = (TextView) findViewById(R.id.lock_input_tips);
+
+        lockPattern = LockPatternView.stringToPattern(loginUser.getScratchable_PWD());
         lockPatternView = (LockPatternView) findViewById(R.id.lock_pattern);
         lockPatternView.setOnPatternListener(this);
 
@@ -44,14 +53,11 @@ public class LockActivity extends Activity implements
     protected void onRestart() {
         super.onRestart();
 
-        SharedPreferences preferences = getSharedPreferences(SplashLoginActivity.LOCK,
-                MODE_PRIVATE);
-        String patternString = preferences.getString(SplashLoginActivity.LOCK_KEY,
-                null);
-        if (patternString == null) {
+        if (loginUser == null || loginUser.getScratchable_PWD() == null){
             finish();
             return;
         }
+        lockPattern = LockPatternView.stringToPattern(loginUser.getScratchable_PWD());
     }
 
     @Override
@@ -59,7 +65,7 @@ public class LockActivity extends Activity implements
 
         // disable back key
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-
+            finish();
             return true;
         }
 
@@ -79,9 +85,6 @@ public class LockActivity extends Activity implements
     @Override
     public void onPatternCellAdded(List<LockPatternView.Cell> pattern) {
         Log.d(TAG, "onPatternCellAdded");
-        Log.e(TAG, LockPatternView.patternToString(pattern));
-        // Toast.makeText(this, LockPatternView.patternToString(pattern),
-        // Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -93,9 +96,15 @@ public class LockActivity extends Activity implements
             startActivity(intent);
             finish();
         } else {
+            if (shakeAnim == null || lock_input_tips == null) {
+                shakeAnim = AnimationUtils.loadAnimation(this, R.anim.shake);
+                shakeAnim.setInterpolator(new LinearInterpolator());
+            }
+            lock_input_tips.setText(getString(R.string.text_lock_input_wrong));
+            lock_input_tips.startAnimation(shakeAnim);
+
             lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
-            Toast.makeText(this, R.string.lockpattern_error, Toast.LENGTH_LONG)
-                    .show();
+
         }
 
     }

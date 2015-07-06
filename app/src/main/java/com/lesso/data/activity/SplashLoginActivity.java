@@ -1,8 +1,5 @@
 package com.lesso.data.activity;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -18,7 +15,7 @@ import com.lesso.data.fragment.LoginFragment;
 import com.lesso.data.fragment.SplashFragment;
 
 
-public class SplashLoginActivity extends FragmentActivity{
+public class SplashLoginActivity extends FragmentActivity {
 
     public static final String LOCK = "lock";
     public static final String LOCK_KEY = "lock_key";
@@ -28,7 +25,7 @@ public class SplashLoginActivity extends FragmentActivity{
     private Fragment splashFragment;
     private Fragment loginFragment;
 
-   private FragmentListener fragmentListener;
+    private FragmentListener fragmentListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +44,15 @@ public class SplashLoginActivity extends FragmentActivity{
             @Override
             public void run() {
 
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                loginFragment = new LoginFragment();
 
-                SharedPreferences preferences = getSharedPreferences(SplashLoginActivity.LOCK, Activity.MODE_PRIVATE);
+                fragmentTransaction.remove(splashFragment);
+                fragmentTransaction.add(R.id.splash_login, loginFragment);
+
+                fragmentTransaction.commit();
+
+                /*SharedPreferences preferences = getSharedPreferences(SplashLoginActivity.LOCK, Activity.MODE_PRIVATE);
 
                 String lockPattenString = preferences.getString(SplashLoginActivity.LOCK_KEY, null);
 
@@ -64,7 +68,7 @@ public class SplashLoginActivity extends FragmentActivity{
                     fragmentTransaction.add(R.id.splash_login, loginFragment);
 
                     fragmentTransaction.commit();
-                }
+                }*/
             }
         }, 3000);
 
@@ -73,7 +77,7 @@ public class SplashLoginActivity extends FragmentActivity{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if(fragmentListener !=null)
+        if (fragmentListener != null)
             fragmentListener.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
@@ -81,12 +85,12 @@ public class SplashLoginActivity extends FragmentActivity{
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if(fragmentListener !=null)
+        if (fragmentListener != null)
             fragmentListener.dispatchKeyEvent(event);
         return super.dispatchKeyEvent(event);
     }
 
-    public void setFragmentListener(FragmentListener fragmentListener){
+    public void setFragmentListener(FragmentListener fragmentListener) {
         this.fragmentListener = fragmentListener;
     }
 

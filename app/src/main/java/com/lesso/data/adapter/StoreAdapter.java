@@ -60,7 +60,7 @@ public class StoreAdapter extends BaseAdapter {
             view = layoutInflater.inflate(this.layoutlistid, null);
 
             viewHolder = new ViewHolder();
-            viewHolder.product_name = (TextView) view.findViewById(R.id.colum2);
+            viewHolder.product_name = (TextView) view.findViewById(R.id.product_name);
             viewHolder.product_num = (TextView) view.findViewById(R.id.product_num);
             viewHolder.product_percent = (ProgressBar) view.findViewById(R.id.product_percent);
 

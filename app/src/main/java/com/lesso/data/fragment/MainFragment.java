@@ -473,6 +473,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("start", yesterday);
         parems.put("end", sEndDate);
 
+        parems.put("pages", "1");
+        parems.put("numbers", "10000");
+
         parems.put("start", "2015-05-01");
         parems.put("end", "2015-05-30");
 

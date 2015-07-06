@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/authority_layer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/interval_A"
+    android:paddingRight="@dimen/interval_A">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_orange_x"
+        android:paddingBottom="@dimen/interval_D"
+        android:paddingLeft="@dimen/interval_B"
+        android:paddingRight="@dimen/interval_B"
+        android:paddingTop="@dimen/interval_D">
+
+        <ImageView
+            android:id="@+id/lock_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/lock_x" />
+
+        <EditText
+            android:id="@+id/authorityEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_C"
+            android:background="@null"
+            android:ems="6"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="6"
+            android:paddingBottom="@dimen/interval_F"
+            android:paddingTop="@dimen/interval_F"
+            android:singleLine="true"
+            android:textColor="@color/REPORT_UI_C1"></EditText>
+
+        <Button
+            android:id="@+id/authority_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:padding="@dimen/interval_F"
+            android:text="@string/sure"
+            android:textColor="@color/REPORT_UI_C1"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

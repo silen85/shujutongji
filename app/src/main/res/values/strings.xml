@@ -6,14 +6,20 @@
     <string name="text_account">账 号</string>
     <string name="text_password">密 码</string>
     <string name="text_password_forget">忘记密码?</string>
-    <string name="text_lock_input">请输入手势密码</string>
-    <string name="text_lock_setup">请设置手势密码</string>
-    <string name="text_lock_setup_again">请再次设置手势密码</string>
+    <string name="text_login_no_account">请输入用户名</string>
+    <string name="text_login_no_password">请输入密码</string>
+    <string name="text_login_failed">登录失败</string>
+    <string name="text_login_failed_infowrong">密码或用户名不对</string>
+    <string name="text_authority_failed_dongpwdwrong">动态密码错误</string>
+    <string name="text_login_failed_dongpwdwrong">动态密码不对</string>
+    <string name="text_login_failed_dongpwdnobind">没有绑定动态密码器</string>
+    <string name="text_scratpwd_failed_setup">手势密码设置失败</string>
 
     <string name="cancel">取消</string>
     <string name="try_again">重试</string>
     <string name="goon">继续</string>
     <string name="confirm">确认</string>
+    <string name="sure">确定</string>
 
     <string name="app_full_name">联塑商城数据报表系统beta1.0</string>
 
@@ -48,19 +54,17 @@
     <string name="user_fivemetal">五金门店</string>
 
     <string name="no_data_tips">查询不到数据</string>
-    <string name="no_data_error">网络连接不可用</string>
+    <string name="no_data_error">连接不到服务器</string>
 
 
-    <string name="lockpattern_recording_incorrect_too_short" >"至少连接4个点，请重试"</string>
-    <string name="lockpattern_error" >"手势密码不对"</string>
-    <!-- Accessibility description sent when user starts drawing a lock pattern. [CHAR LIMIT=NONE] -->
-    <string name="lockscreen_access_pattern_start">Pattern started</string>
-    <!-- Accessibility description sent when the pattern times out and is cleared. [CHAR LIMIT=NONE] -->
-    <string name="lockscreen_access_pattern_cleared">Pattern cleared</string>
-    <!-- Accessibility description sent when user adds a cell to the pattern. [CHAR LIMIT=NONE] -->
-    <string name="lockscreen_access_pattern_cell_added">Cell added</string>
-    <!-- Accessibility description sent when user completes drawing a pattern. [CHAR LIMIT=NONE] -->
-    <string name="lockscreen_access_pattern_detected">Pattern completed</string>
+    <string name="text_lock_input">请输入手势密码</string>
+    <string name="text_lock_input_wrong">密码错误，还可以输入4次</string>
+    <string name="text_lock_input_lock">账户已被锁定，请10分钟之后再试</string>
+
+    <string name="text_lock_setup">请设置手势密码</string>
+    <string name="text_lock_setup_again">请再次设置手势密码</string>
+    <string name="text_lock_setup_too_short" >最少链接4个点，请重新设置</string>
+    <string name="text_lock_setup_wrong" >与上次设置不一致，请重新设置</string>
 
 
 </resources>

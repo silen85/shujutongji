@@ -2,18 +2,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/splash_login_bg"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="28dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:src="@mipmap/user_logo" />
 
     <TextView
+        android:id="@+id/lock_input_tips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"
@@ -26,6 +28,6 @@
         android:id="@+id/lock_pattern"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dip"/>
+        android:layout_marginTop="10dip" />
 
 </LinearLayout>

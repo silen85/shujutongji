@@ -1,23 +1,17 @@
 package com.lesso.data.fragment;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -27,12 +21,10 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.PercentFormatter;
 import com.lesso.data.R;
-import com.lesso.data.activity.MainActivity;
 import com.lesso.data.common.Arith;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
 import com.lesso.data.ui.BarView;
-import com.lesso.data.ui.TimeChooserDialog;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -41,7 +33,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import org.apache.http.Header;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,39 +40,17 @@ import java.util.Map;
 /**
  * Created by meisl on 2015/6/23.
  */
-public class SalesFragment extends Fragment {
+public class SalesFragment extends BaseGraphFragment {
 
     private String TAG = "com.lesso.data.fragment.SalesFragment";
 
-    private LayoutInflater layoutInflater;
-    private MainActivity activity;
-
-    private int[] processbar_stys = {R.drawable.processbar_sty1, R.drawable.processbar_sty2, R.drawable.processbar_sty3,
-            R.drawable.processbar_sty4, R.drawable.processbar_sty5, R.drawable.processbar_sty6,
-            R.drawable.processbar_sty7, R.drawable.processbar_sty8};
-
-    int[] colors = new int[]{R.color.REPORT_TABLE_C1, R.color.REPORT_TABLE_C2, R.color.REPORT_TABLE_C3, R.color.REPORT_TABLE_C4, R.color.REPORT_TABLE_C5,
-            R.color.REPORT_TABLE_C6, R.color.REPORT_TABLE_C7, R.color.REPORT_TABLE_C8};
-
     private int chart_sales_width;
 
-    private TimeChooserDialog timerDialog;
-    private int timeType = 1;
-    private RelativeLayout time_chooser;
-    private String sBeginDate, sEndDate;
-
-    private View view;
-
-    private List<Map<String, String>> list = new ArrayList();
     private LinearLayout data_view, chart_bar_container, data_view_sales;
     private BarView chart_bar;
     private PieChart mChart;
 
-    private int tabType = 1;
     private LinearLayout tab_sales_amount, tab_sales_paper, tab_sales_car, tab_sales_type;
-
-    private Animation roatAnim;
-    private Button btn_toogle_fragment;
 
     private float classTotal = 0.00f;
 
@@ -101,37 +70,16 @@ public class SalesFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initData();
+        // initData();
 
     }
 
-    private void initView() {
+    protected void initView() {
 
-        time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
-        time_chooser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
+        initTime();
 
-        sBeginDate = Constant.DATE_FORMAT_1.format(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6));
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-        time_chooser.findViewById(R.id.time_chooser_f).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
+        initBtnToogle();
 
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-        time_chooser.findViewById(R.id.time_chooser_t).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
 
         data_view = (LinearLayout) view.findViewById(R.id.data_view);
         chart_bar_container = (LinearLayout) view.findViewById(R.id.chart_bar_container);
@@ -163,20 +111,19 @@ public class SalesFragment extends Fragment {
         mChart.animateX(800, Easing.EasingOption.EaseInOutExpo);
         mChart.getLegend().setEnabled(false);
 
-        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
-        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.toogleFragment(SalesFragment.this);
-            }
-        });
-
         tab_sales_amount = (LinearLayout) view.findViewById(R.id.tab_sales_amount);
         tab_sales_paper = (LinearLayout) view.findViewById(R.id.tab_sales_paper);
         tab_sales_car = (LinearLayout) view.findViewById(R.id.tab_sales_car);
         tab_sales_type = (LinearLayout) view.findViewById(R.id.tab_sales_type);
 
         toogleTab(tabType);
+        if (tabType == 1) {
+            if (!activity.AUTHORITY_SALES_AMOUNT) {
+                btn_toogle_fragment.setClickable(false);
+            }
+        }else {
+            hideAuthority();
+        }
 
         tab_sales_amount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,8 +131,14 @@ public class SalesFragment extends Fragment {
 
                 if (tabType != 1) {
                     tabType = 1;
+                    if (activity.AUTHORITY_SALES_AMOUNT) {
+                        btn_toogle_fragment.setClickable(true);
+                        sendRequest(generateParam());
+                    } else {
+                        btn_toogle_fragment.setClickable(false);
+                        displayAuthority();
+                    }
                     toogleTab(tabType);
-                    sendRequest(generateParam());
                 }
             }
         });
@@ -196,8 +149,10 @@ public class SalesFragment extends Fragment {
 
                 if (tabType != 2) {
                     tabType = 2;
+                    btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
                     sendRequest(generateParam());
+                    hideAuthority();
                 }
             }
         });
@@ -208,8 +163,10 @@ public class SalesFragment extends Fragment {
 
                 if (tabType != 3) {
                     tabType = 3;
+                    btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
                     sendRequest(generateParam());
+                    hideAuthority();
                 }
             }
         });
@@ -220,17 +177,18 @@ public class SalesFragment extends Fragment {
 
                 if (tabType != 4) {
                     tabType = 4;
+                    btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
                     sendRequest(generateParam());
-
+                    hideAuthority();
                 }
             }
         });
 
     }
 
-    private void toogleTab(int tabType) {
-
+    public void toogleTab(int tabType) {
+        super.toogleTab(tabType);
         tab_sales_amount.setSelected(tabType == 2 || tabType == 3 || tabType == 4 ? false : true);
         tab_sales_paper.setSelected(tabType == 2 ? true : false);
         tab_sales_car.setSelected(tabType == 3 ? true : false);
@@ -246,7 +204,7 @@ public class SalesFragment extends Fragment {
 
     }
 
-    private void initData() {
+    public void initData() {
         /**
          * 发送请求
          */
@@ -254,7 +212,7 @@ public class SalesFragment extends Fragment {
 
     }
 
-    public void fillData(List<Map<String, String>> data) {
+    protected void fillData(List<Map<String, String>> data) {
 
         list.clear();
         classTotal = 0f;
@@ -376,7 +334,7 @@ public class SalesFragment extends Fragment {
         chart_bar.postInvalidate();
     }
 
-    private Map<String, String> generateParam() {
+    protected Map<String, String> generateParam() {
 
         Map<String, String> parems = new HashMap();
 
@@ -413,7 +371,7 @@ public class SalesFragment extends Fragment {
 
     }
 
-    private void sendRequest(Map<String, String> parems) {
+    protected void sendRequest(Map<String, String> parems) {
 
         RequestParams requestParams = new RequestParams(parems);
 
@@ -509,44 +467,5 @@ public class SalesFragment extends Fragment {
             super.handleMessage(msg);
         }
     };
-
-    private void showTimerDialog() {
-
-        if (timerDialog == null) {
-            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-            timerDialog.setCanceledOnTouchOutside(true);
-            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-                @Override
-                public void doFinish() {
-
-                    timeType = timerDialog.getType();
-                    sBeginDate = timerDialog.getsBeaginDate();
-                    sEndDate = timerDialog.getsEndDate();
-
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                    /**
-                     * 发送请求
-                     */
-                    sendRequest(generateParam());
-
-                }
-            });
-        }
-        timerDialog.show();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (MainActivity) activity;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
-    }
 
 }

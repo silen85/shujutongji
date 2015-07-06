@@ -4,12 +4,15 @@
     android:layout_height="match_parent"
     android:background="@color/REPORT_UI_C6">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120dp"
         android:layout_marginTop="@dimen/interval_C"
+        android:background="@color/REPORT_UI_C6"
         android:paddingLeft="@dimen/interval_A"
         android:paddingRight="@dimen/interval_A">
 
@@ -18,56 +21,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/data_view"
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="38dp"
-        android:paddingLeft="@dimen/interval_A"
-        android:paddingRight="@dimen/interval_A">
 
         <LinearLayout
-            android:id="@+id/chart_bar_container"
+            android:id="@+id/data_view"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_marginTop="@dimen/interval_C"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:background="@color/REPORT_UI_C6"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:orientation="vertical">
 
-            <com.lesso.data.ui.RecordScrollView
+            <LinearLayout
+                android:id="@+id/chart_bar_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none">
+                android:layout_height="250dp"
+                android:layout_marginTop="@dimen/interval_C"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <LinearLayout
-                    android:id="@+id/data_view_sales"
+                <com.lesso.data.ui.RecordScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/report_graph_size_height_user"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:scrollbars="none">
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/data_view_sales"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/report_graph_size_height_user"
+                        android:orientation="vertical">
 
-            </com.lesso.data.ui.RecordScrollView>
+                    </LinearLayout>
 
+                </com.lesso.data.ui.RecordScrollView>
+
+
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChart"
+        <include
+            layout="@layout/authority_layer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:layout_height="match_parent" />
 
-
-    </LinearLayout>
-
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/fragment_bottom"

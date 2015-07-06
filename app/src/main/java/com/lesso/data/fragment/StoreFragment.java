@@ -1,31 +1,25 @@
 package com.lesso.data.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lesso.data.R;
-import com.lesso.data.activity.MainActivity;
 import com.lesso.data.adapter.StoreAdapter;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
-import com.lesso.data.ui.TimeChooserDialog;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -33,8 +27,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,37 +34,26 @@ import java.util.Map;
 /**
  * Created by meisl on 2015/6/21.
  */
-public class StoreFragment extends ListFragment {
+public class StoreFragment extends BaseGraphFragment {
 
     private String TAG = "com.lesso.data.fragment.StoreFragment";
-
-    private MainActivity activity;
-
-    private TimeChooserDialog timerDialog;
-    private int timeType = 1;
-    private RelativeLayout time_chooser;
-    private String sBeginDate, sEndDate;
 
     private RelativeLayout searcher;
     private EditText searcher_text;
     private ImageView searcher_icon;
 
-    List<Map<String, String>> list = new ArrayList();
     private StoreAdapter adapter;
     private LinearLayout list_content;
+    private ListView listView;
 
-    private int tabType = 1;
     private LinearLayout tab_store_out, tab_store_in, tab_store_all;
-
-    private View view;
-
-    private Animation roatAnim;
-    private Button btn_toogle_fragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_store, null);
+        layoutInflater = inflater;
+
+        view = layoutInflater.inflate(R.layout.fragment_store, null);
 
         initView();
 
@@ -87,33 +68,10 @@ public class StoreFragment extends ListFragment {
 
     }
 
-    private void initView() {
+    protected void initView() {
 
-        time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
-        time_chooser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
-
-        sBeginDate = Constant.DATE_FORMAT_1.format(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6));
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-        time_chooser.findViewById(R.id.time_chooser_f).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
-
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-        time_chooser.findViewById(R.id.time_chooser_t).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
+        list_content = (LinearLayout) view.findViewById(R.id.list_content);
+        listView = (ListView) list_content.findViewById(R.id.listView);
 
         searcher = (RelativeLayout) view.findViewById(R.id.searcher);
         searcher_text = (EditText) view.findViewById(R.id.searcher_text);
@@ -132,15 +90,9 @@ public class StoreFragment extends ListFragment {
             }
         });
 
-        list_content = (LinearLayout) view.findViewById(R.id.list_content);
+        initTime();
 
-        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
-        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.toogleFragment(StoreFragment.this);
-            }
-        });
+        initBtnToogle();
 
         tab_store_out = (LinearLayout) view.findViewById(R.id.tab_store_out);
         tab_store_in = (LinearLayout) view.findViewById(R.id.tab_store_in);
@@ -177,17 +129,20 @@ public class StoreFragment extends ListFragment {
             public void onClick(View view) {
 
                 if (tabType != 3) {
+                    //tabType = 3;
+                    //toogleTab(tabType);
+                    //sendRequest(generateParam());
+
                     tabType = 3;
-                    toogleTab(tabType);
-                    sendRequest(generateParam());
+                    btn_toogle_fragment.performClick();
                 }
             }
         });
 
     }
 
-    private void toogleTab(int tabType) {
-
+    public void toogleTab(int tabType) {
+        super.toogleTab(tabType);
         tab_store_out.setSelected(tabType == 2 || tabType == 3 ? false : true);
         tab_store_in.setSelected(tabType == 2 ? true : false);
         tab_store_all.setSelected(tabType == 3 ? true : false);
@@ -205,7 +160,7 @@ public class StoreFragment extends ListFragment {
         }
     }
 
-    private void initData() {
+    public void initData() {
 
         /**
          * 发送请求
@@ -214,7 +169,7 @@ public class StoreFragment extends ListFragment {
 
     }
 
-    public void fillData(List<Map<String, String>> data) {
+    protected void fillData(List<Map<String, String>> data) {
 
         if (data != null && data.size() > 0) {
 
@@ -237,17 +192,20 @@ public class StoreFragment extends ListFragment {
 
             if (adapter == null) {
                 adapter = new StoreAdapter(activity, list, R.layout.item_processbar);
-                setListAdapter(adapter);
+                listView.setAdapter(adapter);
             }
             adapter.notifyDataSetChanged();
         }
     }
 
-    private Map<String, String> generateParam() {
+    protected Map<String, String> generateParam() {
 
         Map<String, String> parems = new HashMap();
 
         parems.put("uid", "39");
+
+        parems.put("pages", "1");
+        parems.put("numbers", "10000");
 
         if (tabType == 3) {
             Log.d(TAG, Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
@@ -271,7 +229,7 @@ public class StoreFragment extends ListFragment {
 
     }
 
-    private void sendRequest(Map<String, String> parems) {
+    protected void sendRequest(Map<String, String> parems) {
 
         RequestParams requestParams = new RequestParams(parems);
 
@@ -383,45 +341,5 @@ public class StoreFragment extends ListFragment {
             super.handleMessage(msg);
         }
     };
-
-    private void showTimerDialog() {
-
-        if (timerDialog == null) {
-            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-            timerDialog.setCanceledOnTouchOutside(true);
-            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-                @Override
-                public void doFinish() {
-
-                    timeType = timerDialog.getType();
-                    sBeginDate = timerDialog.getsBeaginDate();
-                    sEndDate = timerDialog.getsEndDate();
-
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                    /**
-                     * 发送请求
-                     */
-                    sendRequest(generateParam());
-
-                }
-            });
-        }
-        timerDialog.show();
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (MainActivity) activity;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
-    }
 
 }

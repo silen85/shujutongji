@@ -69,7 +69,9 @@ public class LessoApplication extends Application {
     public class LoginUser {
 
         private String userName;
+        private String userid;
         private String userPassword;
+        private String Scratchable_PWD;
 
         public String getUserName() {
             return this.userName;
@@ -77,6 +79,14 @@ public class LessoApplication extends Application {
 
         public void setUserName(String userName) {
             this.userName = userName;
+        }
+
+        public String getUserid() {
+            return userid;
+        }
+
+        public void setUserid(String userid) {
+            this.userid = userid;
         }
 
         public String getUserPassword() {
@@ -87,7 +97,13 @@ public class LessoApplication extends Application {
             this.userPassword = userPassword;
         }
 
+        public String getScratchable_PWD() {
+            return Scratchable_PWD;
+        }
 
+        public void setScratchable_PWD(String scratchable_PWD) {
+            Scratchable_PWD = scratchable_PWD;
+        }
     }
 
 

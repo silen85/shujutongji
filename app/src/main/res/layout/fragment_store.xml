@@ -31,11 +31,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
-            android:background="@drawable/border_normal"
+            android:background="@android:color/white"
             android:orientation="vertical">
 
             <ListView
-                android:id="@android:id/list"
+                android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
@@ -44,7 +44,6 @@
                 android:scrollbars="none"></ListView>
 
         </LinearLayout>
-
     </FrameLayout>
 
     <LinearLayout

@@ -1,23 +1,17 @@
 package com.lesso.data.fragment;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -27,11 +21,9 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.PercentFormatter;
 import com.lesso.data.R;
-import com.lesso.data.activity.MainActivity;
 import com.lesso.data.common.Arith;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
-import com.lesso.data.ui.TimeChooserDialog;
 import com.lesso.data.ui.XYLineView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -41,7 +33,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import org.apache.http.Header;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,36 +40,17 @@ import java.util.Map;
 /**
  * Created by meisl on 2015/6/24.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends BaseGraphFragment {
 
     private String TAG = "com.lesso.data.fragment.UserDetailFragment";
 
-    int[] colors = new int[]{R.color.REPORT_TABLE_C1, R.color.REPORT_TABLE_C2, R.color.REPORT_TABLE_C3, R.color.REPORT_TABLE_C4, R.color.REPORT_TABLE_C5,
-            R.color.REPORT_TABLE_C6, R.color.REPORT_TABLE_C7, R.color.REPORT_TABLE_C8};
-
     private int chart_user_width;
-
-    private LayoutInflater layoutInflater;
-    private MainActivity activity;
-
-    private TimeChooserDialog timerDialog;
-    private int timeType = 1;
-    private RelativeLayout time_chooser;
-    private String sBeginDate, sEndDate;
-
-    private View view;
-
-    private List<Map<String, String>> list = new ArrayList();
 
     private LinearLayout data_view, chart_xy_container, data_view_user;
     private XYLineView chart_xy;
     private PieChart mChart;
 
-    private int tabType = 1;
     private LinearLayout tab_user_new, tab_user_total, tab_user_supplier, tab_user_fivemetal;
-
-    private Animation roatAnim;
-    private Button btn_toogle_fragment;
 
 
     @Override
@@ -101,33 +73,11 @@ public class UserFragment extends Fragment {
 
     }
 
-    private void initView() {
+    protected void initView() {
 
-        time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
-        time_chooser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
+        initTime();
 
-        sBeginDate = Constant.DATE_FORMAT_1.format(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6));
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-        time_chooser.findViewById(R.id.time_chooser_f).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
-
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-        time_chooser.findViewById(R.id.time_chooser_t).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
+        initBtnToogle();
 
         data_view = (LinearLayout) view.findViewById(R.id.data_view);
         chart_xy_container = (LinearLayout) view.findViewById(R.id.chart_xy_container);
@@ -157,16 +107,6 @@ public class UserFragment extends Fragment {
         mChart.animateY(800, Easing.EasingOption.EaseInOutExpo);
         mChart.animateX(800, Easing.EasingOption.EaseInOutExpo);
         mChart.getLegend().setEnabled(false);
-
-
-        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
-        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.toogleFragment(UserFragment.this);
-            }
-        });
-
 
         tab_user_new = (LinearLayout) view.findViewById(R.id.tab_user_new);
         tab_user_total = (LinearLayout) view.findViewById(R.id.tab_user_total);
@@ -226,8 +166,8 @@ public class UserFragment extends Fragment {
 
     }
 
-    private void toogleTab(int tabType) {
-
+    public void toogleTab(int tabType) {
+        super.toogleTab(tabType);
         tab_user_new.setSelected(tabType == 2 || tabType == 3 || tabType == 4 ? false : true);
         tab_user_total.setSelected(tabType == 2 ? true : false);
         tab_user_supplier.setSelected(tabType == 3 ? true : false);
@@ -245,7 +185,7 @@ public class UserFragment extends Fragment {
 
     }
 
-    private void initData() {
+    public void initData() {
         /**
          * 发送请求
          */
@@ -253,7 +193,7 @@ public class UserFragment extends Fragment {
 
     }
 
-    public void fillData(List<Map<String, String>> data) {
+    protected void fillData(List<Map<String, String>> data) {
 
         list.clear();
         if (data != null && data.size() > 0) {
@@ -385,7 +325,7 @@ public class UserFragment extends Fragment {
         mChart.invalidate();
     }
 
-    private Map<String, String> generateParam() {
+    protected Map<String, String> generateParam() {
 
         Map<String, String> parems = new HashMap();
 
@@ -413,7 +353,7 @@ public class UserFragment extends Fragment {
 
     }
 
-    private void sendRequest(Map<String, String> parems) {
+    protected void sendRequest(Map<String, String> parems) {
 
         RequestParams requestParams = new RequestParams(parems);
 
@@ -508,44 +448,5 @@ public class UserFragment extends Fragment {
         }
     };
 
-    private void showTimerDialog() {
-
-        if (timerDialog == null) {
-            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-            timerDialog.setCanceledOnTouchOutside(true);
-            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-                @Override
-                public void doFinish() {
-
-                    timeType = timerDialog.getType();
-                    sBeginDate = timerDialog.getsBeaginDate();
-                    sEndDate = timerDialog.getsEndDate();
-
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                    /**
-                     * 发送请求
-                     */
-                    sendRequest(generateParam());
-
-                }
-            });
-        }
-        timerDialog.show();
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (MainActivity) activity;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
-    }
 
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/login_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,9 +9,9 @@
         android:id="@+id/roating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="38dp"
-        android:clickable="true"
-        android:layout_alignParentTop="true">
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/splash_leftroat"
@@ -47,9 +46,9 @@
         android:id="@+id/login_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="18dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="18dp"
+        android:layout_marginTop="18dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -78,10 +77,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:textSize="@dimen/F6"
+                    android:text="@string/text_account"
                     android:textColor="@color/MALL_C6"
-                    android:textStyle="normal"
-                    android:text="@string/text_account"/>
+                    android:textSize="@dimen/F6"
+                    android:textStyle="normal" />
 
             </LinearLayout>
 
@@ -90,15 +89,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:paddingTop="@dimen/interval_F"
-                android:paddingBottom="4dp"
-                android:gravity="center"
-                android:inputType="textVisiblePassword"
-                android:singleLine="true"
                 android:background="@null"
                 android:digits="@string/digits"
-                android:ems="20">
-            </EditText>
+                android:ems="20"
+                android:gravity="center"
+                android:inputType="textVisiblePassword"
+                android:paddingBottom="4dp"
+                android:paddingTop="@dimen/interval_F"
+                android:singleLine="true"
+                android:textColor="@color/REPORT_UI_C6"></EditText>
 
 
         </FrameLayout>
@@ -130,10 +129,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:textSize="@dimen/F6"
+                    android:text="@string/text_password"
                     android:textColor="@color/MALL_C6"
-                    android:textStyle="normal"
-                    android:text="@string/text_password"/>
+                    android:textSize="@dimen/F6"
+                    android:textStyle="normal" />
 
             </LinearLayout>
 
@@ -142,14 +141,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:paddingTop="@dimen/interval_F"
-                android:paddingBottom="4dp"
-                android:gravity="center"
-                android:singleLine="true"
-                android:inputType="textPassword"
                 android:background="@null"
-                android:ems="20">
-            </EditText>
+                android:ems="20"
+                android:gravity="center"
+                android:inputType="textPassword"
+                android:paddingBottom="4dp"
+                android:paddingTop="@dimen/interval_F"
+                android:singleLine="true"
+                android:textColor="@color/REPORT_UI_C6"></EditText>
 
         </FrameLayout>
 
@@ -158,28 +157,28 @@
             android:id="@+id/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/interval_B"
-            android:paddingBottom="@dimen/interval_B"
-            android:layout_marginTop="@dimen/interval_A"
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/interval_C"
             android:layout_marginRight="@dimen/interval_C"
+            android:layout_marginTop="@dimen/interval_A"
+            android:background="@drawable/login_button_bg_x"
             android:gravity="center"
-            android:layout_gravity="center"
-            android:background="@drawable/login_button_bg_x"/>
+            android:paddingBottom="@dimen/interval_B"
+            android:paddingTop="@dimen/interval_B" />
 
         <TextView
             android:id="@+id/login_forget_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/interval_D"
+            android:clickable="true"
+            android:gravity="center_horizontal"
             android:paddingBottom="@dimen/interval_D"
-            android:textSize="@dimen/F6"
-            android:textColor="@color/MALL_C6"
-            android:textStyle="normal"
+            android:paddingTop="@dimen/interval_D"
             android:text="@string/text_password_forget"
-            android:clickable="true"/>
+            android:textColor="@color/MALL_C6"
+            android:textSize="@dimen/F6"
+            android:textStyle="normal" />
 
     </LinearLayout>
 

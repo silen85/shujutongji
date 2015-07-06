@@ -5,7 +5,7 @@
     android:layout_gravity="center"
     android:layout_marginLeft="@dimen/interval_B"
     android:layout_marginRight="@dimen/interval_B"
-    android:background="@drawable/border_normal1"
+    android:background="@drawable/border_normal"
     android:gravity="center"
     android:orientation="vertical">
 

@@ -3,5 +3,5 @@
     <item android:drawable="@drawable/border_orange" android:state_focused="true"></item>
     <item android:drawable="@drawable/border_orange" android:state_pressed="true"></item>
     <item android:drawable="@drawable/border_orange" android:state_selected="true"></item>
-    <item android:drawable="@drawable/border_normal1"></item>
+    <item android:drawable="@drawable/border_normal"></item>
 </selector>

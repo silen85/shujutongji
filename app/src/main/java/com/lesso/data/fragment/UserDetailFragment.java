@@ -1,34 +1,27 @@
 package com.lesso.data.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lesso.data.R;
-import com.lesso.data.activity.MainActivity;
 import com.lesso.data.common.Arith;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
-import com.lesso.data.ui.TimeChooserDialog;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -37,7 +30,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import org.apache.http.Header;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,29 +37,15 @@ import java.util.Map;
 /**
  * Created by meisl on 2015/6/24.
  */
-public class UserDetailFragment extends ListFragment {
+public class UserDetailFragment extends BaseListFragment {
 
     private String TAG = "com.lesso.data.fragment.UserDetailFragment";
 
-    private MainActivity activity;
-
-    private TimeChooserDialog timerDialog;
-    private int timeType = 1;
-    private RelativeLayout time_chooser;
-    private String sBeginDate, sEndDate;
-
-    List<Map<String, String>> list = new ArrayList();
     private AccessDetailAdapter adapter;
     private LinearLayout list_content;
     private LinearLayout header;
 
-    private int tabType = 1;
     private LinearLayout tab_user_new, tab_user_total, tab_user_supplier, tab_user_fivemetal;
-
-    private View view;
-
-    private Animation roatAnim;
-    private Button btn_toogle_fragment;
 
     private int topMargin;
 
@@ -89,7 +67,7 @@ public class UserDetailFragment extends ListFragment {
 
     }
 
-    private void initView() {
+    protected void initView() {
 
         list_content = (LinearLayout) view.findViewById(R.id.list_content);
         list_content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -100,39 +78,9 @@ public class UserDetailFragment extends ListFragment {
             }
         });
 
-        time_chooser = (RelativeLayout) view.findViewById(R.id.time_chooser);
-        time_chooser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
+        initTime();
 
-        sBeginDate = Constant.DATE_FORMAT_1.format(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6));
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-        time_chooser.findViewById(R.id.time_chooser_f).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
-
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
-        ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-        time_chooser.findViewById(R.id.time_chooser_t).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimerDialog();
-            }
-        });
-
-        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
-        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.toogleFragment(UserDetailFragment.this);
-            }
-        });
+        initBtnToogle();
 
         tab_user_new = (LinearLayout) view.findViewById(R.id.tab_user_new);
         tab_user_total = (LinearLayout) view.findViewById(R.id.tab_user_total);
@@ -196,7 +144,7 @@ public class UserDetailFragment extends ListFragment {
 
     }
 
-    private void toogleHeader(int tabType) {
+    protected void toogleHeader(int tabType) {
 
         if (header != null) {
             list_content.removeView(header);
@@ -219,21 +167,23 @@ public class UserDetailFragment extends ListFragment {
         TextView b = ((TextView) header.findViewById(R.id.colum2));
         b.setText(tabType == 2 || tabType == 3 || tabType == 4 ? "数量" : "新增用户");
         b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+        b.setBackgroundResource(R.drawable.border_left1);
+        //b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
 
         if (tabType == 2 || tabType == 3 || tabType == 4) {
             TextView c = ((TextView) header.findViewById(R.id.colum3));
             c.setText("比例");
             c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-            c.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+            c.setBackgroundResource(R.drawable.border_left1);
+            //c.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
         }
 
         list_content.addView(header, 0);
 
     }
 
-    private void toogleTab(int tabType) {
-
+    public void toogleTab(int tabType) {
+        super.toogleTab(tabType);
         tab_user_new.setSelected(tabType == 2 || tabType == 3 || tabType == 4 ? false : true);
         tab_user_total.setSelected(tabType == 2 ? true : false);
         tab_user_supplier.setSelected(tabType == 3 ? true : false);
@@ -251,7 +201,7 @@ public class UserDetailFragment extends ListFragment {
 
     }
 
-    private void initData() {
+    public void initData() {
 
         toogleHeader(tabType);
 
@@ -263,7 +213,7 @@ public class UserDetailFragment extends ListFragment {
     }
 
 
-    public void fillData(List<Map<String, String>> data) {
+    protected void fillData(List<Map<String, String>> data) {
 
         if (data != null && data.size() > 0) {
 
@@ -318,9 +268,15 @@ public class UserDetailFragment extends ListFragment {
 
             if (adapter == null) {
 
-                adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
-                adapter.setColoumCount(2);
-                setListAdapter(adapter);
+                if (flag) {
+                    adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid);
+                    adapter.setColoumCount(3);
+                    setListAdapter(adapter);
+                } else {
+                    adapter = new AccessDetailAdapter(activity, list, R.layout.item_grid1);
+                    adapter.setColoumCount(2);
+                    setListAdapter(adapter);
+                }
 
             } else {
 
@@ -342,14 +298,13 @@ public class UserDetailFragment extends ListFragment {
                         adapter.setColoumCount(2);
                         setListAdapter(adapter);
                     }
-
                 }
             }
             adapter.notifyDataSetChanged();
         }
     }
 
-    private Map<String, String> generateParam() {
+    protected Map<String, String> generateParam() {
 
         Map<String, String> parems = new HashMap();
 
@@ -377,7 +332,7 @@ public class UserDetailFragment extends ListFragment {
 
     }
 
-    private void sendRequest(Map<String, String> parems) {
+    protected void sendRequest(Map<String, String> parems) {
 
         RequestParams requestParams = new RequestParams(parems);
 
@@ -490,46 +445,6 @@ public class UserDetailFragment extends ListFragment {
         }
     };
 
-    private void showTimerDialog() {
-
-        if (timerDialog == null) {
-            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-            timerDialog.setCanceledOnTouchOutside(true);
-            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-                @Override
-                public void doFinish() {
-
-                    timeType = timerDialog.getType();
-                    sBeginDate = timerDialog.getsBeaginDate();
-                    sEndDate = timerDialog.getsEndDate();
-
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
-
-                    /**
-                     * 发送请求
-                     */
-                    sendRequest(generateParam());
-
-                }
-            });
-        }
-        timerDialog.show();
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (MainActivity) activity;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
-    }
-
     class AccessDetailAdapter extends BaseAdapter {
 
         private int coloumCount = 2;
@@ -587,10 +502,12 @@ public class UserDetailFragment extends ListFragment {
 
             if (position % 2 > 0) {
                 colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-                colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+                colum2.setBackgroundResource(R.drawable.border_left1);
+                //colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
             } else {
                 colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C6));
-                colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
+                colum2.setBackgroundResource(R.drawable.border_left);
+                //colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
             }
 
 
@@ -600,9 +517,11 @@ public class UserDetailFragment extends ListFragment {
                 colum3.setText(map.get(colum3.getTag()));
 
                 if (position % 2 > 0) {
-                    colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+                    colum3.setBackgroundResource(R.drawable.border_left1);
+                    //colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
                 } else {
-                    colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
+                    colum3.setBackgroundResource(R.drawable.border_left);
+                    //colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
                 }
             }
         }
