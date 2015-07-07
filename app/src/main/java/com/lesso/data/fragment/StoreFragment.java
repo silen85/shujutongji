@@ -7,8 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -92,7 +91,17 @@ public class StoreFragment extends BaseGraphFragment {
 
         initTime();
 
-        initBtnToogle();
+        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
+        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (adapter != null) {
+                    list.clear();
+                    adapter.notifyDataSetChanged();
+                }
+                activity.toogleFragment(StoreFragment.this);
+            }
+        });
 
         tab_store_out = (LinearLayout) view.findViewById(R.id.tab_store_out);
         tab_store_in = (LinearLayout) view.findViewById(R.id.tab_store_in);
@@ -107,6 +116,10 @@ public class StoreFragment extends BaseGraphFragment {
                 if (tabType != 1) {
                     tabType = 1;
                     toogleTab(tabType);
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
                     sendRequest(generateParam());
                 }
             }
@@ -119,6 +132,10 @@ public class StoreFragment extends BaseGraphFragment {
                 if (tabType != 2) {
                     tabType = 2;
                     toogleTab(tabType);
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
                     sendRequest(generateParam());
                 }
             }
@@ -319,14 +336,14 @@ public class StoreFragment extends BaseGraphFragment {
                     }
                     break;
                 case HANDLER_SROAT:
-                    if (roatAnim == null) {
-                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
-                        roatAnim.setInterpolator(new LinearInterpolator());
+                    if (tabType != 3) {
+                        roatStart();
                     }
-                    btn_toogle_fragment.startAnimation(roatAnim);
                     break;
                 case HANDLER_EROAT:
-                    btn_toogle_fragment.clearAnimation();
+                    /*if (tabType != 3) {
+                        btn_toogle_fragment.clearAnimation();
+                    }*/
                     break;
                 case HANDLER_NETWORK_ERR:
                     if (list != null && list.size() > 0) {

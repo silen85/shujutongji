@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,7 +59,17 @@ public class SalesDetailFragment extends BaseListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-       // initData();
+        // initData();
+        if (tabType == 1) {
+            if (!activity.AUTHORITY_SALES_AMOUNT) {
+                btn_toogle_fragment.setClickable(false);
+            } else {
+                btn_toogle_fragment.setClickable(true);
+                hideAuthority();
+            }
+        } else {
+            hideAuthority();
+        }
 
     }
 
@@ -79,13 +87,6 @@ public class SalesDetailFragment extends BaseListFragment {
         tab_sales_type = (LinearLayout) view.findViewById(R.id.tab_sales_type);
 
         toogleTab(tabType);
-        if (tabType == 1) {
-            if (!activity.AUTHORITY_SALES_AMOUNT) {
-                btn_toogle_fragment.setClickable(false);
-            }
-        }else {
-            hideAuthority();
-        }
 
         tab_sales_amount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,10 +94,10 @@ public class SalesDetailFragment extends BaseListFragment {
 
                 if (tabType != 1) {
                     tabType = 1;
-                    if(activity.AUTHORITY_SALES_AMOUNT){
+                    if (activity.AUTHORITY_SALES_AMOUNT) {
                         btn_toogle_fragment.setClickable(true);
                         sendRequest(generateParam());
-                    }else {
+                    } else {
                         btn_toogle_fragment.setClickable(false);
                         displayAuthority();
                     }
@@ -160,7 +161,7 @@ public class SalesDetailFragment extends BaseListFragment {
             header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
 
             TextView a = ((TextView) header.findViewById(R.id.colum1));
-            a.setText(tabType == 4 ? "物料组" : tabType == 3 ? "车牌号码" : "日期");
+            a.setText(tabType == 4 ? "物料组" : "日期");
             a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
             a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
             TextView b = ((TextView) header.findViewById(R.id.colum2));
@@ -171,7 +172,7 @@ public class SalesDetailFragment extends BaseListFragment {
 
             list_content.addView(header, 0);
         } else {
-            ((TextView) (header.findViewById(R.id.colum1))).setText(tabType == 4 ? "物料组" : tabType == 3 ? "车牌号码" : "日期");
+            ((TextView) (header.findViewById(R.id.colum1))).setText(tabType == 4 ? "物料组" : "日期");
             ((TextView) (header.findViewById(R.id.colum2))).setText(tabType == 2 ? "单据量" : tabType == 3 ? "车次量" : tabType == 4 ? "占比" : "销售额");
         }
 
@@ -210,27 +211,30 @@ public class SalesDetailFragment extends BaseListFragment {
 
                 if (tabType == 2) {
                     if (timeType == 2) {
-                        coloum1 = data.get(i).get("ZDATE");
-                        coloum2 = data.get(i).get("ZTOTLE");
+                        coloum1 = data.get(data.size() - 1 - i).get("ZDATE");
+                        coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
+                        coloum2 = coloum2.substring(0, coloum2.indexOf(".") > -1 ? coloum2.indexOf(".") : coloum2.length());
                     } else {
-                        coloum1 = data.get(i).get("ZDATE");
-                        coloum2 = data.get(i).get("ZTOTLE");
+                        coloum1 = data.get(data.size() - 1 - i).get("ZDATE");
+                        coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
+                        coloum2 = coloum2.substring(0, coloum2.indexOf(".") > -1 ? coloum2.indexOf(".") : coloum2.length());
                     }
                 } else if (tabType == 3) {
-                    coloum1 = data.get(i).get("ZZCHHAO");
-                    coloum2 = data.get(i).get("ZCOUNT");
+                    coloum1 = data.get(data.size() - 1 - i).get("ERDAT");
+                    coloum2 = data.get(data.size() - 1 - i).get("ZCOUNT");
+                    coloum2 = coloum2.substring(0, coloum2.indexOf(".") > -1 ? coloum2.indexOf(".") : coloum2.length());
                 } else if (tabType == 4) {
-                    coloum1 = data.get(i).get("MATKL");
-                    coloum2 = data.get(i).get("ZTOTLE");
+                    coloum1 = data.get(data.size() - 1 - i).get("MATKL");
+                    coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
 
                     classTotal += Float.parseFloat(coloum2);
                 } else {
                     if (timeType == 2) {
-                        coloum1 = data.get(i).get("ZDATE");
-                        coloum2 = data.get(i).get("ZTOTLE");
+                        coloum1 = data.get(data.size() - 1 - i).get("ZDATE");
+                        coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
                     } else {
-                        coloum1 = data.get(i).get("ZDATE");
-                        coloum2 = data.get(i).get("ZTOTLE");
+                        coloum1 = data.get(data.size() - 1 - i).get("ZDATE");
+                        coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
                     }
                 }
 
@@ -376,14 +380,10 @@ public class SalesDetailFragment extends BaseListFragment {
                     }
                     break;
                 case HANDLER_SROAT:
-                    if (roatAnim == null) {
-                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
-                        roatAnim.setInterpolator(new LinearInterpolator());
-                    }
-                    btn_toogle_fragment.startAnimation(roatAnim);
+                    roatStart();
                     break;
                 case HANDLER_EROAT:
-                    btn_toogle_fragment.clearAnimation();
+                    //btn_toogle_fragment.clearAnimation();
                     break;
                 case HANDLER_NETWORK_ERR:
                     if (list != null && list.size() > 0) {
@@ -452,7 +452,11 @@ public class SalesDetailFragment extends BaseListFragment {
             colum1.setText(map.get(colum1.getTag()));
 
             if (tabType == 4) {
-                colum2.setText(Arith.round(Float.parseFloat(map.get(colum2.getTag())) / classTotal * 100, 2) + "%");
+                try {
+                    colum2.setText(Arith.round(Float.parseFloat(map.get(colum2.getTag())) / classTotal * 100, 2) + "%");
+                } catch (Exception e) {
+                    colum2.setText("");
+                }
             } else {
                 colum2.setText(map.get(colum2.getTag()));
             }

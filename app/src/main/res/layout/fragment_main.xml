@@ -78,26 +78,25 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="@dimen/report_graph_size_height_access"
                 android:layout_marginTop="@dimen/interval_C"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.lesso.data.ui.RecordScrollView
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/report_graph_size_height_access"
                     android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/data_view_access"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/report_graph_size_height_access"
-                        android:orientation="vertical">
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
                     </LinearLayout>
 
-                </com.lesso.data.ui.RecordScrollView>
-
+                </HorizontalScrollView>
 
             </LinearLayout>
 
@@ -186,25 +185,25 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="@dimen/report_graph_size_height_sales"
                 android:layout_marginTop="@dimen/interval_C"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.lesso.data.ui.RecordScrollView
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/report_graph_size_height_sales"
                     android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/data_view_sales"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/report_graph_size_height_sales"
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
                     </LinearLayout>
 
-                </com.lesso.data.ui.RecordScrollView>
+                </HorizontalScrollView>
 
 
             </LinearLayout>
@@ -406,25 +405,25 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="@dimen/report_graph_size_height_user"
                 android:layout_marginTop="@dimen/interval_C"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.lesso.data.ui.RecordScrollView
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/report_graph_size_height_user"
                     android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/data_view_user"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/report_graph_size_height_user"
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
                     </LinearLayout>
 
-                </com.lesso.data.ui.RecordScrollView>
+                </HorizontalScrollView>
 
 
             </LinearLayout>

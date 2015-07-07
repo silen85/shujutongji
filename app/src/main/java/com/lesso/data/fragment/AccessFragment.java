@@ -3,13 +3,11 @@ package com.lesso.data.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -17,7 +15,7 @@ import com.lesso.data.R;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.MD5;
 import com.lesso.data.common.Tools;
-import com.lesso.data.ui.XYLineView;
+import com.lesso.data.ui.XYLineView2;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -36,17 +34,23 @@ public class AccessFragment extends BaseGraphFragment {
 
     private String TAG = "com.lesso.data.fragment.AccessFragment";
 
+    private int screenWidth, screenHeight;
     private int chart_access_width;
 
     private List<Map<String, String>> dataCache;
 
     private LinearLayout data_view, chart_xy_container, data_view_access;
-    private XYLineView chart_xy;
+    private XYLineView2 chart_xy;
 
     private LinearLayout tab_uv, tab_pv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+
+        screenWidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
 
         layoutInflater = inflater;
 
@@ -74,15 +78,7 @@ public class AccessFragment extends BaseGraphFragment {
         data_view = (LinearLayout) view.findViewById(R.id.data_view);
         chart_xy_container = (LinearLayout) view.findViewById(R.id.chart_xy_container);
         data_view_access = (LinearLayout) view.findViewById(R.id.data_view_access);
-        data_view_access.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                data_view_access.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_access_width = data_view_access.getWidth();
-                Log.d(TAG, "chart_user_width;" + chart_access_width);
-                return true;
-            }
-        });
+        chart_access_width = screenWidth;
 
         tab_uv = (LinearLayout) view.findViewById(R.id.tab_uv);
         tab_pv = (LinearLayout) view.findViewById(R.id.tab_pv);
@@ -128,7 +124,7 @@ public class AccessFragment extends BaseGraphFragment {
     }
 
     protected void fillData(List<Map<String, String>> data) {
-
+        roatStart();
         list.clear();
         if (data != null && data.size() > 0) {
 
@@ -148,16 +144,17 @@ public class AccessFragment extends BaseGraphFragment {
 
         }
 
-        if (chart_xy == null) {
-
-            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_access_width,
-                    (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
-            chart_xy = new XYLineView(activity);
-            chart_xy.setLayoutParams(lp);
-            chart_xy.setScreenWidth(chart_access_width);
-            chart_xy.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_access));
-            data_view_access.addView(chart_xy);
+        if (chart_xy != null) {
+            data_view_access.removeView(chart_xy);
         }
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_access_width,
+                (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
+        chart_xy = new XYLineView2(activity);
+        chart_xy.setLayoutParams(lp);
+        chart_xy.setScreenWidth(chart_access_width);
+        chart_xy.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_access));
+        data_view_access.addView(chart_xy);
+
         fillXYLineData(list);
 
     }
@@ -171,8 +168,8 @@ public class AccessFragment extends BaseGraphFragment {
 
             for (int i = 0; i < list.size(); i++) {
 
-                String xdata = list.get(list.size() - 1 - i).get("colum1");
-                String ydata = list.get(list.size() - 1 - i).get("colum2");
+                String xdata = list.get(i).get("colum1");
+                String ydata = list.get(i).get("colum2");
 
                 fields[i] = xdata.substring(6);
                 dataArr[i] = Float.parseFloat(ydata);
@@ -296,14 +293,10 @@ public class AccessFragment extends BaseGraphFragment {
                     }
                     break;
                 case HANDLER_SROAT:
-                    if (roatAnim == null) {
-                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
-                        roatAnim.setInterpolator(new LinearInterpolator());
-                    }
-                    btn_toogle_fragment.startAnimation(roatAnim);
+                    roatStart();
                     break;
                 case HANDLER_EROAT:
-                    btn_toogle_fragment.clearAnimation();
+                    //btn_toogle_fragment.clearAnimation();
                     break;
                 case HANDLER_NETWORK_ERR:
                     fillData(null);

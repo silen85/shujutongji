@@ -1,6 +1,7 @@
 package com.lesso.data.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -8,6 +9,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -106,6 +110,12 @@ public abstract class BaseListFragment extends ListFragment {
                 @Override
                 public void onClick(View view) {
                     authority();
+                    authorityEditText.clearFocus();
+                    InputMethodManager mSoftManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (activity.getCurrentFocus() != null) {
+                        mSoftManager.hideSoftInputFromWindow(activity.getCurrentFocus()
+                                .getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);// 隐藏软键盘
+                    }
                 }
             });
 
@@ -283,6 +293,18 @@ public abstract class BaseListFragment extends ListFragment {
 
     public void toogleTab(int tabType){
         this.tabType = tabType;
+    }
+
+    protected void roatStart(){
+        if (roatAnim == null) {
+            roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
+            roatAnim.setInterpolator(new LinearInterpolator());
+        }
+        btn_toogle_fragment.startAnimation(roatAnim);
+    }
+
+    protected void roatEnd(){
+        btn_toogle_fragment.clearAnimation();
     }
 
     protected abstract void initView();

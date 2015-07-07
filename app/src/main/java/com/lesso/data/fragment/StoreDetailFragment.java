@@ -9,9 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -93,7 +92,17 @@ public class StoreDetailFragment extends BaseListFragment {
 
         initTime();
 
-        initBtnToogle();
+        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
+        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (adapter != null) {
+                    list.clear();
+                    adapter.notifyDataSetChanged();
+                }
+                activity.toogleFragment(StoreDetailFragment.this);
+            }
+        });
 
         tab_store_out = (LinearLayout) view.findViewById(R.id.tab_store_out);
         tab_store_in = (LinearLayout) view.findViewById(R.id.tab_store_in);
@@ -109,6 +118,12 @@ public class StoreDetailFragment extends BaseListFragment {
                     tabType = 1;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+
                     sendRequest(generateParam());
                 }
             }
@@ -122,6 +137,12 @@ public class StoreDetailFragment extends BaseListFragment {
                     tabType = 2;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+
                     sendRequest(generateParam());
                 }
             }
@@ -135,7 +156,11 @@ public class StoreDetailFragment extends BaseListFragment {
                     tabType = 3;
                     toogleHeader(tabType);
                     toogleTab(tabType);
-                    sendRequest(generateParam());
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    //sendRequest(generateParam());
                 }
             }
         });
@@ -205,7 +230,8 @@ public class StoreDetailFragment extends BaseListFragment {
         /**
          * 发送请求
          */
-        sendRequest(generateParam());
+        if (tabType != 3)
+            sendRequest(generateParam());
 
     }
 
@@ -361,18 +387,14 @@ public class StoreDetailFragment extends BaseListFragment {
                     }
                     break;
                 case HANDLER_SROAT:
-                    if (roatAnim == null) {
-                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
-                        roatAnim.setInterpolator(new LinearInterpolator());
-                    }
                     if (tabType != 3) {
-                        btn_toogle_fragment.startAnimation(roatAnim);
+                        roatStart();
                     }
                     break;
                 case HANDLER_EROAT:
-                    if (tabType != 3) {
+                    /*if (tabType != 3) {
                         btn_toogle_fragment.clearAnimation();
-                    }
+                    }*/
                     break;
                 case HANDLER_NETWORK_ERR:
                     if (list != null && list.size() > 0) {

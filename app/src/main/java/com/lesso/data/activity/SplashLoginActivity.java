@@ -1,5 +1,6 @@
 package com.lesso.data.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
 import com.lesso.data.cusinterface.FragmentListener;
 import com.lesso.data.fragment.LoginFragment;
@@ -17,8 +19,7 @@ import com.lesso.data.fragment.SplashFragment;
 
 public class SplashLoginActivity extends FragmentActivity {
 
-    public static final String LOCK = "lock";
-    public static final String LOCK_KEY = "lock_key";
+    private LessoApplication.LoginUser loginUser;
 
     private FragmentManager fragmentManager;
 
@@ -32,6 +33,8 @@ public class SplashLoginActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_login);
 
+        loginUser = ((LessoApplication) getApplication()).getLoginUser();
+
         fragmentManager = getSupportFragmentManager();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -44,13 +47,27 @@ public class SplashLoginActivity extends FragmentActivity {
             @Override
             public void run() {
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                loginFragment = new LoginFragment();
+                if (loginUser == null) {
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    loginFragment = new LoginFragment();
 
-                fragmentTransaction.remove(splashFragment);
-                fragmentTransaction.add(R.id.splash_login, loginFragment);
+                    fragmentTransaction.remove(splashFragment);
+                    fragmentTransaction.add(R.id.splash_login, loginFragment);
 
-                fragmentTransaction.commit();
+                    fragmentTransaction.commit();
+                } else {
+
+                    String Scratchable_PWD = loginUser.getScratchable_PWD();
+
+                    if (Scratchable_PWD != null && !"".equals(Scratchable_PWD.trim())) {
+                        Intent intent = new Intent(SplashLoginActivity.this, LockActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(SplashLoginActivity.this, LockSetupActivity.class);
+                        startActivity(intent);
+                    }
+                    finish();
+                }
 
                 /*SharedPreferences preferences = getSharedPreferences(SplashLoginActivity.LOCK, Activity.MODE_PRIVATE);
 
@@ -70,7 +87,7 @@ public class SplashLoginActivity extends FragmentActivity {
                     fragmentTransaction.commit();
                 }*/
             }
-        }, 3000);
+        }, 1500);
 
     }
 

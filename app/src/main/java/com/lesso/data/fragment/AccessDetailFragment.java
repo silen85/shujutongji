@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -143,19 +141,19 @@ public class AccessDetailFragment extends BaseListFragment {
     }
 
     protected void fillData(List<Map<String, String>> data) {
-
+        roatStart();
         list.clear();
         if (data != null && data.size() > 0) {
             for (int i = 0; i < data.size(); i++) {
 
                 Map<String, String> item = new HashMap();
 
-                item.put("colum1", data.get(i).get("created"));
+                item.put("colum1", data.get(data.size() - 1 - i).get("created"));
 
                 if (tabType == 2)
-                    item.put("colum2", data.get(i).get("pv"));
+                    item.put("colum2", data.get(data.size() - 1 - i).get("pv"));
                 else
-                    item.put("colum2", data.get(i).get("uv"));
+                    item.put("colum2", data.get(data.size() - 1 - i).get("uv"));
 
                 list.add(item);
             }
@@ -277,14 +275,10 @@ public class AccessDetailFragment extends BaseListFragment {
                     }
                     break;
                 case HANDLER_SROAT:
-                    if (roatAnim == null) {
-                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
-                        roatAnim.setInterpolator(new LinearInterpolator());
-                    }
-                    btn_toogle_fragment.startAnimation(roatAnim);
+                    roatStart();
                     break;
                 case HANDLER_EROAT:
-                    btn_toogle_fragment.clearAnimation();
+                    //roatEnd();
                     break;
                 case HANDLER_NETWORK_ERR:
                     if (list != null && list.size() > 0) {

@@ -226,10 +226,10 @@ public class TimeChooserDialog extends Dialog {
                 calendar.set(i, i1, i2);
                 if (dateType == 2) {
                     tempEndDate = calendar.getTime();
-                    datepicker_edate.setText(i + "年" + (i1+1) + "月" + i2 + "日  周" + txtWeek[week - 1]);
+                    datepicker_edate.setText(i + "年" + (i1+1) + "月" + i2 + "日  周" + txtWeek[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
                 } else {
                     tempBeginDate = calendar.getTime();
-                    datepicker_bdate.setText(i + "年" + (i1+1) + "月" + i2 + "日  周" + txtWeek[week - 1]);
+                    datepicker_bdate.setText(i + "年" + (i1+1) + "月" + i2 + "日  周" + txtWeek[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
                 }
             }
         });

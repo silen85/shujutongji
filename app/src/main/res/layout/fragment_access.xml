@@ -35,26 +35,26 @@
         <LinearLayout
             android:id="@+id/chart_xy_container"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="@dimen/report_graph_size_height_access"
             android:layout_marginTop="@dimen/interval_C"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible">
 
-            <com.lesso.data.ui.RecordScrollView
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/report_graph_size_height_access"
                 android:scrollbars="none">
 
                 <LinearLayout
                     android:id="@+id/data_view_access"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/report_graph_size_height_access"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                 </LinearLayout>
 
-            </com.lesso.data.ui.RecordScrollView>
+            </HorizontalScrollView>
 
 
         </LinearLayout>

@@ -25,7 +25,7 @@
         <LinearLayout
             android:id="@+id/data_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="48dp"
             android:background="@color/REPORT_UI_C6"
             android:gravity="center"
@@ -34,26 +34,27 @@
             <LinearLayout
                 android:id="@+id/chart_bar_container"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="@dimen/report_graph_size_height_user"
+                android:layout_gravity="center"
                 android:layout_marginTop="@dimen/interval_C"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <com.lesso.data.ui.RecordScrollView
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/report_graph_size_height_user"
                     android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/data_view_sales"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/report_graph_size_height_user"
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
                     </LinearLayout>
 
-                </com.lesso.data.ui.RecordScrollView>
+                </HorizontalScrollView>
 
 
             </LinearLayout>
@@ -61,7 +62,8 @@
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart"
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
                 android:visibility="gone" />
 
         </LinearLayout>

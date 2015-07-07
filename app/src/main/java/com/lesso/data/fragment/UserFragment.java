@@ -4,13 +4,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -24,7 +22,7 @@ import com.lesso.data.R;
 import com.lesso.data.common.Arith;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
-import com.lesso.data.ui.XYLineView;
+import com.lesso.data.ui.XYLineView2;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -44,10 +42,11 @@ public class UserFragment extends BaseGraphFragment {
 
     private String TAG = "com.lesso.data.fragment.UserDetailFragment";
 
+    private int screenWidth, screenHeight;
     private int chart_user_width;
 
     private LinearLayout data_view, chart_xy_container, data_view_user;
-    private XYLineView chart_xy;
+    private XYLineView2 chart_xy;
     private PieChart mChart;
 
     private LinearLayout tab_user_new, tab_user_total, tab_user_supplier, tab_user_fivemetal;
@@ -55,6 +54,11 @@ public class UserFragment extends BaseGraphFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+
+        screenWidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
 
         layoutInflater = inflater;
 
@@ -82,15 +86,7 @@ public class UserFragment extends BaseGraphFragment {
         data_view = (LinearLayout) view.findViewById(R.id.data_view);
         chart_xy_container = (LinearLayout) view.findViewById(R.id.chart_xy_container);
         data_view_user = (LinearLayout) view.findViewById(R.id.data_view_user);
-        data_view_user.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                data_view_user.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_user_width = data_view_user.getWidth();
-                Log.d(TAG, "chart_user_width;" + chart_user_width);
-                return true;
-            }
-        });
+        chart_user_width = screenWidth;
 
         mChart = (PieChart) data_view.findViewById(R.id.pieChart);
         mChart.setUsePercentValues(true);
@@ -250,16 +246,17 @@ public class UserFragment extends BaseGraphFragment {
         if (tabType == 2 || tabType == 3 || tabType == 4) {
             fillPieChartData(list);
         } else {
-            if (chart_xy == null) {
-
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_user_width,
-                        (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
-                chart_xy = new XYLineView(activity);
-                chart_xy.setLayoutParams(lp);
-                chart_xy.setScreenWidth(chart_user_width);
-                chart_xy.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
-                data_view_user.addView(chart_xy);
+            if (chart_xy != null) {
+                data_view_user.removeView(chart_xy);
             }
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_user_width,
+                    (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
+            chart_xy = new XYLineView2(activity);
+            chart_xy.setLayoutParams(lp);
+            chart_xy.setScreenWidth(chart_user_width);
+            chart_xy.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
+            data_view_user.addView(chart_xy);
+
             fillXYLineData(list);
         }
     }
@@ -428,14 +425,10 @@ public class UserFragment extends BaseGraphFragment {
                     }
                     break;
                 case HANDLER_SROAT:
-                    if (roatAnim == null) {
-                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
-                        roatAnim.setInterpolator(new LinearInterpolator());
-                    }
-                    btn_toogle_fragment.startAnimation(roatAnim);
+                    roatStart();
                     break;
                 case HANDLER_EROAT:
-                    btn_toogle_fragment.clearAnimation();
+                    //btn_toogle_fragment.clearAnimation();
                     break;
                 case HANDLER_NETWORK_ERR:
                     fillData(null);

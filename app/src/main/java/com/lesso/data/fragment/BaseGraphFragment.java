@@ -1,6 +1,7 @@
 package com.lesso.data.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -9,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -99,7 +103,7 @@ public abstract class BaseGraphFragment extends Fragment {
                         lock_icon.setSelected(true);
                         authority_layer.setSelected(true);
                         authority_button.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         lock_icon.setSelected(false);
                         authority_layer.setSelected(false);
                         authority_button.setVisibility(View.GONE);
@@ -111,6 +115,12 @@ public abstract class BaseGraphFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     authority();
+                    authorityEditText.clearFocus();
+                    InputMethodManager mSoftManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (activity.getCurrentFocus() != null) {
+                        mSoftManager.hideSoftInputFromWindow(activity.getCurrentFocus()
+                                .getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);// 隐藏软键盘
+                    }
                 }
             });
 
@@ -118,26 +128,26 @@ public abstract class BaseGraphFragment extends Fragment {
 
     }
 
-    protected void displayAuthority(){
+    protected void displayAuthority() {
         if (authority_layer != null) {
             authority_layer.setVisibility(View.VISIBLE);
             btn_toogle_fragment.setClickable(false);
         }
     }
 
-    private void authority(){
+    private void authority() {
 
         LessoApplication.LoginUser loginUser = ((LessoApplication) activity.getApplication()).getLoginUser();
 
         Map<String, String> parems = new HashMap();
 
         parems.put("type", "logkey");
-        parems.put("id",loginUser.getUserid());
-        parems.put("key",authorityEditText.getText().toString());
+        parems.put("id", loginUser.getUserid());
+        parems.put("key", authorityEditText.getText().toString());
 
         RequestParams requestParams = new RequestParams(parems);
 
-        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler(){
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -186,7 +196,7 @@ public abstract class BaseGraphFragment extends Fragment {
 
     }
 
-    protected void hideAuthority(){
+    protected void hideAuthority() {
         if (authority_layer != null) {
             authority_layer.setVisibility(View.GONE);
             btn_toogle_fragment.setClickable(true);
@@ -288,6 +298,18 @@ public abstract class BaseGraphFragment extends Fragment {
 
     public void toogleTab(int tabType) {
         this.tabType = tabType;
+    }
+
+    protected void roatStart() {
+        if (roatAnim == null) {
+            roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
+            roatAnim.setInterpolator(new LinearInterpolator());
+        }
+        btn_toogle_fragment.startAnimation(roatAnim);
+    }
+
+    protected void roatEnd() {
+        btn_toogle_fragment.clearAnimation();
     }
 
     protected abstract void initView();

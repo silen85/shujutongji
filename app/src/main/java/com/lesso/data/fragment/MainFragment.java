@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,8 +22,8 @@ import com.lesso.data.adapter.StoreAdapter;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.MD5;
 import com.lesso.data.common.Tools;
-import com.lesso.data.ui.BarView;
-import com.lesso.data.ui.XYLineView;
+import com.lesso.data.ui.BarView2;
+import com.lesso.data.ui.XYLineView2;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -45,6 +45,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private static String TAG = "com.lesso.data.fragment.MainFragment";
 
+    private int screenWidth, screenHeight;
+
     private int[] processbar_stys = {R.drawable.processbar_sty1, R.drawable.processbar_sty2, R.drawable.processbar_sty3,
             R.drawable.processbar_sty4, R.drawable.processbar_sty5, R.drawable.processbar_sty6,
             R.drawable.processbar_sty7, R.drawable.processbar_sty8};
@@ -62,13 +64,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private int chart_access_width, chart_sales_width, chart_user_width;
     private LinearLayout data_view_access, data_view_sales, data_view_store, data_view_user;
-    private XYLineView chart_access, chart_user;
-    private BarView chart_sales;
+    private XYLineView2 chart_access, chart_user;
+    private BarView2 chart_sales;
     private ListView listview_store;
     private StoreAdapter storeAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+
+        screenWidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
 
         layoutInflater = inflater;
 
@@ -136,15 +143,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         data_view_access = (LinearLayout) view.findViewById(R.id.data_view_access);
         data_view_access.setOnClickListener(this);
-        data_view_access.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                data_view_access.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_access_width = data_view_access.getWidth();
-                Log.d(TAG, "chart_access_width;" + chart_access_width);
-                return true;
-            }
-        });
+        chart_access_width = screenWidth;
 
         requestAccessData();
 
@@ -154,15 +153,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         data_view_sales = (LinearLayout) view.findViewById(R.id.data_view_sales);
         data_view_sales.setOnClickListener(this);
-        data_view_sales.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                data_view_sales.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_sales_width = data_view_sales.getWidth();
-                Log.d(TAG, "chart_sales_width;" + chart_sales_width);
-                return true;
-            }
-        });
+        chart_sales_width = screenWidth;
 
         requestSalesData();
 
@@ -187,15 +178,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         data_view_user = (LinearLayout) view.findViewById(R.id.data_view_user);
         data_view_user.setOnClickListener(this);
-        data_view_user.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                data_view_user.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_user_width = data_view_user.getWidth();
-                Log.d(TAG, "chart_user_width;" + chart_user_width);
-                return true;
-            }
-        });
+        chart_user_width = screenWidth;
 
         requestUseData();
 
@@ -205,7 +188,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_access_width,
                 (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_access));
-        chart_access = new XYLineView(activity);
+        chart_access = new XYLineView2(activity);
         chart_access.setLayoutParams(lp);
         chart_access.setScreenWidth(chart_access_width);
         chart_access.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_access));
@@ -234,8 +217,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                     for (int i = 0; i < dataList.size(); i++) {
 
-                        String xdata = dataList.get(dataList.size() - 1 - i).get("created");
-                        String ydata = dataList.get(dataList.size() - 1 - i).get("uv");
+                        String xdata = dataList.get(i).get("created");
+                        String ydata = dataList.get(i).get("uv");
 
                         fields[i] = xdata.substring(6);
                         data[i] = Float.parseFloat(ydata);
@@ -267,7 +250,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_sales_width,
                 (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_sales));
-        chart_sales = new BarView(activity);
+        chart_sales = new BarView2(activity);
         chart_sales.setLayoutParams(lp);
         chart_sales.setScreenWidth(chart_sales_width);
         chart_sales.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_sales));
@@ -373,7 +356,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_user_width,
                 (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
-        chart_user = new XYLineView(activity);
+        chart_user = new XYLineView2(activity);
         chart_user.setLayoutParams(lp);
         chart_user.setScreenWidth(chart_user_width);
         chart_user.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
@@ -476,8 +459,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("pages", "1");
         parems.put("numbers", "10000");
 
-        parems.put("start", "2015-05-01");
-        parems.put("end", "2015-05-30");
+        //parems.put("start", "2015-05-01");
+        //parems.put("end", "2015-05-30");
 
         sendRequest(parems, HANDLER_DATA_STORE);
     }
@@ -631,6 +614,5 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
         }
-
     }
 }

@@ -140,9 +140,7 @@ public class Arith {
 
         if (scale < 0) {
 
-            throw new IllegalArgumentException(
-
-                    "The scale must be a positive integer or zero");
+            throw new IllegalArgumentException("The scale must be a positive integer or zero");
 
         }
 

@@ -4,13 +4,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -24,7 +22,7 @@ import com.lesso.data.R;
 import com.lesso.data.common.Arith;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
-import com.lesso.data.ui.BarView;
+import com.lesso.data.ui.BarView2;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -44,10 +42,11 @@ public class SalesFragment extends BaseGraphFragment {
 
     private String TAG = "com.lesso.data.fragment.SalesFragment";
 
+    private int screenWidth, screenHeight;
     private int chart_sales_width;
 
     private LinearLayout data_view, chart_bar_container, data_view_sales;
-    private BarView chart_bar;
+    private BarView2 chart_bar;
     private PieChart mChart;
 
     private LinearLayout tab_sales_amount, tab_sales_paper, tab_sales_car, tab_sales_type;
@@ -56,6 +55,11 @@ public class SalesFragment extends BaseGraphFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+
+        screenWidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
 
         layoutInflater = inflater;
 
@@ -72,6 +76,17 @@ public class SalesFragment extends BaseGraphFragment {
 
         // initData();
 
+        if (tabType == 1) {
+            if (!activity.AUTHORITY_SALES_AMOUNT) {
+                btn_toogle_fragment.setClickable(false);
+            } else {
+                btn_toogle_fragment.setClickable(true);
+                hideAuthority();
+            }
+        } else {
+            hideAuthority();
+        }
+
     }
 
     protected void initView() {
@@ -84,15 +99,7 @@ public class SalesFragment extends BaseGraphFragment {
         data_view = (LinearLayout) view.findViewById(R.id.data_view);
         chart_bar_container = (LinearLayout) view.findViewById(R.id.chart_bar_container);
         data_view_sales = (LinearLayout) view.findViewById(R.id.data_view_sales);
-        data_view_sales.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                data_view_sales.getViewTreeObserver().removeOnPreDrawListener(this);
-                chart_sales_width = data_view_sales.getWidth();
-                Log.d(TAG, "chart_user_width;" + chart_sales_width);
-                return true;
-            }
-        });
+        chart_sales_width = screenWidth;
 
 
         mChart = (PieChart) data_view.findViewById(R.id.pieChart);
@@ -117,13 +124,6 @@ public class SalesFragment extends BaseGraphFragment {
         tab_sales_type = (LinearLayout) view.findViewById(R.id.tab_sales_type);
 
         toogleTab(tabType);
-        if (tabType == 1) {
-            if (!activity.AUTHORITY_SALES_AMOUNT) {
-                btn_toogle_fragment.setClickable(false);
-            }
-        }else {
-            hideAuthority();
-        }
 
         tab_sales_amount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,7 +232,7 @@ public class SalesFragment extends BaseGraphFragment {
                         coloum2 = data.get(i).get("ZTOTLE");
                     }
                 } else if (tabType == 3) {
-                    coloum1 = data.get(i).get("ZZCHHAO");
+                    coloum1 = data.get(i).get("ERDAT");
                     coloum2 = data.get(i).get("ZCOUNT");
                 } else if (tabType == 4) {
                     coloum1 = data.get(i).get("MATKL");
@@ -259,16 +259,17 @@ public class SalesFragment extends BaseGraphFragment {
         if (tabType == 4) {
             fillPieChartData(list);
         } else {
-            if (chart_bar == null) {
-
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_sales_width,
-                        (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
-                chart_bar = new BarView(activity);
-                chart_bar.setLayoutParams(lp);
-                chart_bar.setScreenWidth(chart_sales_width);
-                chart_bar.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
-                data_view_sales.addView(chart_bar);
+            if (chart_bar != null) {
+                data_view_sales.removeView(chart_bar);
             }
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(chart_sales_width,
+                    (int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
+            chart_bar = new BarView2(activity);
+            chart_bar.setLayoutParams(lp);
+            chart_bar.setScreenWidth(chart_sales_width);
+            chart_bar.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
+            data_view_sales.addView(chart_bar);
+
             fillBarData(list);
         }
     }
@@ -318,8 +319,8 @@ public class SalesFragment extends BaseGraphFragment {
 
             for (int i = 0; i < list.size(); i++) {
 
-                String xdata = list.get(list.size() - 1 - i).get("colum1");
-                String ydata = list.get(list.size() - 1 - i).get("colum2");
+                String xdata = list.get(i).get("colum1");
+                String ydata = list.get(i).get("colum2");
 
                 fields[i] = xdata.substring(6);
                 dataArr[i] = Float.parseFloat(ydata);
@@ -448,14 +449,10 @@ public class SalesFragment extends BaseGraphFragment {
                     }
                     break;
                 case HANDLER_SROAT:
-                    if (roatAnim == null) {
-                        roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
-                        roatAnim.setInterpolator(new LinearInterpolator());
-                    }
-                    btn_toogle_fragment.startAnimation(roatAnim);
+                    roatStart();
                     break;
                 case HANDLER_EROAT:
-                    btn_toogle_fragment.clearAnimation();
+                    //btn_toogle_fragment.clearAnimation();
                     break;
                 case HANDLER_NETWORK_ERR:
                     fillData(null);
