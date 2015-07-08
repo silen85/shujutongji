@@ -224,22 +224,29 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         data[i] = Float.parseFloat(ydata);
 
                         if (yesterday.equals(xdata)) {
-                            ((TextView) view.findViewById(R.id.fragment_access_amount)).setText(ydata);
+                            try {
+                                ((TextView) view.findViewById(R.id.fragment_access_amount)).setText(Integer.parseInt(ydata) + "");
+                            } catch (Exception e) {
+                                ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
+                            }
                         }
 
                     }
                     chart_access.setData(data);
                     chart_access.setField(fields);
                 } else {
+                    ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
                     chart_access.setData(new float[]{});
                     chart_access.setField(new String[]{});
                 }
             } else {
+                ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
                 chart_access.setData(new float[]{});
                 chart_access.setField(new String[]{});
             }
         } catch (Exception e) {
             Log.e(TAG + ":initAccessData", e.getMessage());
+            ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
             chart_access.setData(new float[]{});
             chart_access.setField(new String[]{});
         }
@@ -283,17 +290,23 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     data[i] = Float.parseFloat(ydata);
 
                     if (yesterday.equals(xdata)) {
-                        ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText(((int) data[i]) + "");
+                        try {
+                            ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText(Integer.parseInt(ydata) + "");
+                        } catch (Exception e) {
+                            ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
+                        }
                     }
                 }
                 chart_sales.setData(data);
                 chart_sales.setField(fields);
             } else {
+                ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
                 chart_sales.setData(new float[]{});
                 chart_sales.setField(new String[]{});
             }
         } catch (Exception e) {
             Log.e(TAG + ":initSalesData", e.getMessage());
+            ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
             chart_sales.setData(new float[]{});
             chart_sales.setField(new String[]{});
         }
@@ -339,12 +352,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 view.findViewById(R.id.data_view_store_tips).setVisibility(View.GONE);
 
             } else {
+                ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
                 listview_store.setVisibility(View.GONE);
                 view.findViewById(R.id.data_view_store_tips).setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             Log.e(TAG + ":initStoreData", e.getMessage());
 
+            ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
             listview_store.setVisibility(View.GONE);
             view.findViewById(R.id.data_view_store_tips).setVisibility(View.VISIBLE);
         }
@@ -382,25 +397,30 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 for (int i = 0; i < viewtable.size(); i++) {
 
-                    String xdata = viewtable.get(viewtable.size() - 1 - i).get("CREATETIME");
-                    String ydata = viewtable.get(viewtable.size() - 1 - i).get("COUN");
+                    String xdata = viewtable.get(i).get("CREATETIME");
+                    String ydata = viewtable.get(i).get("COUN");
 
                     fields[i] = xdata.substring(5);
                     data[i] = Float.parseFloat(ydata);
 
                     if (yesterday.equals(xdata)) {
-                        ((TextView) view.findViewById(R.id.fragment_user_amount)).setText(ydata);
+                        try {
+                            ((TextView) view.findViewById(R.id.fragment_user_amount)).setText(Integer.parseInt(ydata) + "");
+                        } catch (Exception e) {
+                            ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
+                        }
                     }
-
                 }
                 chart_user.setData(data);
                 chart_user.setField(fields);
             } else {
+                ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
                 chart_user.setData(new float[]{});
                 chart_user.setField(new String[]{});
             }
         } catch (Exception e) {
             Log.e(TAG + ":initUserData", e.getMessage());
+            ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
             chart_user.setData(new float[]{});
             chart_user.setField(new String[]{});
         }

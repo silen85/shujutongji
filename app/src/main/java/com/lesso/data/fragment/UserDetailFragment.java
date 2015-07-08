@@ -242,11 +242,11 @@ public class UserDetailFragment extends BaseListFragment {
                     }
                 } else {
                     if (timeType == 2) {
-                        coloum1 = data.get(i).get("CREATETIME");
-                        coloum2 = data.get(i).get("COUN");
+                        coloum1 = data.get(data.size() - 1 - i).get("CREATETIME");
+                        coloum2 = data.get(data.size() - 1 - i).get("COUN");
                     } else {
-                        coloum1 = data.get(i).get("CREATETIME");
-                        coloum2 = data.get(i).get("COUN");
+                        coloum1 = data.get(data.size() - 1 - i).get("CREATETIME");
+                        coloum2 = data.get(data.size() - 1 - i).get("COUN");
                     }
                 }
 

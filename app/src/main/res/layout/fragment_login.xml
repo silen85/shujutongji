@@ -90,6 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
                 android:background="@null"
+                android:clickable="true"
                 android:digits="@string/digits"
                 android:ems="20"
                 android:gravity="center"
@@ -142,6 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
                 android:background="@null"
+                android:clickable="true"
                 android:ems="20"
                 android:gravity="center"
                 android:inputType="textPassword"
@@ -151,7 +153,6 @@
                 android:textColor="@color/REPORT_UI_C6"></EditText>
 
         </FrameLayout>
-
 
         <Button
             android:id="@+id/login"

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +23,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lesso.data.LessoApplication;
@@ -37,7 +33,6 @@ import com.lesso.data.activity.SplashLoginActivity;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
 import com.lesso.data.cusinterface.FragmentListener;
-import com.lesso.data.ui.EditTextHolder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -52,15 +47,12 @@ import java.util.Map;
 /**
  * Created by meisl on 2015/6/9.
  */
-public class LoginFragment extends Fragment implements View.OnClickListener, Handler.Callback,
-        EditTextHolder.EditTextListener, FragmentListener {
+public class LoginFragment extends Fragment implements View.OnClickListener, Handler.Callback, FragmentListener {
 
     String TAG = "com.lesso.data.fragment.LoginFragment";
 
-    private static final int HANDLER_LOGIN_HAS_FOCUS = 1;
-    private static final int HANDLER_LOGIN_HAS_NO_FOCUS = 2;
-    private static final int HANDLER_DATA = 3;
-    private static final int HANDLER_NETWORK_ERR = 4;
+    private static final int HANDLER_DATA = 1;
+    private static final int HANDLER_NETWORK_ERR = 2;
 
     private int roatMargis[] = new int[4];
     private int layoutMargis[] = new int[4];
@@ -77,9 +69,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
 
     private Handler mHandler;
     private ImageView l, r;
-
-    EditTextHolder mEditUserNameEt;
-    EditTextHolder mEditPassWordEt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,49 +119,29 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         accountEditText = (EditText) view.findViewById(R.id.accountEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
-        mEditUserNameEt = new EditTextHolder(accountEditText, this);
-        mEditPassWordEt = new EditTextHolder(passwordEditText, this);
+        accountEditText.setShowSoftInputOnFocus(true);
+        passwordEditText.setShowSoftInputOnFocus(true);
 
-
-        accountEditText.addTextChangedListener(new TextWatcher() {
-
+        accountEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (accountEditText.length() != 0 || passwordEditText.length() != 0) {
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
                     onKeybordShow();
                 }
             }
         });
 
-        passwordEditText.addTextChangedListener(new TextWatcher() {
-
+        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (accountEditText.length() != 0 || passwordEditText.length() != 0) {
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
                     onKeybordShow();
                 }
             }
         });
+
+        accountEditText.setOnClickListener(this);
+        passwordEditText.setOnClickListener(this);
 
         roatMargis[0] = ((RelativeLayout.LayoutParams) roating.getLayoutParams()).leftMargin;
         roatMargis[1] = ((RelativeLayout.LayoutParams) roating.getLayoutParams()).topMargin;
@@ -184,33 +153,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         layoutMargis[2] = ((RelativeLayout.LayoutParams) login_input.getLayoutParams()).rightMargin;
         layoutMargis[3] = ((RelativeLayout.LayoutParams) login_input.getLayoutParams()).bottomMargin;
 
-            /*view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    int heightDiff = view.getRootView().getHeight() - view.getHeight();
-                    Log.v(TAG, "键盘:"+heightDiff);
-                    if (heightDiff > 100)
-                    { // 说明键盘是弹出状态
-                        Log.v(TAG, "键盘弹出状态");
-                        onKeybordShow();
-                    } else{
-                        Log.v(TAG, "键盘收起状态");
-                        onKeybordHidden();
-                    }
-                }
-            });*/
-
-            /*login_input.setOnSoftKeyboardListener(new CustomLinearLayout.OnSoftKeyboardListener() {
-                @Override
-                public void onShown() {
-                    onKeybordShow();
-                }
-
-                @Override
-                public void onHidden() {
-                    onKeybordHidden();
-                }
-            });*/
 
         Button login = (Button) view.findViewById(R.id.login);
         login.setOnClickListener(this);
@@ -230,13 +172,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         params.setMargins(roatMargis[0], roatMargis[1], roatMargis[2], roatMargis[3]);
         login_input.setLayoutParams(params);
 
-        if (accountEditText.length() == 0 && passwordEditText.length() == 0) {
-            login_account_icon.setVisibility(View.VISIBLE);
-            login_password_icon.setVisibility(View.VISIBLE);
-        } else {
-            login_account_icon.setVisibility(View.GONE);
-            login_password_icon.setVisibility(View.GONE);
-        }
+        login_account_icon.setVisibility(View.GONE);
+        login_password_icon.setVisibility(View.GONE);
 
     }
 
@@ -253,24 +190,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         params.setMargins(layoutMargis[0], layoutMargis[1], layoutMargis[2], layoutMargis[3]);
         login_input.setLayoutParams(params);
 
-        if (accountEditText.length() == 0 && passwordEditText.length() == 0) {
-            login_account_icon.setVisibility(View.VISIBLE);
-            login_password_icon.setVisibility(View.VISIBLE);
-        } else {
+        if (accountEditText.length() != 0 || passwordEditText.length() != 0) {
             login_account_icon.setVisibility(View.GONE);
             login_password_icon.setVisibility(View.GONE);
+        } else {
+            login_account_icon.setVisibility(View.VISIBLE);
+            login_password_icon.setVisibility(View.VISIBLE);
         }
 
     }
 
-    public void hideSoftKeybord() {
+    private void hideSoftKeybord() {
         if (activity.getCurrentFocus() != null && activity.getCurrentFocus().getWindowToken() != null) {
             mSoftManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
-        Message mess = Message.obtain();
-        mess.what = HANDLER_LOGIN_HAS_NO_FOCUS;
-        mHandler.sendMessage(mess);
     }
 
     @Override
@@ -289,9 +223,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
                 break;
             case R.id.accountEditText:
             case R.id.passwordEditText:
-                Message mess = Message.obtain();
-                mess.what = HANDLER_LOGIN_HAS_FOCUS;
-                mHandler.sendMessage(mess);
+                onKeybordShow();
+            default:
                 break;
 
         }
@@ -312,7 +245,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
 
         RequestParams requestParams = new RequestParams(parems);
 
-        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler(){
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -349,7 +282,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         };
         asyncHttpResponseHandler.setCharset("GBK");
         AsyncHttpClient client = new AsyncHttpClient();
-        client.post(activity, Constant.URL_LOGIN, requestParams,asyncHttpResponseHandler);
+        client.post(activity, Constant.URL_LOGIN, requestParams, asyncHttpResponseHandler);
     }
 
     private void handleLogin(JSONObject data) throws Exception {
@@ -394,11 +327,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
     @Override
     public boolean handleMessage(Message msg) {
 
-        if (msg.what == HANDLER_LOGIN_HAS_FOCUS) {
-            onKeybordShow();
-        } else if (msg.what == HANDLER_LOGIN_HAS_NO_FOCUS) {
-            onKeybordHidden();
-        } else if (msg.what == HANDLER_DATA) {
+        if (msg.what == HANDLER_DATA) {
             String json = msg.getData().getString("json");
             try {
                 Map result = Tools.json2Map(json);
@@ -416,58 +345,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
             Toast.makeText(activity, getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
         }
 
-        return false;
-    }
-
-    @Override
-    public void onEditTextFocusChange(View v, boolean hasFocus) {
-        Message mess = Message.obtain();
-        switch (v.getId()) {
-            case R.id.accountEditText:
-            case R.id.passwordEditText:
-                if (hasFocus) {
-                    mess.what = HANDLER_LOGIN_HAS_FOCUS;
-                } else {
-                    mess.what = HANDLER_LOGIN_HAS_NO_FOCUS;
-                }
-                mHandler.sendMessage(mess);
-                break;
-        }
-    }
-
-    @Override
-    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-
-        if (i == EditorInfo.IME_ACTION_DONE) {
-            hideSoftKeybord();
-        }
-
-        return false;
+        return true;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             hideSoftKeybord();
+            onKeybordHidden();
+            return true;
         }
         return false;
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
-        /*event.getKeyCode();
-        switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_BACK:
-            case KeyEvent.KEYCODE_MENU:
-            case KeyEvent.KEYCODE_ESCAPE:
-            case KeyEvent.KEYCODE_ENTER:
-                hideSoftKeybord();
-                break;
-            default:
-                break;
-        }*/
-
         return false;
     }
 
@@ -488,6 +380,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         super.onAttach(activity);
         this.activity = (SplashLoginActivity) activity;
     }
-
 
 }

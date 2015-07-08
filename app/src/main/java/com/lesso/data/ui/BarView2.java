@@ -85,7 +85,7 @@ public class BarView2 extends View {
         mTextHeight = mSingleHeight / 2;
         mHeightOffset = mTextHeight / 2f;
 
-        mCalculateWidth = mSingleWidth * (data.length - 1);
+        mCalculateWidth = mSingleWidth * data.length;
 
         Log.d(TAG, "initSize :" + screenWidth + screenHeight);
 

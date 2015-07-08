@@ -270,8 +270,8 @@ public class UserFragment extends BaseGraphFragment {
 
             for (int i = 0; i < list.size(); i++) {
 
-                String xdata = list.get(list.size() - 1 - i).get("colum1");
-                String ydata = list.get(list.size() - 1 - i).get("colum2");
+                String xdata = list.get(i).get("colum1");
+                String ydata = list.get(i).get("colum2");
 
                 fields[i] = xdata.substring(5);
                 dataArr[i] = Float.parseFloat(ydata);

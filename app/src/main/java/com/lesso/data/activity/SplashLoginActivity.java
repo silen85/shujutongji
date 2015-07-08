@@ -93,22 +93,21 @@ public class SplashLoginActivity extends FragmentActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-        if (fragmentListener != null)
-            fragmentListener.onTouchEvent(event);
+        if (fragmentListener != null){
+            return fragmentListener.onTouchEvent(event);
+        }
         return super.onTouchEvent(event);
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
-        if (fragmentListener != null)
+        if (fragmentListener != null){
             fragmentListener.dispatchKeyEvent(event);
+        }
         return super.dispatchKeyEvent(event);
     }
 
     public void setFragmentListener(FragmentListener fragmentListener) {
         this.fragmentListener = fragmentListener;
     }
-
 }
