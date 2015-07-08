@@ -7,7 +7,7 @@
     <FrameLayout
         android:id="@+id/fragment_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="120dp"
@@ -25,7 +25,8 @@
         <LinearLayout
             android:id="@+id/data_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="48dp"
             android:background="@color/REPORT_UI_C6"
             android:gravity="center"
@@ -55,8 +56,6 @@
                     </LinearLayout>
 
                 </HorizontalScrollView>
-
-
             </LinearLayout>
 
             <com.github.mikephil.charting.charts.PieChart

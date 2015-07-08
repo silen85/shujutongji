@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
@@ -33,6 +34,8 @@ import java.util.List;
  * Created by meisl on 2015/6/19.
  */
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
+
+    private long mExitTime;
 
     public boolean AUTHORITY_SALES_AMOUNT = false;
 
@@ -264,24 +267,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void backFragment() {
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        List<Fragment> fragmentList = fragmentManager.getFragments();
-        Iterator iterator = fragmentList.iterator();
-        while (iterator.hasNext()) {
-            Fragment _fragment = (Fragment) iterator.next();
-            if (_fragment != null && !(_fragment instanceof MainFragment)) {
-                fragmentTransaction.remove(_fragment);
-            }
-        }
-
         if (mainFragment.isVisible()) {
-            finish();
+
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Toast.makeText(this, getString(R.string.quit_press_again), Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
         } else {
+
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            List<Fragment> fragmentList = fragmentManager.getFragments();
+            Iterator iterator = fragmentList.iterator();
+            while (iterator.hasNext()) {
+                Fragment _fragment = (Fragment) iterator.next();
+                if (_fragment != null && !(_fragment instanceof MainFragment)) {
+                    fragmentTransaction.remove(_fragment);
+                }
+            }
+
             fragmentTransaction.show(mainFragment);
+            fragmentTransaction.commit();
             toogleTitle(getString(R.string.app_title_name1), true);
         }
-        fragmentTransaction.commit();
     }
 
     @Override

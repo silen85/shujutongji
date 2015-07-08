@@ -3,7 +3,7 @@
     android:id="@+id/authority_layer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/REPORT_UI_C6"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingLeft="@dimen/interval_A"

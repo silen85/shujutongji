@@ -5,11 +5,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -68,13 +68,6 @@ public class UserDetailFragment extends BaseListFragment {
     protected void initView() {
 
         list_content = (LinearLayout) view.findViewById(R.id.list_content);
-        list_content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                list_content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                topMargin = ((FrameLayout.LayoutParams) list_content.getLayoutParams()).topMargin;
-            }
-        });
 
         initTime();
 
@@ -192,9 +185,12 @@ public class UserDetailFragment extends BaseListFragment {
             ((FrameLayout.LayoutParams) list_content.getLayoutParams()).setMargins(0, 0, 0, 0);
         } else {
             time_chooser.setVisibility(View.VISIBLE);
-            if (topMargin > 0) {
-                ((FrameLayout.LayoutParams) list_content.getLayoutParams()).setMargins(0, topMargin, 0, 0);
+            topMargin = ((FrameLayout.LayoutParams) list_content.getLayoutParams()).topMargin;
+            if (topMargin <= 0) {
+                DisplayMetrics dm = getResources().getDisplayMetrics();
+                topMargin = (int) (48f * dm.density);
             }
+            ((FrameLayout.LayoutParams) list_content.getLayoutParams()).setMargins(0, topMargin, 0, 0);
         }
 
     }
@@ -420,6 +416,10 @@ public class UserDetailFragment extends BaseListFragment {
                     }
                     break;
                 case HANDLER_SROAT:
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
                     roatStart();
                     break;
                 case HANDLER_EROAT:

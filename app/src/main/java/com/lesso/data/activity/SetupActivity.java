@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,12 +17,12 @@ import com.lesso.data.R;
 /**
  * Created by meisl on 2015/7/6.
  */
-public class SetupActivity extends Activity{
+public class SetupActivity extends Activity {
 
     private LessoApplication.LoginUser loginUser;
 
 
-    private Button btn_back,setup_scratpwd,setup_logout;
+    private Button btn_back, setup_scratpwd, setup_logout;
     private RelativeLayout main_title;
     private TextView main_title_txt;
     private ImageView main_setting;
@@ -28,6 +30,10 @@ public class SetupActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_setup);
 
@@ -37,6 +43,8 @@ public class SetupActivity extends Activity{
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(SetupActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });

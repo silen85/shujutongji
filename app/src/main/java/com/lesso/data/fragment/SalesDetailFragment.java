@@ -86,6 +86,7 @@ public class SalesDetailFragment extends BaseListFragment {
         tab_sales_car = (LinearLayout) view.findViewById(R.id.tab_sales_car);
         tab_sales_type = (LinearLayout) view.findViewById(R.id.tab_sales_type);
 
+        toogleHeader(tabType);
         toogleTab(tabType);
 
         tab_sales_amount.setOnClickListener(new View.OnClickListener() {
@@ -156,26 +157,34 @@ public class SalesDetailFragment extends BaseListFragment {
 
     protected void toogleHeader(int tabType) {
 
-        if (header == null) {
-
-            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
-
-            TextView a = ((TextView) header.findViewById(R.id.colum1));
-            a.setText(tabType == 4 ? "物料组" : "日期");
-            a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-            a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
-            TextView b = ((TextView) header.findViewById(R.id.colum2));
-            b.setText(tabType == 2 ? "单据量" : tabType == 3 ? "车次量" : tabType == 4 ? "占比" : "销售额");
-            b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-            b.setBackgroundResource(R.drawable.border_left1);
-            //b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
-
-            list_content.addView(header, 0);
-        } else {
-            ((TextView) (header.findViewById(R.id.colum1))).setText(tabType == 4 ? "物料组" : "日期");
-            ((TextView) (header.findViewById(R.id.colum2))).setText(tabType == 2 ? "单据量" : tabType == 3 ? "车次量" : tabType == 4 ? "占比" : "销售额");
+        if (header != null) {
+            list_content.removeView(header);
         }
 
+
+        if (tabType == 4) {
+            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid, null);
+        } else {
+            header = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.item_grid1, null);
+        }
+
+        TextView a = ((TextView) header.findViewById(R.id.colum1));
+        a.setText(tabType == 4 ? "用户类别" : "日期");
+        a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
+        TextView b = ((TextView) header.findViewById(R.id.colum2));
+        b.setText(tabType == 2 ? "单据量" : tabType == 3 ? "车次量" : tabType == 4 ? "数量" : "销售额");
+        b.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        b.setBackgroundResource(R.drawable.border_left1);
+        //b.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+
+        if (tabType == 4) {
+            TextView c = ((TextView) header.findViewById(R.id.colum3));
+            c.setText("比例");
+            c.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            c.setBackgroundResource(R.drawable.border_left1);
+        }
+        list_content.addView(header, 0);
     }
 
     public void toogleTab(int tabType) {
@@ -201,13 +210,14 @@ public class SalesDetailFragment extends BaseListFragment {
 
         if (data != null && data.size() > 0) {
 
+            boolean flag = (tabType == 4 ? true : false);
             list.clear();
             classTotal = 0f;
             for (int i = 0; i < data.size(); i++) {
 
                 Map<String, String> item = new HashMap();
 
-                String coloum1 = "", coloum2 = "";
+                String coloum1 = "", coloum2 = "", coloum3 = "";
 
                 if (tabType == 2) {
                     if (timeType == 2) {
@@ -224,9 +234,9 @@ public class SalesDetailFragment extends BaseListFragment {
                     coloum2 = data.get(data.size() - 1 - i).get("ZCOUNT");
                     coloum2 = coloum2.substring(0, coloum2.indexOf(".") > -1 ? coloum2.indexOf(".") : coloum2.length());
                 } else if (tabType == 4) {
-                    coloum1 = data.get(data.size() - 1 - i).get("MATKL");
+                    coloum1 = Constant.TYPE_MAP.get(data.get(data.size() - 1 - i).get("MATKL"));
                     coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
-
+                    coloum3 = coloum2;
                     classTotal += Float.parseFloat(coloum2);
                 } else {
                     if (timeType == 2) {
@@ -241,12 +251,46 @@ public class SalesDetailFragment extends BaseListFragment {
                 item.put("colum1", coloum1);
                 item.put("colum2", coloum2);
 
+                if (flag) {
+                    item.put("colum3", coloum3);
+                }
+
                 list.add(item);
             }
 
             if (adapter == null) {
-                adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid1);
-                setListAdapter(adapter);
+
+                if (flag) {
+                    adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid);
+                    adapter.setColoumCount(3);
+                    setListAdapter(adapter);
+                } else {
+                    adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid1);
+                    adapter.setColoumCount(2);
+                    setListAdapter(adapter);
+                }
+
+            } else {
+
+                if (adapter.getColoumCount() == 2) {
+
+                    if (flag) {
+                        adapter.notifyDataSetInvalidated();
+                        adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid);
+                        adapter.setColoumCount(3);
+                        setListAdapter(adapter);
+                    }
+
+                } else if (adapter.getColoumCount() == 3) {
+
+                    if (!flag) {
+
+                        adapter.notifyDataSetInvalidated();
+                        adapter = new SalesDetailAdapter(activity, list, R.layout.item_grid1);
+                        adapter.setColoumCount(2);
+                        setListAdapter(adapter);
+                    }
+                }
             }
             adapter.notifyDataSetChanged();
         }
@@ -272,7 +316,11 @@ public class SalesDetailFragment extends BaseListFragment {
             }
         } else if (tabType == 3) {
             parems.put("VBELN", "01");
-            parems.put("type", "CAR");
+            if (timeType == 2) {
+                parems.put("type", "CAR_MONTH");
+            } else {
+                parems.put("type", "CAR");
+            }
         } else if (tabType == 4) {
             parems.put("VBELN", "00");
             parems.put("type", "CLASS");
@@ -380,6 +428,10 @@ public class SalesDetailFragment extends BaseListFragment {
                     }
                     break;
                 case HANDLER_SROAT:
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
                     roatStart();
                     break;
                 case HANDLER_EROAT:
@@ -400,6 +452,8 @@ public class SalesDetailFragment extends BaseListFragment {
     };
 
     class SalesDetailAdapter extends BaseAdapter {
+
+        private int coloumCount = 2;
 
         private Context context;
         private LayoutInflater layoutInflater;
@@ -450,16 +504,7 @@ public class SalesDetailFragment extends BaseListFragment {
             TextView colum2 = (TextView) listviewitem.findViewById(R.id.colum2);
 
             colum1.setText(map.get(colum1.getTag()));
-
-            if (tabType == 4) {
-                try {
-                    colum2.setText(Arith.round(Float.parseFloat(map.get(colum2.getTag())) / classTotal * 100, 2) + "%");
-                } catch (Exception e) {
-                    colum2.setText("");
-                }
-            } else {
-                colum2.setText(map.get(colum2.getTag()));
-            }
+            colum2.setText(map.get(colum2.getTag()));
 
             if (position % 2 > 0) {
                 colum1.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
@@ -470,6 +515,36 @@ public class SalesDetailFragment extends BaseListFragment {
                 colum2.setBackgroundResource(R.drawable.border_left);
                 //colum2.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
             }
+
+            if (getColoumCount() == 3) {
+
+                TextView colum3 = (TextView) listviewitem.findViewById(R.id.colum3);
+                if (tabType == 4) {
+                    try {
+                        colum3.setText(Arith.round(Float.parseFloat(map.get(colum3.getTag())) / classTotal * 100, 2) + "%");
+                    } catch (Exception e) {
+                        colum3.setText("");
+                    }
+                } else {
+                    colum3.setText(map.get(colum3.getTag()));
+                }
+
+                if (position % 2 > 0) {
+                    colum3.setBackgroundResource(R.drawable.border_left1);
+                    //colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left1));
+                } else {
+                    colum3.setBackgroundResource(R.drawable.border_left);
+                    //colum3.setBackground(activity.getResources().getDrawable(R.drawable.border_left));
+                }
+            }
+        }
+
+        public int getColoumCount() {
+            return coloumCount;
+        }
+
+        public void setColoumCount(int coloumCount) {
+            this.coloumCount = coloumCount;
         }
     }
 

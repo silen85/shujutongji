@@ -220,7 +220,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         String xdata = dataList.get(i).get("created");
                         String ydata = dataList.get(i).get("uv");
 
-                        fields[i] = xdata.substring(6);
+                        fields[i] = xdata.substring(5);
                         data[i] = Float.parseFloat(ydata);
 
                         if (yesterday.equals(xdata)) {
@@ -279,7 +279,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     String xdata = viewtable.get(i).get("ZDATE");
                     String ydata = viewtable.get(i).get("ZTOTLE");
 
-                    fields[i] = xdata.substring(6);
+                    fields[i] = xdata.substring(5);
                     data[i] = Float.parseFloat(ydata);
 
                     if (yesterday.equals(xdata)) {
@@ -385,7 +385,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     String xdata = viewtable.get(viewtable.size() - 1 - i).get("CREATETIME");
                     String ydata = viewtable.get(viewtable.size() - 1 - i).get("COUN");
 
-                    fields[i] = xdata.substring(6);
+                    fields[i] = xdata.substring(5);
                     data[i] = Float.parseFloat(ydata);
 
                     if (yesterday.equals(xdata)) {

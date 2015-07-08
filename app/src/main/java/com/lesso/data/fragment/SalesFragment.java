@@ -235,7 +235,7 @@ public class SalesFragment extends BaseGraphFragment {
                     coloum1 = data.get(i).get("ERDAT");
                     coloum2 = data.get(i).get("ZCOUNT");
                 } else if (tabType == 4) {
-                    coloum1 = data.get(i).get("MATKL");
+                    coloum1 = Constant.TYPE_MAP.get(data.get(i).get("MATKL"));
                     coloum2 = data.get(i).get("ZTOTLE");
 
                     classTotal += Float.parseFloat(coloum2);
@@ -322,7 +322,7 @@ public class SalesFragment extends BaseGraphFragment {
                 String xdata = list.get(i).get("colum1");
                 String ydata = list.get(i).get("colum2");
 
-                fields[i] = xdata.substring(6);
+                fields[i] = xdata.substring(5);
                 dataArr[i] = Float.parseFloat(ydata);
 
             }
@@ -355,7 +355,11 @@ public class SalesFragment extends BaseGraphFragment {
             }
         } else if (tabType == 3) {
             parems.put("VBELN", "01");
-            parems.put("type", "CAR");
+            if (timeType == 2) {
+                parems.put("type", "CAR_MONTH");
+            } else {
+                parems.put("type", "CAR");
+            }
         } else if (tabType == 4) {
             parems.put("VBELN", "00");
             parems.put("type", "CLASS");

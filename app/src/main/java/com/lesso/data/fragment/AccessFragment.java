@@ -171,7 +171,7 @@ public class AccessFragment extends BaseGraphFragment {
                 String xdata = list.get(i).get("colum1");
                 String ydata = list.get(i).get("colum2");
 
-                fields[i] = xdata.substring(6);
+                fields[i] = xdata.substring(5);
                 dataArr[i] = Float.parseFloat(ydata);
 
             }
