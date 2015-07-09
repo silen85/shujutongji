@@ -118,6 +118,7 @@ public class StoreDetailFragment extends BaseListFragment {
                     tabType = 1;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+                    toogleTime();
 
                     if (adapter != null) {
                         list.clear();
@@ -137,6 +138,7 @@ public class StoreDetailFragment extends BaseListFragment {
                     tabType = 2;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+                    toogleTime();
 
                     if (adapter != null) {
                         list.clear();
@@ -156,6 +158,8 @@ public class StoreDetailFragment extends BaseListFragment {
                     tabType = 3;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+                    toogleTime();
+
                     if (adapter != null) {
                         list.clear();
                         adapter.notifyDataSetChanged();

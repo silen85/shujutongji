@@ -98,7 +98,7 @@ public abstract class BaseListFragment extends ListFragment {
                         lock_icon.setSelected(true);
                         authority_layer.setSelected(true);
                         authority_button.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         lock_icon.setSelected(false);
                         authority_layer.setSelected(false);
                         authority_button.setVisibility(View.GONE);
@@ -123,26 +123,26 @@ public abstract class BaseListFragment extends ListFragment {
 
     }
 
-    protected void displayAuthority(){
+    protected void displayAuthority() {
         if (authority_layer != null) {
             authority_layer.setVisibility(View.VISIBLE);
             btn_toogle_fragment.setClickable(false);
         }
     }
 
-    private void authority(){
+    private void authority() {
 
         LessoApplication.LoginUser loginUser = ((LessoApplication) activity.getApplication()).getLoginUser();
 
         Map<String, String> parems = new HashMap();
 
         parems.put("type", "logkey");
-        parems.put("id",loginUser.getUserid());
-        parems.put("key",authorityEditText.getText().toString());
+        parems.put("id", loginUser.getUserid());
+        parems.put("key", authorityEditText.getText().toString());
 
         RequestParams requestParams = new RequestParams(parems);
 
-        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler(){
+        AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -191,7 +191,7 @@ public abstract class BaseListFragment extends ListFragment {
 
     }
 
-    protected void hideAuthority(){
+    protected void hideAuthority() {
         if (authority_layer != null) {
             authority_layer.setVisibility(View.GONE);
             btn_toogle_fragment.setClickable(true);
@@ -202,7 +202,7 @@ public abstract class BaseListFragment extends ListFragment {
 
         initTimeChooser();
 
-        initTimeVal();
+        initTimeChooserVal();
 
 
     }
@@ -233,50 +233,39 @@ public abstract class BaseListFragment extends ListFragment {
 
     }
 
-    public void initTimeVal() {
+    public void initTimeChooserVal() {
 
         if (time_chooser == null)
             return;
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-
-        calendar.add(Calendar.MONTH, -1);
-
-        sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
         ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-
-
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
         ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
 
     }
 
     protected void showTimerDialog() {
 
-        if (timerDialog == null) {
-            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-            timerDialog.setCanceledOnTouchOutside(true);
-            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-                @Override
-                public void doFinish() {
+        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+        timerDialog.setCanceledOnTouchOutside(true);
+        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+            @Override
+            public void doFinish() {
 
-                    timeType = timerDialog.getType();
-                    sBeginDate = timerDialog.getsBeaginDate();
-                    sEndDate = timerDialog.getsEndDate();
+                timeType = timerDialog.getType();
+                sBeginDate = timerDialog.getsBeaginDate();
+                sEndDate = timerDialog.getsEndDate();
 
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
 
-                    /**
-                     * 发送请求
-                     */
+                /**
+                 * 发送请求
+                 */
 
-                    sendRequest(generateParam());
+                sendRequest(generateParam());
 
-                }
-            });
-        }
+            }
+        });
         timerDialog.show();
     }
 
@@ -291,11 +280,24 @@ public abstract class BaseListFragment extends ListFragment {
         });
     }
 
-    public void toogleTab(int tabType){
+    public void toogleTab(int tabType) {
         this.tabType = tabType;
     }
 
-    protected void roatStart(){
+    protected void toogleTime() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MONTH, -1);
+
+        sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
+        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
+
+        initTimeChooserVal();
+
+    }
+
+    protected void roatStart() {
         if (roatAnim == null) {
             roatAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.roat);
             roatAnim.setInterpolator(new LinearInterpolator());
@@ -303,7 +305,7 @@ public abstract class BaseListFragment extends ListFragment {
         btn_toogle_fragment.startAnimation(roatAnim);
     }
 
-    protected void roatEnd(){
+    protected void roatEnd() {
         btn_toogle_fragment.clearAnimation();
     }
 
@@ -337,5 +339,21 @@ public abstract class BaseListFragment extends ListFragment {
 
     public void setTabType(int tabType) {
         this.tabType = tabType;
+    }
+
+    public String getsBeginDate() {
+        return sBeginDate;
+    }
+
+    public void setsBeginDate(String sBeginDate) {
+        this.sBeginDate = sBeginDate;
+    }
+
+    public String getsEndDate() {
+        return sEndDate;
+    }
+
+    public void setsEndDate(String sEndDate) {
+        this.sEndDate = sEndDate;
     }
 }

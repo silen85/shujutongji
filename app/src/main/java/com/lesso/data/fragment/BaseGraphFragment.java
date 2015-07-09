@@ -207,8 +207,7 @@ public abstract class BaseGraphFragment extends Fragment {
 
         initTimeChooser();
 
-        initTimeVal();
-
+        initTimeChooserVal();
 
     }
 
@@ -238,49 +237,38 @@ public abstract class BaseGraphFragment extends Fragment {
 
     }
 
-    public void initTimeVal() {
+    public void initTimeChooserVal() {
 
         if (time_chooser == null)
             return;
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-
-        calendar.add(Calendar.MONTH, -1);
-
-        sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
         ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-
-
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
         ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
 
     }
 
     protected void showTimerDialog() {
 
-        if (timerDialog == null) {
-            timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
-            timerDialog.setCanceledOnTouchOutside(true);
-            timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
-                @Override
-                public void doFinish() {
+        timerDialog = new TimeChooserDialog(activity, timeType, sBeginDate, sEndDate);
+        timerDialog.setCanceledOnTouchOutside(true);
+        timerDialog.setClickListenerInterface(new TimeChooserDialog.ClickListenerInterface() {
+            @Override
+            public void doFinish() {
 
-                    timeType = timerDialog.getType();
-                    sBeginDate = timerDialog.getsBeaginDate();
-                    sEndDate = timerDialog.getsEndDate();
+                timeType = timerDialog.getType();
+                sBeginDate = timerDialog.getsBeaginDate();
+                sEndDate = timerDialog.getsEndDate();
 
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
-                    ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
+                ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
 
-                    /**
-                     * 发送请求
-                     */
-                    sendRequest(generateParam());
+                /**
+                 * 发送请求
+                 */
+                sendRequest(generateParam());
 
-                }
-            });
-        }
+            }
+        });
         timerDialog.show();
 
     }
@@ -298,6 +286,19 @@ public abstract class BaseGraphFragment extends Fragment {
 
     public void toogleTab(int tabType) {
         this.tabType = tabType;
+    }
+
+    protected void toogleTime() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MONTH, -1);
+
+        sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
+        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
+
+        initTimeChooserVal();
+
     }
 
     protected void roatStart() {
@@ -340,5 +341,21 @@ public abstract class BaseGraphFragment extends Fragment {
 
     public void setTabType(int tabType) {
         this.tabType = tabType;
+    }
+
+    public String getsBeginDate() {
+        return sBeginDate;
+    }
+
+    public void setsBeginDate(String sBeginDate) {
+        this.sBeginDate = sBeginDate;
+    }
+
+    public String getsEndDate() {
+        return sEndDate;
+    }
+
+    public void setsEndDate(String sEndDate) {
+        this.sEndDate = sEndDate;
     }
 }

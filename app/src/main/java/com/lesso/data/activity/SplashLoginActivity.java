@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 
 import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
+import com.lesso.data.common.UpdateManager;
 import com.lesso.data.cusinterface.FragmentListener;
 import com.lesso.data.fragment.LoginFragment;
 import com.lesso.data.fragment.SplashFragment;
@@ -55,6 +56,10 @@ public class SplashLoginActivity extends FragmentActivity {
                     fragmentTransaction.add(R.id.splash_login, loginFragment);
 
                     fragmentTransaction.commit();
+
+                    UpdateManager mUpdateManager = new UpdateManager(SplashLoginActivity.this);
+                    mUpdateManager.sendUpdateRequest();
+
                 } else {
 
                     String Scratchable_PWD = loginUser.getScratchable_PWD();
@@ -93,7 +98,7 @@ public class SplashLoginActivity extends FragmentActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (fragmentListener != null){
+        if (fragmentListener != null) {
             return fragmentListener.onTouchEvent(event);
         }
         return super.onTouchEvent(event);
@@ -101,7 +106,7 @@ public class SplashLoginActivity extends FragmentActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (fragmentListener != null){
+        if (fragmentListener != null) {
             fragmentListener.dispatchKeyEvent(event);
         }
         return super.dispatchKeyEvent(event);
@@ -110,4 +115,5 @@ public class SplashLoginActivity extends FragmentActivity {
     public void setFragmentListener(FragmentListener fragmentListener) {
         this.fragmentListener = fragmentListener;
     }
+
 }

@@ -118,6 +118,7 @@ public class UserFragment extends BaseGraphFragment {
                 if (tabType != 1) {
                     tabType = 1;
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                 }
             }
@@ -130,6 +131,7 @@ public class UserFragment extends BaseGraphFragment {
                 if (tabType != 2) {
                     tabType = 2;
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                 }
             }
@@ -142,6 +144,7 @@ public class UserFragment extends BaseGraphFragment {
                 if (tabType != 3) {
                     tabType = 3;
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                 }
             }
@@ -154,6 +157,7 @@ public class UserFragment extends BaseGraphFragment {
                 if (tabType != 4) {
                     tabType = 4;
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
 
                 }

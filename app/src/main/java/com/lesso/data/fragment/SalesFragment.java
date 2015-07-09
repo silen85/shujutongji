@@ -139,6 +139,7 @@ public class SalesFragment extends BaseGraphFragment {
                         displayAuthority();
                     }
                     toogleTab(tabType);
+                    toogleTime();
                 }
             }
         });
@@ -151,6 +152,7 @@ public class SalesFragment extends BaseGraphFragment {
                     tabType = 2;
                     btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                     hideAuthority();
                 }
@@ -165,6 +167,7 @@ public class SalesFragment extends BaseGraphFragment {
                     tabType = 3;
                     btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                     hideAuthority();
                 }
@@ -179,6 +182,7 @@ public class SalesFragment extends BaseGraphFragment {
                     tabType = 4;
                     btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                     hideAuthority();
                 }
@@ -235,7 +239,8 @@ public class SalesFragment extends BaseGraphFragment {
                     coloum1 = data.get(i).get("ERDAT");
                     coloum2 = data.get(i).get("ZCOUNT");
                 } else if (tabType == 4) {
-                    coloum1 = Constant.TYPE_MAP.get(data.get(i).get("MATKL"));
+                    coloum1 = data.get(data.size() - 1 - i).get("WGBEZ")+" ";
+                    coloum1 = coloum1.substring(coloum1.indexOf("-")>0?coloum1.indexOf("-")+1:0);
                     coloum2 = data.get(i).get("ZTOTLE");
 
                     classTotal += Float.parseFloat(coloum2);

@@ -37,8 +37,6 @@ public class AccessFragment extends BaseGraphFragment {
     private int screenWidth, screenHeight;
     private int chart_access_width;
 
-    private List<Map<String, String>> dataCache;
-
     private LinearLayout data_view, chart_xy_container, data_view_access;
     private XYLineView2 chart_xy;
 
@@ -93,7 +91,8 @@ public class AccessFragment extends BaseGraphFragment {
                 if (tabType != 1) {
                     tabType = 1;
                     toogleTab(tabType);
-                    fillData(dataCache);
+                    toogleTime();
+                    sendRequest(generateParam());
                 }
             }
         });
@@ -104,7 +103,8 @@ public class AccessFragment extends BaseGraphFragment {
                 if (tabType != 2) {
                     tabType = 2;
                     toogleTab(tabType);
-                    fillData(dataCache);
+                    toogleTime();
+                    sendRequest(generateParam());
                 }
             }
         });
@@ -279,8 +279,7 @@ public class AccessFragment extends BaseGraphFragment {
                         //String desc = (String) result.get("msg");
 
                         if (Constant.ACCESS_STATUS_CODE_SUCCESS.equals(status)) {
-                            dataCache = (List<Map<String, String>>) result.get("data");
-                            fillData(dataCache);
+                            fillData((List<Map<String, String>>) result.get("data"));
                         } else {
                             fillData(null);
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();

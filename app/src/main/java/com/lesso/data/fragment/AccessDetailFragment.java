@@ -38,7 +38,6 @@ public class AccessDetailFragment extends BaseListFragment {
 
     private String TAG = "com.lesso.data.fragment.AccessDetailFragment";
 
-    private List<Map<String, String>> dataCache;
     private AccessDetailAdapter adapter;
     private LinearLayout list_content;
     private LinearLayout header;
@@ -86,7 +85,8 @@ public class AccessDetailFragment extends BaseListFragment {
                 if (tabType != 1) {
                     tabType = 1;
                     toogleTab(tabType);
-                    fillData(dataCache);
+                    toogleTime();
+                    sendRequest(generateParam());
                 }
             }
         });
@@ -97,7 +97,8 @@ public class AccessDetailFragment extends BaseListFragment {
                 if (tabType != 2) {
                     tabType = 2;
                     toogleTab(tabType);
-                    fillData(dataCache);
+                    toogleTime();
+                    sendRequest(generateParam());
                 }
             }
         });
@@ -256,8 +257,7 @@ public class AccessDetailFragment extends BaseListFragment {
                         //String desc = (String) result.get("msg");
 
                         if (Constant.ACCESS_STATUS_CODE_SUCCESS.equals(status)) {
-                            dataCache = (List<Map<String, String>>) result.get("data");
-                            fillData(dataCache);
+                            fillData((List<Map<String, String>>) result.get("data"));
                         } else {
                             if (list != null && list.size() > 0) {
                                 list.clear();

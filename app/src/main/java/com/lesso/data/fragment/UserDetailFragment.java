@@ -88,6 +88,7 @@ public class UserDetailFragment extends BaseListFragment {
                     tabType = 1;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                 }
             }
@@ -101,6 +102,7 @@ public class UserDetailFragment extends BaseListFragment {
                     tabType = 2;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                 }
             }
@@ -114,6 +116,7 @@ public class UserDetailFragment extends BaseListFragment {
                     tabType = 3;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
                 }
             }
@@ -127,6 +130,7 @@ public class UserDetailFragment extends BaseListFragment {
                     tabType = 4;
                     toogleHeader(tabType);
                     toogleTab(tabType);
+                    toogleTime();
                     sendRequest(generateParam());
 
                 }

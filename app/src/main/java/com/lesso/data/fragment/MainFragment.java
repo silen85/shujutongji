@@ -47,10 +47,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private int screenWidth, screenHeight;
 
-    private int[] processbar_stys = {R.drawable.processbar_sty1, R.drawable.processbar_sty2, R.drawable.processbar_sty3,
-            R.drawable.processbar_sty4, R.drawable.processbar_sty5, R.drawable.processbar_sty6,
-            R.drawable.processbar_sty7, R.drawable.processbar_sty8};
-
     private String sBeginDate, sEndDate, yesterday, tomorrow;
 
     private LayoutInflater layoutInflater;
@@ -120,10 +116,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         fragment_store.setOnClickListener(this);
         fragment_user.setOnClickListener(this);
 
-        ((TextView) view.findViewById(R.id.fragment_access_date)).setText(sBeginDate + " 至 " + sEndDate);
-        ((TextView) view.findViewById(R.id.fragment_sales_date)).setText(sBeginDate + " 至 " + sEndDate);
-        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(yesterday + " 至 " + yesterday);
-        ((TextView) view.findViewById(R.id.fragment_user_date)).setText(sBeginDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_access_date)).setText(sBeginDate + " 至 " + yesterday);
+        ((TextView) view.findViewById(R.id.fragment_sales_date)).setText(sBeginDate + " 至 " + yesterday);
+        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(yesterday);
+        ((TextView) view.findViewById(R.id.fragment_user_date)).setText(sBeginDate + " 至 " + yesterday);
 
         initAccessView();
 

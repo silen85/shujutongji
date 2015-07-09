@@ -98,6 +98,7 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="@dimen/interval_F"
                 android:singleLine="true"
+                android:text="sysadmin"
                 android:textColor="@color/REPORT_UI_C6"></EditText>
 
 
@@ -150,6 +151,7 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="@dimen/interval_F"
                 android:singleLine="true"
+                android:text="min0dscj"
                 android:textColor="@color/REPORT_UI_C6"></EditText>
 
         </FrameLayout>

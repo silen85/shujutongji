@@ -21,6 +21,8 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
 
     private static final String TAG = "LockActivity";
 
+    private int errcount = 5;
+
     private LessoApplication.LoginUser loginUser;
 
     private List<LockPatternView.Cell> lockPattern;
@@ -34,7 +36,7 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
         super.onCreate(savedInstanceState);
 
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
-        if (loginUser == null || loginUser.getScratchable_PWD() == null){
+        if (loginUser == null || loginUser.getScratchable_PWD() == null) {
             finish();
             return;
         }
@@ -53,7 +55,7 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
     protected void onRestart() {
         super.onRestart();
 
-        if (loginUser == null || loginUser.getScratchable_PWD() == null){
+        if (loginUser == null || loginUser.getScratchable_PWD() == null) {
             finish();
             return;
         }
@@ -100,11 +102,17 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
                 shakeAnim = AnimationUtils.loadAnimation(this, R.anim.shake);
                 shakeAnim.setInterpolator(new LinearInterpolator());
             }
-            lock_input_tips.setText(getString(R.string.text_lock_input_wrong));
-            lock_input_tips.startAnimation(shakeAnim);
 
-            lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
+            errcount--;
+            if (errcount <= 0) {
+                finish();
+            }else{
 
+                lock_input_tips.setText("密码错误，还可以输入" + (errcount) + "次");
+                lock_input_tips.startAnimation(shakeAnim);
+
+                lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
+            }
         }
 
     }

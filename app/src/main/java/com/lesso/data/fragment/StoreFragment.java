@@ -116,6 +116,8 @@ public class StoreFragment extends BaseGraphFragment {
                 if (tabType != 1) {
                     tabType = 1;
                     toogleTab(tabType);
+                    toogleTime();
+
                     if (adapter != null) {
                         list.clear();
                         adapter.notifyDataSetChanged();
@@ -132,6 +134,8 @@ public class StoreFragment extends BaseGraphFragment {
                 if (tabType != 2) {
                     tabType = 2;
                     toogleTab(tabType);
+                    toogleTime();
+
                     if (adapter != null) {
                         list.clear();
                         adapter.notifyDataSetChanged();
@@ -148,6 +152,7 @@ public class StoreFragment extends BaseGraphFragment {
                 if (tabType != 3) {
                     //tabType = 3;
                     //toogleTab(tabType);
+                    //toogleTime();
                     //sendRequest(generateParam());
 
                     tabType = 3;
