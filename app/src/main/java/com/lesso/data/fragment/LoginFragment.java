@@ -119,8 +119,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         accountEditText = (EditText) view.findViewById(R.id.accountEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
-        accountEditText.setShowSoftInputOnFocus(true);
-        passwordEditText.setShowSoftInputOnFocus(true);
+        //accountEditText.setShowSoftInputOnFocus(true);
+        //passwordEditText.setShowSoftInputOnFocus(true);
 
         accountEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

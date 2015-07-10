@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by meisl on 2015/6/25.
  */
 
-public class StoreAdapter extends BaseAdapter {
+public class HorizontalBarAdapter extends BaseAdapter {
 
     private int[] processbar_stys = {R.drawable.processbar_sty1, R.drawable.processbar_sty2, R.drawable.processbar_sty3,
             R.drawable.processbar_sty4, R.drawable.processbar_sty5, R.drawable.processbar_sty6,
@@ -30,7 +30,7 @@ public class StoreAdapter extends BaseAdapter {
 
     private int layoutlistid;
 
-    public StoreAdapter(Context context, List<Map<String, String>> listobject, int listcontextid) {
+    public HorizontalBarAdapter(Context context, List<Map<String, String>> listobject, int listcontextid) {
         this.context = context;
         this.layoutInflater = LayoutInflater.from(this.context);
         this.list = listobject;

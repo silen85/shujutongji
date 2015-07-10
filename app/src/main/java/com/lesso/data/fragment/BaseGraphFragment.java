@@ -279,6 +279,7 @@ public abstract class BaseGraphFragment extends Fragment {
         btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onBtnToogle();
                 activity.toogleFragment(BaseGraphFragment.this);
             }
         });
@@ -314,6 +315,8 @@ public abstract class BaseGraphFragment extends Fragment {
     }
 
     protected abstract void initView();
+
+    protected abstract void onBtnToogle();
 
     public abstract void initData();
 

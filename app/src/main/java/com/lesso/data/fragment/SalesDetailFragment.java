@@ -60,7 +60,7 @@ public class SalesDetailFragment extends BaseListFragment {
         super.onActivityCreated(savedInstanceState);
 
         // initData();
-        if (tabType == 1) {
+        if (tabType == 2) {
             if (!activity.AUTHORITY_SALES_AMOUNT) {
                 btn_toogle_fragment.setClickable(false);
             } else {
@@ -95,16 +95,12 @@ public class SalesDetailFragment extends BaseListFragment {
 
                 if (tabType != 1) {
                     tabType = 1;
-                    if (activity.AUTHORITY_SALES_AMOUNT) {
-                        btn_toogle_fragment.setClickable(true);
-                        sendRequest(generateParam());
-                    } else {
-                        btn_toogle_fragment.setClickable(false);
-                        displayAuthority();
-                    }
+                    btn_toogle_fragment.setClickable(true);
                     toogleHeader(tabType);
                     toogleTab(tabType);
                     toogleTime();
+                    sendRequest(generateParam());
+                    hideAuthority();
                 }
             }
         });
@@ -115,12 +111,16 @@ public class SalesDetailFragment extends BaseListFragment {
 
                 if (tabType != 2) {
                     tabType = 2;
-                    btn_toogle_fragment.setClickable(true);
+                    if (activity.AUTHORITY_SALES_AMOUNT) {
+                        btn_toogle_fragment.setClickable(true);
+                        sendRequest(generateParam());
+                    } else {
+                        btn_toogle_fragment.setClickable(false);
+                        displayAuthority();
+                    }
                     toogleHeader(tabType);
                     toogleTab(tabType);
                     toogleTime();
-                    sendRequest(generateParam());
-                    hideAuthority();
                 }
             }
         });
@@ -157,6 +157,14 @@ public class SalesDetailFragment extends BaseListFragment {
             }
         });
 
+    }
+
+    @Override
+    protected void onBtnToogle() {
+        if (adapter != null) {
+            list.clear();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     protected void toogleHeader(int tabType) {
@@ -238,8 +246,8 @@ public class SalesDetailFragment extends BaseListFragment {
                     coloum2 = data.get(data.size() - 1 - i).get("ZCOUNT");
                     coloum2 = coloum2.substring(0, coloum2.indexOf(".") > -1 ? coloum2.indexOf(".") : coloum2.length());
                 } else if (tabType == 4) {
-                    coloum1 = data.get(data.size() - 1 - i).get("WGBEZ")+" ";
-                    coloum1 = coloum1.substring(coloum1.indexOf("-")>0?coloum1.indexOf("-")+1:0);
+                    coloum1 = data.get(data.size() - 1 - i).get("WGBEZ") + " ";
+                    coloum1 = coloum1.substring(coloum1.indexOf("-") > 0 ? coloum1.indexOf("-") + 1 : 0);
                     coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
                     coloum3 = coloum2;
                     classTotal += Float.parseFloat(coloum2);

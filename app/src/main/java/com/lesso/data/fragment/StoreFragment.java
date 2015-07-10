@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.lesso.data.R;
-import com.lesso.data.adapter.StoreAdapter;
+import com.lesso.data.adapter.HorizontalBarAdapter;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
 import com.loopj.android.http.AsyncHttpClient;
@@ -41,7 +40,7 @@ public class StoreFragment extends BaseGraphFragment {
     private EditText searcher_text;
     private ImageView searcher_icon;
 
-    private StoreAdapter adapter;
+    private HorizontalBarAdapter adapter;
     private LinearLayout list_content;
     private ListView listView;
 
@@ -91,17 +90,7 @@ public class StoreFragment extends BaseGraphFragment {
 
         initTime();
 
-        btn_toogle_fragment = (Button) view.findViewById(R.id.btn_toogle_fragment);
-        btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (adapter != null) {
-                    list.clear();
-                    adapter.notifyDataSetChanged();
-                }
-                activity.toogleFragment(StoreFragment.this);
-            }
-        });
+        initBtnToogle();
 
         tab_store_out = (LinearLayout) view.findViewById(R.id.tab_store_out);
         tab_store_in = (LinearLayout) view.findViewById(R.id.tab_store_in);
@@ -163,6 +152,14 @@ public class StoreFragment extends BaseGraphFragment {
 
     }
 
+    @Override
+    protected void onBtnToogle() {
+        if (adapter != null) {
+            list.clear();
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     public void toogleTab(int tabType) {
         super.toogleTab(tabType);
         tab_store_out.setSelected(tabType == 2 || tabType == 3 ? false : true);
@@ -213,7 +210,7 @@ public class StoreFragment extends BaseGraphFragment {
             }
 
             if (adapter == null) {
-                adapter = new StoreAdapter(activity, list, R.layout.item_processbar);
+                adapter = new HorizontalBarAdapter(activity, list, R.layout.item_processbar);
                 listView.setAdapter(adapter);
             }
             adapter.notifyDataSetChanged();

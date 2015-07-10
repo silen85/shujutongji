@@ -139,6 +139,14 @@ public class UserDetailFragment extends BaseListFragment {
 
     }
 
+    @Override
+    protected void onBtnToogle() {
+        if (adapter != null) {
+            list.clear();
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     protected void toogleHeader(int tabType) {
 
         if (header != null) {

@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.lesso.data.R;
 import com.lesso.data.activity.MainActivity;
-import com.lesso.data.adapter.StoreAdapter;
+import com.lesso.data.adapter.HorizontalBarAdapter;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.MD5;
 import com.lesso.data.common.Tools;
@@ -63,7 +63,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private XYLineView2 chart_access, chart_user;
     private BarView2 chart_sales;
     private ListView listview_store;
-    private StoreAdapter storeAdapter;
+    private HorizontalBarAdapter horizontalBarAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         ((TextView) view.findViewById(R.id.fragment_access_date)).setText(sBeginDate + " 至 " + yesterday);
         ((TextView) view.findViewById(R.id.fragment_sales_date)).setText(sBeginDate + " 至 " + yesterday);
-        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(yesterday);
+        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(sBeginDate + " 至 " + yesterday);
         ((TextView) view.findViewById(R.id.fragment_user_date)).setText(sBeginDate + " 至 " + yesterday);
 
         initAccessView();
@@ -133,6 +133,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private void initData() {
         requestStoreData();
+        requestStoreDataByYesterday();
     }
 
     private void initAccessView() {
@@ -176,7 +177,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         data_view_user.setOnClickListener(this);
         chart_user_width = screenWidth;
 
-        requestUseData();
+        requestUserData();
 
     }
 
@@ -287,7 +288,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                     if (yesterday.equals(xdata)) {
                         try {
-                            ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText(Integer.parseInt(ydata) + "");
+                            ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText(((int) Float.parseFloat(ydata)) + "");
                         } catch (Exception e) {
                             ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
                         }
@@ -319,7 +320,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             if (viewtable != null && viewtable.size() > 0) {
 
                 storeList.clear();
-                int count = 0;
+                //int count = 0;
                 for (int i = 0; i < viewtable.size() && i < 8; i++) {
 
                     Map<String, String> item = new HashMap();
@@ -333,34 +334,53 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     item.put("product_num", coloum2);
                     item.put("product_percent", ((int) ((Float.parseFloat(viewtable.get(i).get("number"))) / (Float.parseFloat(viewtable.get(0).get("number"))) * 100)) + "");
 
-                    count += Integer.parseInt(viewtable.get(i).get("number"));
+                    //count += Integer.parseInt(viewtable.get(i).get("number"));
 
                     storeList.add(item);
                 }
 
-                ((TextView) view.findViewById(R.id.fragment_store_amount)).setText(count + "");
+                //((TextView) view.findViewById(R.id.fragment_store_amount)).setText(count + "");
 
-                storeAdapter = new StoreAdapter(activity, storeList, R.layout.item_processbar);
+                horizontalBarAdapter = new HorizontalBarAdapter(activity, storeList, R.layout.item_processbar);
 
-                listview_store.setAdapter(storeAdapter);
+                listview_store.setAdapter(horizontalBarAdapter);
 
                 listview_store.setVisibility(View.VISIBLE);
                 view.findViewById(R.id.data_view_store_tips).setVisibility(View.GONE);
 
             } else {
-                ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
+                //((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
                 listview_store.setVisibility(View.GONE);
                 view.findViewById(R.id.data_view_store_tips).setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             Log.e(TAG + ":initStoreData", e.getMessage());
 
-            ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
+            //((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
             listview_store.setVisibility(View.GONE);
             view.findViewById(R.id.data_view_store_tips).setVisibility(View.VISIBLE);
         }
 
 
+    }
+
+    private void initStoreDataByYesterday(String json) {
+        try {
+            Map result = Tools.json2Map(json);
+            List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+            if (viewtable != null && viewtable.size() > 0) {
+                int count = 0;
+                for (int i = 0; i < viewtable.size(); i++) {
+                    count += ((int) Float.parseFloat(viewtable.get(i).get("number")));
+                }
+                ((TextView) view.findViewById(R.id.fragment_store_amount)).setText(count + "");
+            } else {
+                ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
+            }
+        } catch (Exception e) {
+            Log.e(TAG + ":initStoreData", e.getMessage());
+            ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
+        }
     }
 
     private void initUserData(String json) {
@@ -437,7 +457,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("token", token);
 
         parems.put("st", sBeginDate);
-        parems.put("et", tomorrow);
+        parems.put("et", yesterday);
 
         // parems.put("st", "2019-05-01");
         // parems.put("et", "2019-05-30");
@@ -452,7 +472,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         parems.put("VKORG", "1250");
         parems.put("start", sBeginDate);
-        parems.put("end", tomorrow);
+        parems.put("end", yesterday);
         parems.put("VBELN", "00");
         parems.put("type", "MONEY");
 
@@ -469,11 +489,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         parems.put("uid", "39");
         parems.put("type", "out");
-        parems.put("start", yesterday);
-        parems.put("end", sEndDate);
+        parems.put("start", sBeginDate);
+        parems.put("end", yesterday);
 
         parems.put("pages", "1");
-        parems.put("numbers", "10000");
+        parems.put("numbers", "8");
 
         //parems.put("start", "2015-05-01");
         //parems.put("end", "2015-05-30");
@@ -481,13 +501,32 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         sendRequest(parems, HANDLER_DATA_STORE);
     }
 
-    private void requestUseData() {
+    private void requestStoreDataByYesterday() {
+
+        Map<String, String> parems = new HashMap();
+
+        parems.put("uid", "39");
+        parems.put("type", "out");
+        parems.put("start", yesterday);
+        parems.put("end", yesterday);
+
+        parems.put("pages", "1");
+        parems.put("numbers", "10000");
+
+        //parems.put("start", "2015-04-10");
+        //parems.put("end", "2015-04-11");
+
+        sendRequest(parems, HANDLER_DATA_STORE_YESTERDAY);
+
+    }
+
+    private void requestUserData() {
 
         Map<String, String> parems = new HashMap();
 
         parems.put("type", "nuser");
         parems.put("start", sBeginDate);
-        parems.put("end", tomorrow);
+        parems.put("end", yesterday);
 
         //  parems.put("start", "2019-05-01");
         //  parems.put("end", "2019-05-30");
@@ -508,6 +547,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             url = Constant.URL_REPORT_STORE;
         } else if (handlerType == HANDLER_DATA_USER) {
             url = Constant.URL_REPORT_USER;
+        } else if (handlerType == HANDLER_DATA_STORE_YESTERDAY) {
+            url = Constant.URL_REPORT_STORE;
         } else {
             return;
         }
@@ -564,40 +605,52 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private final int HANDLER_DATA_ACCESS = 1;
     private final int HANDLER_DATA_SALES = 2;
     private final int HANDLER_DATA_STORE = 3;
-    private final int HANDLER_DATA_USER = 4;
+    private final int HANDLER_DATA_STORE_YESTERDAY = 4;
+    private final int HANDLER_DATA_USER = 5;
+
     private Handler mHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
 
-            String json = "";
-            switch (msg.what) {
-                case HANDLER_DATA_ACCESS:
-                    json = msg.getData().getString("json");
-                    Log.d(TAG, "HANDLER_DATA_ACCESS:" + json);
-                    initAccessData(json);
-                    break;
-                case HANDLER_DATA_SALES:
-                    json = msg.getData().getString("json");
-                    Log.d(TAG, "HANDLER_DATA_SALES:" + json);
-                    initSalesData(json);
-                    break;
-                case HANDLER_DATA_STORE:
-                    json = msg.getData().getString("json");
-                    Log.d(TAG, "HANDLER_DATA_STORE:" + json);
-                    initStoreData(json);
-                    break;
-                case HANDLER_DATA_USER:
-                    json = msg.getData().getString("json");
-                    Log.d(TAG, "HANDLER_DATA_USER:" + json);
-                    initUserData(json);
-                    break;
-                case HANDLER_NETWORK_ERR:
-                    Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
+            try {
+                String json = "";
+                switch (msg.what) {
+                    case HANDLER_DATA_ACCESS:
+                        json = msg.getData().getString("json");
+                        Log.d(TAG, "HANDLER_DATA_ACCESS:" + json);
+                        initAccessData(json);
+                        break;
+                    case HANDLER_DATA_SALES:
+                        json = msg.getData().getString("json");
+                        Log.d(TAG, "HANDLER_DATA_SALES:" + json);
+                        initSalesData(json);
+                        break;
+                    case HANDLER_DATA_STORE:
+                        json = msg.getData().getString("json");
+                        Log.d(TAG, "HANDLER_DATA_STORE:" + json);
+                        initStoreData(json);
+                        break;
+                    case HANDLER_DATA_STORE_YESTERDAY:
+                        json = msg.getData().getString("json");
+                        Log.d(TAG, "HANDLER_DATA_USER:" + json);
+                        initStoreDataByYesterday(json);
+                        break;
+                    case HANDLER_DATA_USER:
+                        json = msg.getData().getString("json");
+                        Log.d(TAG, "HANDLER_DATA_USER:" + json);
+                        initUserData(json);
+                        break;
+                    case HANDLER_NETWORK_ERR:
+                        Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
+                Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
             }
+
             super.handleMessage(msg);
         }
     };

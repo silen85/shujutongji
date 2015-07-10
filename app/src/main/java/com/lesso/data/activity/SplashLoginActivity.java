@@ -57,8 +57,11 @@ public class SplashLoginActivity extends FragmentActivity {
 
                     fragmentTransaction.commit();
 
-                    UpdateManager mUpdateManager = new UpdateManager(SplashLoginActivity.this);
-                    mUpdateManager.sendUpdateRequest();
+                    try {
+                        UpdateManager mUpdateManager = new UpdateManager(SplashLoginActivity.this);
+                        mUpdateManager.sendUpdateRequest();
+                    } catch (Exception e) {
+                    }
 
                 } else {
 

@@ -21,7 +21,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.lesso.data.R;
 import com.lesso.data.activity.MainActivity;
-import com.lesso.data.adapter.StoreAdapter;
+import com.lesso.data.adapter.HorizontalBarAdapter;
 import com.lesso.data.ui.VerticalProgressBar;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class MainFragment1 extends Fragment implements View.OnClickListener {
     private LinearLayout data_view_access, data_view_sales, data_view_store, data_view_user;
     private LineChart chart_access, chart_user;
     private ListView listview_store;
-    private StoreAdapter storeAdapter;
+    private HorizontalBarAdapter horizontalBarAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -402,9 +402,9 @@ public class MainFragment1 extends Fragment implements View.OnClickListener {
         storeList.add(item6);
         storeList.add(item7);
 
-        storeAdapter = new StoreAdapter(activity, storeList, R.layout.item_processbar);
+        horizontalBarAdapter = new HorizontalBarAdapter(activity, storeList, R.layout.item_processbar);
 
-        listview_store.setAdapter(storeAdapter);
+        listview_store.setAdapter(horizontalBarAdapter);
 
     }
 

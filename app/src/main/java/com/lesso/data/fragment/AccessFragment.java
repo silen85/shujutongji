@@ -110,6 +110,11 @@ public class AccessFragment extends BaseGraphFragment {
         });
     }
 
+    @Override
+    protected void onBtnToogle() {
+
+    }
+
     public void toogleTab(int tabType) {
         super.toogleTab(tabType);
         tab_uv.setSelected(tabType == 2 ? false : true);

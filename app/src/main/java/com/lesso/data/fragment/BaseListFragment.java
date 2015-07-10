@@ -275,6 +275,7 @@ public abstract class BaseListFragment extends ListFragment {
         btn_toogle_fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onBtnToogle();
                 activity.toogleFragment(BaseListFragment.this);
             }
         });
@@ -310,6 +311,8 @@ public abstract class BaseListFragment extends ListFragment {
     }
 
     protected abstract void initView();
+
+    protected abstract void onBtnToogle();
 
     public abstract void initData();
 

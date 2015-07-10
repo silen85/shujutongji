@@ -166,6 +166,10 @@ public class UserFragment extends BaseGraphFragment {
 
     }
 
+    @Override
+    protected void onBtnToogle() {
+    }
+
     public void toogleTab(int tabType) {
         super.toogleTab(tabType);
         tab_user_new.setSelected(tabType == 2 || tabType == 3 || tabType == 4 ? false : true);

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/REPORT_UI_C6">
+
+    <FrameLayout
+        android:id="@+id/fragment_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120dp"
+        android:layout_marginTop="@dimen/interval_C"
+        android:background="@color/REPORT_UI_C6"
+        android:paddingLeft="@dimen/interval_A"
+        android:paddingRight="@dimen/interval_A">
+
+        <include
+            layout="@layout/time_chooser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <LinearLayout
+            android:id="@+id/data_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="48dp"
+            android:background="@color/REPORT_UI_C6"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/chart_bar_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/interval_C"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/report_graph_size_height_user"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/data_view_sales"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/list_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="@dimen/interval_C"
+                android:background="@android:color/white"
+                android:gravity="top|center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:background="@android:color/white"
+                    android:cacheColorHint="@null"
+                    android:divider="@null"
+                    android:scrollbars="none"></ListView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/authority_layer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/interval_C"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_toogle_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/btn_toogle_fragment" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/interval_C"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:id="@+id/tab_sales_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_bg_x"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/interval_C"
+                    android:paddingTop="@dimen/interval_C"
+                    android:text="@string/sales_amount"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/interval_C"
+                    android:background="@color/REPORT_TABLE_C1" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tab_sales_paper"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_bg_x"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/interval_C"
+                    android:paddingTop="@dimen/interval_C"
+                    android:text="@string/sales_paper"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/interval_C"
+                    android:background="@color/REPORT_TABLE_C2" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tab_sales_car"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_bg_x"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/interval_C"
+                    android:paddingTop="@dimen/interval_C"
+                    android:text="@string/sales_car"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/interval_C"
+                    android:background="@color/REPORT_TABLE_C3" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tab_sales_type"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_bg_x"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/interval_C"
+                    android:paddingTop="@dimen/interval_C"
+                    android:text="@string/sales_type"
+                    android:textColor="@color/REPORT_UI_C2"
+                    android:textSize="@dimen/F5" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/interval_C"
+                    android:background="@color/REPORT_TABLE_C4" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

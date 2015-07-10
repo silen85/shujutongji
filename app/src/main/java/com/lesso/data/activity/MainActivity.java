@@ -22,11 +22,11 @@ import com.lesso.data.fragment.AccessDetailFragment;
 import com.lesso.data.fragment.AccessFragment;
 import com.lesso.data.fragment.MainFragment;
 import com.lesso.data.fragment.SalesDetailFragment;
-import com.lesso.data.fragment.SalesFragment;
+import com.lesso.data.fragment.SalesFragment1;
 import com.lesso.data.fragment.StoreDetailFragment;
 import com.lesso.data.fragment.StoreFragment;
 import com.lesso.data.fragment.UserDetailFragment;
-import com.lesso.data.fragment.UserFragment;
+import com.lesso.data.fragment.UserFragment1;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -54,13 +54,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private FragmentManager fragmentManager;
 
     private MainFragment mainFragment;
-    private SalesFragment salesFragment;
+    private SalesFragment1 salesFragment;
     private SalesDetailFragment salesDetailFragment;
     private StoreFragment storeFragment;
     private StoreDetailFragment storeDetailFragment;
     private AccessFragment accessFragment;
     private AccessDetailFragment accessDetailFragment;
-    private UserFragment userFragment;
+    private UserFragment1 userFragment;
     private UserDetailFragment userDetailFragment;
 
     @Override
@@ -107,7 +107,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             main_title.setBackgroundColor(getResources().getColor(R.color.REPORT_UI_C2));
             main_setting.setVisibility(View.GONE);
         }
-
     }
 
     private void initFragment() {
@@ -161,21 +160,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 accessFragment.setTabType(((AccessDetailFragment) fragment).getTabType());
                 fragmentTransaction.add(R.id.main_content, accessFragment);
             }
-        } else if (fragment instanceof SalesFragment) {
+        } else if (fragment instanceof SalesFragment1) {
             if (salesDetailFragment != null && salesDetailFragment.isAdded()) {
-                salesDetailFragment.setsBeginDate(((SalesFragment) fragment).getsBeginDate());
-                salesDetailFragment.setsEndDate(((SalesFragment) fragment).getsEndDate());
-                if (salesDetailFragment.getTabType() != ((SalesFragment) fragment).getTabType()) {
-                    salesDetailFragment.toogleTab(((SalesFragment) fragment).getTabType());
+                salesDetailFragment.setsBeginDate(((SalesFragment1) fragment).getsBeginDate());
+                salesDetailFragment.setsEndDate(((SalesFragment1) fragment).getsEndDate());
+                if (salesDetailFragment.getTabType() != ((SalesFragment1) fragment).getTabType()) {
+                    salesDetailFragment.toogleTab(((SalesFragment1) fragment).getTabType());
                 }
                 salesDetailFragment.initTimeChooserVal();
                 salesDetailFragment.initData();
                 fragmentTransaction.show(salesDetailFragment);
             } else {
                 salesDetailFragment = new SalesDetailFragment();
-                salesDetailFragment.setsBeginDate(((SalesFragment) fragment).getsBeginDate());
-                salesDetailFragment.setsEndDate(((SalesFragment) fragment).getsEndDate());
-                salesDetailFragment.setTabType(((SalesFragment) fragment).getTabType());
+                salesDetailFragment.setsBeginDate(((SalesFragment1) fragment).getsBeginDate());
+                salesDetailFragment.setsEndDate(((SalesFragment1) fragment).getsEndDate());
+                salesDetailFragment.setTabType(((SalesFragment1) fragment).getTabType());
                 fragmentTransaction.add(R.id.main_content, salesDetailFragment);
             }
         } else if (fragment instanceof SalesDetailFragment) {
@@ -189,7 +188,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 salesFragment.initData();
                 fragmentTransaction.show(salesFragment);
             } else {
-                salesFragment = new SalesFragment();
+                salesFragment = new SalesFragment1();
                 salesFragment.setsBeginDate(((SalesDetailFragment) fragment).getsBeginDate());
                 salesFragment.setsEndDate(((SalesDetailFragment) fragment).getsEndDate());
                 salesFragment.setTabType(((SalesDetailFragment) fragment).getTabType());
@@ -229,21 +228,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 storeFragment.setTabType(((StoreDetailFragment) fragment).getTabType());
                 fragmentTransaction.add(R.id.main_content, storeFragment);
             }
-        } else if (fragment instanceof UserFragment) {
+        } else if (fragment instanceof UserFragment1) {
             if (userDetailFragment != null && userDetailFragment.isAdded()) {
-                userDetailFragment.setsBeginDate(((UserFragment) fragment).getsBeginDate());
-                userDetailFragment.setsEndDate(((UserFragment) fragment).getsEndDate());
-                if (userDetailFragment.getTabType() != ((UserFragment) fragment).getTabType()) {
-                    userDetailFragment.toogleTab(((UserFragment) fragment).getTabType());
+                userDetailFragment.setsBeginDate(((UserFragment1) fragment).getsBeginDate());
+                userDetailFragment.setsEndDate(((UserFragment1) fragment).getsEndDate());
+                if (userDetailFragment.getTabType() != ((UserFragment1) fragment).getTabType()) {
+                    userDetailFragment.toogleTab(((UserFragment1) fragment).getTabType());
                 }
                 userDetailFragment.initTimeChooserVal();
                 userDetailFragment.initData();
                 fragmentTransaction.show(userDetailFragment);
             } else {
                 userDetailFragment = new UserDetailFragment();
-                userDetailFragment.setsBeginDate(((UserFragment) fragment).getsBeginDate());
-                userDetailFragment.setsEndDate(((UserFragment) fragment).getsEndDate());
-                userDetailFragment.setTabType(((UserFragment) fragment).getTabType());
+                userDetailFragment.setsBeginDate(((UserFragment1) fragment).getsBeginDate());
+                userDetailFragment.setsEndDate(((UserFragment1) fragment).getsEndDate());
+                userDetailFragment.setTabType(((UserFragment1) fragment).getTabType());
                 fragmentTransaction.add(R.id.main_content, userDetailFragment);
             }
         } else if (fragment instanceof UserDetailFragment) {
@@ -257,7 +256,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 userFragment.initData();
                 fragmentTransaction.show(userFragment);
             } else {
-                userFragment = new UserFragment();
+                userFragment = new UserFragment1();
                 userFragment.setsBeginDate(((UserDetailFragment) fragment).getsBeginDate());
                 userFragment.setsEndDate(((UserDetailFragment) fragment).getsEndDate());
                 userFragment.setTabType(((UserDetailFragment) fragment).getTabType());
@@ -285,7 +284,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.fragment_sales:
             case R.id.data_view_sales:
-                salesFragment = new SalesFragment();
+                salesFragment = new SalesFragment1();
                 salesFragment.setsBeginDate(sBeginDate);
                 salesFragment.setsEndDate(sEndDate);
                 fragment = salesFragment;
@@ -302,7 +301,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.fragment_user:
             case R.id.data_view_user:
-                userFragment = new UserFragment();
+                userFragment = new UserFragment1();
                 userFragment.setsBeginDate(sBeginDate);
                 userFragment.setsEndDate(sEndDate);
                 fragment = userFragment;
