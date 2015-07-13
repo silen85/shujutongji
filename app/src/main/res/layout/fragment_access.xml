@@ -42,6 +42,7 @@
             android:visibility="visible">
 
             <HorizontalScrollView
+                android:id="@+id/scrollview_linearlayout_access"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/report_graph_size_height_access"
                 android:scrollbars="none">

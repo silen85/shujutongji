@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private View view;
 
+    private HorizontalScrollView scrollview_linearlayout_access, scrollview_linearlayout_sales, scrollview_linearlayout_user;
     private LinearLayout fragment_access, fragment_sales, fragment_store, fragment_user;
 
     private List<Map<String, String>> storeList = new ArrayList<>();
@@ -76,6 +78,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         layoutInflater = inflater;
 
         view = layoutInflater.inflate(R.layout.fragment_main, null);
+
+        scrollview_linearlayout_access = (HorizontalScrollView) view.findViewById(R.id.scrollview_linearlayout_access);
+        scrollview_linearlayout_sales = (HorizontalScrollView) view.findViewById(R.id.scrollview_linearlayout_sales);
+        scrollview_linearlayout_user = (HorizontalScrollView) view.findViewById(R.id.scrollview_linearlayout_user);
 
         return view;
     }
@@ -441,6 +447,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             chart_user.setField(new String[]{});
         }
         chart_user.postInvalidate();
+
     }
 
 
@@ -620,11 +627,29 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_ACCESS:" + json);
                         initAccessData(json);
+
+                        this.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (chart_access != null && chart_access.getDataSize() > 5) {
+                                    scrollview_linearlayout_access.scrollTo(chart_access.getRight(), 0);
+                                }
+                            }
+                        }, 800);
                         break;
                     case HANDLER_DATA_SALES:
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_SALES:" + json);
                         initSalesData(json);
+
+                        this.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (chart_sales != null && chart_sales.getDataSize() > 5) {
+                                    scrollview_linearlayout_sales.scrollTo(chart_sales.getRight(), 0);
+                                }
+                            }
+                        }, 800);
                         break;
                     case HANDLER_DATA_STORE:
                         json = msg.getData().getString("json");
@@ -640,6 +665,15 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_USER:" + json);
                         initUserData(json);
+
+                        this.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (chart_user != null && chart_user.getDataSize() > 5) {
+                                    scrollview_linearlayout_user.scrollTo(chart_user.getRight(), 0);
+                                }
+                            }
+                        }, 800);
                         break;
                     case HANDLER_NETWORK_ERR:
                         Toast.makeText(activity, activity.getResources().getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();

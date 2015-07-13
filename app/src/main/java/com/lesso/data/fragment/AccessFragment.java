@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ public class AccessFragment extends BaseGraphFragment {
     private int screenWidth, screenHeight;
     private int chart_access_width;
 
+    private HorizontalScrollView scrollview_linearlayout_access;
+
     private LinearLayout data_view, chart_xy_container, data_view_access;
     private XYLineView2 chart_xy;
 
@@ -53,6 +56,8 @@ public class AccessFragment extends BaseGraphFragment {
         layoutInflater = inflater;
 
         view = layoutInflater.inflate(R.layout.fragment_access, null);
+
+        scrollview_linearlayout_access = (HorizontalScrollView) view.findViewById(R.id.scrollview_linearlayout_access);
 
         initView();
 
@@ -187,6 +192,16 @@ public class AccessFragment extends BaseGraphFragment {
             chart_xy.setField(new String[]{});
         }
         chart_xy.postInvalidate();
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (chart_xy != null && chart_xy.getDataSize() > 5) {
+                    scrollview_linearlayout_access.scrollTo(chart_xy.getRight(), 0);
+                }
+            }
+        }, 800);
+
     }
 
     protected Map<String, String> generateParam() {

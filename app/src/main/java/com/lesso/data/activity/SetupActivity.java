@@ -75,4 +75,9 @@ public class SetupActivity extends Activity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        btn_back.performClick();
+    }
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -48,6 +49,8 @@ public class UserFragment1 extends BaseGraphFragment {
     private int screenWidth, screenHeight;
     private int chart_user_width;
 
+    private HorizontalScrollView scrollview_linearlayout_user;
+
     private LinearLayout data_view, list_content, chart_xy_container, data_view_user;
     private XYLineView2 chart_xy;
     private PieChart mChart;
@@ -69,6 +72,8 @@ public class UserFragment1 extends BaseGraphFragment {
         layoutInflater = inflater;
 
         view = layoutInflater.inflate(R.layout.fragment_user1, null);
+
+        scrollview_linearlayout_user = (HorizontalScrollView) view.findViewById(R.id.scrollview_linearlayout_user);
 
         initView();
 
@@ -206,13 +211,13 @@ public class UserFragment1 extends BaseGraphFragment {
         tab_user_supplier.setSelected(tabType == 3 ? true : false);
         tab_user_fivemetal.setSelected(tabType == 4 ? true : false);
 
-        if(tabType == 2 ){
+        if (tabType == 2) {
             time_chooser.setVisibility(View.GONE);
             chart_xy_container.setVisibility(View.GONE);
             mChart.setVisibility(View.VISIBLE);
             list_content.setVisibility(View.GONE);
             ((FrameLayout.LayoutParams) data_view.getLayoutParams()).setMargins(0, 0, 0, 0);
-        }else if (tabType == 3 || tabType == 4) {
+        } else if (tabType == 3 || tabType == 4) {
             time_chooser.setVisibility(View.GONE);
             chart_xy_container.setVisibility(View.GONE);
             mChart.setVisibility(View.GONE);
@@ -288,9 +293,9 @@ public class UserFragment1 extends BaseGraphFragment {
                 list.add(item);
             }
         }
-        if (tabType == 2){
+        if (tabType == 2) {
             fillPieChartData(list);
-        }else if (tabType == 3 || tabType == 4) {
+        } else if (tabType == 3 || tabType == 4) {
             fillHorizontalBarData(list);
         } else {
             if (chart_xy != null) {
@@ -331,6 +336,16 @@ public class UserFragment1 extends BaseGraphFragment {
             chart_xy.setField(new String[]{});
         }
         chart_xy.postInvalidate();
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (chart_xy != null && chart_xy.getDataSize() > 5) {
+                    scrollview_linearlayout_user.scrollTo(chart_xy.getRight(), 0);
+                }
+            }
+        }, 800);
+
     }
 
     private void fillPieChartData(List<Map<String, String>> list) {

@@ -1,5 +1,6 @@
 package com.lesso.data.ui;
 
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.LinearInterpolator;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +37,10 @@ public class TimeChooserDialog extends Dialog {
     private String sEndDate = "";
     private Date tempBeginDate;
     private Date tempEndDate;
+
+    private DatePicker datePicker;
+
+    private LinearLayout sdate_layout, datepicker_layout, edate_layout;
 
     private Context context;
 
@@ -72,7 +78,7 @@ public class TimeChooserDialog extends Dialog {
     private void init() {
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        LinearLayout dialog = (LinearLayout) inflater.inflate(R.layout.dialog_datepicker, null);
+        final LinearLayout dialog = (LinearLayout) inflater.inflate(R.layout.dialog_datepicker, null);
 
         setContentView(dialog);
 
@@ -131,8 +137,64 @@ public class TimeChooserDialog extends Dialog {
         });
 
 
+        datePicker = (DatePicker) dialog.findViewById(R.id.datepicker);
+        sdate_layout = (LinearLayout) dialog.findViewById(R.id.sdate_layout);
+        datepicker_layout = (LinearLayout) dialog.findViewById(R.id.datepicker_layout);
+        edate_layout = (LinearLayout) dialog.findViewById(R.id.edate_layout);
+
         final TextView datepicker_bdate = (TextView) dialog.findViewById(R.id.datepicker_bdate);
         final TextView datepicker_edate = (TextView) dialog.findViewById(R.id.datepicker_edate);
+
+        sdate_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (dateType == 2) {
+
+                    ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(datepicker_layout, "Y", datepicker_layout.getY(), datepicker_layout.getY() - edate_layout.getHeight());
+                    objectAnimator1.setInterpolator(new LinearInterpolator());
+                    objectAnimator1.setDuration(300);
+                    objectAnimator1.start();
+
+                    ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(edate_layout, "Y", edate_layout.getY(), edate_layout.getY() + datepicker_layout.getHeight());
+                    objectAnimator2.setInterpolator(new LinearInterpolator());
+                    objectAnimator2.setDuration(300);
+                    objectAnimator2.start();
+
+                }
+
+                dateType = 1;
+                datepicker_bdate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C1));
+                datepicker_edate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C2));
+
+            }
+        });
+
+
+        edate_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (dateType == 1) {
+
+                    ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(datepicker_layout, "Y", datepicker_layout.getY(), datepicker_layout.getY() + edate_layout.getHeight());
+                    objectAnimator1.setInterpolator(new LinearInterpolator());
+                    objectAnimator1.setDuration(300);
+                    objectAnimator1.start();
+
+                    ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(edate_layout, "Y", edate_layout.getY(), edate_layout.getY() - datepicker_layout.getHeight());
+                    objectAnimator2.setInterpolator(new LinearInterpolator());
+                    objectAnimator2.setDuration(300);
+                    objectAnimator2.start();
+
+                }
+
+                dateType = 2;
+                datepicker_bdate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C2));
+                datepicker_edate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C1));
+            }
+        });
+
         if (dateType == 2) {
             datepicker_bdate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C2));
             datepicker_edate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C1));
@@ -144,18 +206,14 @@ public class TimeChooserDialog extends Dialog {
         datepicker_bdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dateType = 1;
-                datepicker_bdate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C1));
-                datepicker_edate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C2));
+                sdate_layout.performClick();
             }
         });
 
         datepicker_edate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dateType = 2;
-                datepicker_bdate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C2));
-                datepicker_edate.setTextColor(context.getResources().getColor(R.color.REPORT_UI_C1));
+                edate_layout.performClick();
             }
         });
 
@@ -219,17 +277,16 @@ public class TimeChooserDialog extends Dialog {
         int day = calendar.get(Calendar.DATE);
         final int week = calendar.get(Calendar.DAY_OF_WEEK);
 
-        DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datepicker);
         datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
                 calendar.set(i, i1, i2);
                 if (dateType == 2) {
                     tempEndDate = calendar.getTime();
-                    datepicker_edate.setText(i + "年" + (i1+1) + "月" + i2 + "日  周" + txtWeek[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
+                    datepicker_edate.setText(i + "年" + (i1 + 1) + "月" + i2 + "日  周" + txtWeek[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
                 } else {
                     tempBeginDate = calendar.getTime();
-                    datepicker_bdate.setText(i + "年" + (i1+1) + "月" + i2 + "日  周" + txtWeek[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
+                    datepicker_bdate.setText(i + "年" + (i1 + 1) + "月" + i2 + "日  周" + txtWeek[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
                 }
             }
         });

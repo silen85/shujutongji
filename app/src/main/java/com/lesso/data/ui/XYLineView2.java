@@ -257,6 +257,15 @@ public class XYLineView2 extends View {
         this.field = field;
     }
 
+    public int getDataSize() {
+
+        if (data == null || data.length <= 0)
+            return 0;
+        else
+            return data.length;
+
+    }
+
     public void setScreenWidth(int screenWidth) {
         this.screenWidth = screenWidth;
     }

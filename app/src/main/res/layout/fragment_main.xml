@@ -84,6 +84,7 @@
                 android:orientation="vertical">
 
                 <HorizontalScrollView
+                    android:id="@+id/scrollview_linearlayout_access"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/report_graph_size_height_access"
                     android:scrollbars="none">
@@ -191,6 +192,7 @@
                 android:orientation="vertical">
 
                 <HorizontalScrollView
+                    android:id="@+id/scrollview_linearlayout_sales"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/report_graph_size_height_sales"
                     android:scrollbars="none">
@@ -411,6 +413,7 @@
                 android:orientation="vertical">
 
                 <HorizontalScrollView
+                    android:id="@+id/scrollview_linearlayout_user"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/report_graph_size_height_user"
                     android:scrollbars="none">

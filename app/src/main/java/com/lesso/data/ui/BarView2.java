@@ -197,7 +197,7 @@ public class BarView2 extends View {
         initSize();
 
         if(mWidth>=mCalculateWidth){
-            setMeasuredDimension(screenWidth,screenHeight);
+            setMeasuredDimension(screenWidth, screenHeight);
         }else {
             setMeasuredDimension(mCalculateWidth,screenHeight);
         }
@@ -229,6 +229,15 @@ public class BarView2 extends View {
 
     public void setField(String[] field) {
         this.field = field;
+    }
+
+    public int getDataSize(){
+
+        if(data==null || data.length<=0)
+            return 0;
+        else
+            return data.length;
+
     }
 
     public void setScreenWidth(int screenWidth) {

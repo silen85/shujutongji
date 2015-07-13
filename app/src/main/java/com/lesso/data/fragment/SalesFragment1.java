@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -38,6 +39,8 @@ public class SalesFragment1 extends BaseGraphFragment {
     private int screenWidth, screenHeight;
     private int chart_sales_width;
 
+    private HorizontalScrollView scrollview_linearlayout_sales;
+
     private LinearLayout data_view, list_content, chart_bar_container, data_view_sales;
     private BarView2 chart_bar;
     private HorizontalBarAdapter adapter;
@@ -58,6 +61,8 @@ public class SalesFragment1 extends BaseGraphFragment {
         layoutInflater = inflater;
 
         view = layoutInflater.inflate(R.layout.fragment_sales1, null);
+
+        scrollview_linearlayout_sales = (HorizontalScrollView) view.findViewById(R.id.scrollview_linearlayout_sales);
 
         initView();
 
@@ -335,6 +340,16 @@ public class SalesFragment1 extends BaseGraphFragment {
             chart_bar.setField(new String[]{});
         }
         chart_bar.postInvalidate();
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (chart_bar != null && chart_bar.getDataSize() > 5) {
+                    scrollview_linearlayout_sales.scrollTo(chart_bar.getRight(), 0);
+                }
+            }
+        }, 800);
+
     }
 
     protected Map<String, String> generateParam() {
