@@ -406,6 +406,7 @@ public class UserFragment extends BaseGraphFragment {
         asyncHttpResponseHandler.setCharset("GBK");
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_REPORT_USER, requestParams, asyncHttpResponseHandler);
 
     }

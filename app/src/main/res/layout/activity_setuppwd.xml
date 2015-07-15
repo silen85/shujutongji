@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/REPORT_UI_C6">
+
+    <LinearLayout
+        android:id="@+id/modifypwd_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="58dp"
+        android:background="@color/REPORT_UI_C6"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginTop="18dp"
+            android:background="@color/REPORT_UI_C5" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:background="@null"
+            android:clickable="true"
+            android:digits="@string/digits"
+            android:ems="20"
+            android:gravity="left"
+            android:hint="@string/text_setup_password"
+            android:inputType="textPassword"
+            android:paddingBottom="12dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="12dp"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/REPORT_UI_C2"
+            android:textSize="@dimen/F3"></EditText>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="18dp"
+            android:background="@color/REPORT_UI_C5" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:background="@color/REPORT_UI_C5" />
+
+        <EditText
+            android:id="@+id/newpasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:background="@null"
+            android:clickable="true"
+            android:digits="@string/digits"
+            android:ems="20"
+            android:gravity="left"
+            android:hint="@string/text_setup_password1"
+            android:inputType="textPassword"
+            android:paddingBottom="12dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="12dp"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/REPORT_UI_C2"
+            android:textSize="@dimen/F3"></EditText>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="18dp"
+            android:background="@color/REPORT_UI_C5" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:background="@color/REPORT_UI_C5" />
+
+        <EditText
+            android:id="@+id/confirmpasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:background="@null"
+            android:clickable="true"
+            android:digits="@string/digits"
+            android:ems="20"
+            android:gravity="left"
+            android:hint="@string/text_setup_password2"
+            android:inputType="textPassword"
+            android:paddingBottom="12dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="12dp"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/REPORT_UI_C2"
+            android:textSize="@dimen/F3"></EditText>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/interval_line_height"
+            android:layout_marginBottom="18dp"
+            android:background="@color/REPORT_UI_C5" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/interval_C"
+            android:layout_marginRight="@dimen/interval_C"
+            android:background="@drawable/submit_x"
+            android:gravity="center"
+            android:paddingBottom="@dimen/interval_B"
+            android:paddingTop="@dimen/interval_B" />
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/authority_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include layout="@layout/title" />
+
+</FrameLayout>

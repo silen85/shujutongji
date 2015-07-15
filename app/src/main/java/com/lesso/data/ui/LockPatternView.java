@@ -1055,7 +1055,7 @@ public class LockPatternView extends View {
         List<Cell> result = new ArrayList();
 
         for (int i = 0; i < string.length(); i++) {
-            int temp = Integer.parseInt(String.valueOf(string.charAt(i))) - 1;
+            int temp = Integer.parseInt(String.valueOf(string.charAt(i)));
             byte b = (byte) temp;
             result.add(Cell.of(b / 3, b % 3));
         }
@@ -1077,7 +1077,7 @@ public class LockPatternView extends View {
         String res = "";
         for (int i = 0; i < patternSize; i++) {
             Cell cell = pattern.get(i);
-            int temp = (cell.getRow() * 3 + cell.getColumn()) + 1;
+            int temp = cell.getRow() * 3 + cell.getColumn();
             res += temp;
         }
         return res;

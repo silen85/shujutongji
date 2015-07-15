@@ -40,6 +40,11 @@
             android:name=".activity.SetupActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SetupPWDActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
     </application>
 
     <supports-screens

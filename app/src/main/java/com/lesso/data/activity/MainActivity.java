@@ -1,5 +1,6 @@
 package com.lesso.data.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,8 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -37,6 +36,8 @@ import java.util.List;
  * Created by meisl on 2015/6/19.
  */
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
+
+    private ProgressDialog loadingDialog;
 
     private long mExitTime;
 
@@ -67,15 +68,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
 
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
 
         btn_back = (Button) findViewById(R.id.btn_back);
+        btn_back.setVisibility(View.GONE);
         btn_back.setOnClickListener(this);
 
         main_title = (RelativeLayout) findViewById(R.id.main_title);
@@ -85,10 +86,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
         calendar.add(Calendar.MONTH, -1);
-
         sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
+
+        calendar.add(Calendar.MONTH, 1);
+        sEndDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
 
 
         fragmentManager = getSupportFragmentManager();
@@ -324,6 +327,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             }
 
+            btn_back.setVisibility(View.VISIBLE);
+
             fragmentTransaction.hide(mainFragment);
             fragmentTransaction.add(R.id.main_content, fragment);
 
@@ -335,7 +340,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void backFragment() {
 
         if (mainFragment.isVisible()) {
-
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
                 Toast.makeText(this, getString(R.string.quit_press_again), Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
@@ -355,9 +359,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             }
 
+            btn_back.setVisibility(View.GONE);
+
             fragmentTransaction.show(mainFragment);
             fragmentTransaction.commit();
-            toogleTitle(getString(R.string.app_title_name1), true);
+            toogleTitle(getString(R.string.app_title), true);
         }
     }
 
@@ -376,6 +382,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
         }
 
+    }
+
+    /**
+     * 加载对话框(显示)
+     */
+    public void loading() {
+        if (loadingDialog == null) {
+            loadingDialog = new ProgressDialog(this);
+            loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            loadingDialog.setMessage(getString(R.string.loading));
+            loadingDialog.setIndeterminate(true);
+            loadingDialog.setCancelable(false);
+        }
+        loadingDialog.show();
+    }
+
+    /**
+     * 加载对话框(关闭)
+     */
+    public void disLoading() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
     }
 
     @Override

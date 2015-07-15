@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class SalesFragment1 extends BaseGraphFragment {
 
-    private String TAG = "com.lesso.data.fragment.SalesFragment";
+    private String TAG = "com.lesso.data.fragment.SalesFragment1";
 
     private int screenWidth, screenHeight;
     private int chart_sales_width;
@@ -443,6 +443,7 @@ public class SalesFragment1 extends BaseGraphFragment {
         asyncHttpResponseHandler.setCharset("GBK");
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_REPORT_SALES, requestParams, asyncHttpResponseHandler);
 
     }

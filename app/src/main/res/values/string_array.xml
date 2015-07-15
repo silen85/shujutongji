@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="create_table_sql_array">
+        <item>  create table datacache(
+				updatetime date not null,
+				type integer default 0,
+				data varchar(1000) not null)
+		</item>
+    </string-array>
+</resources>

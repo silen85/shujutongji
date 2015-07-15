@@ -282,6 +282,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         };
         asyncHttpResponseHandler.setCharset("GBK");
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_LOGIN, requestParams, asyncHttpResponseHandler);
     }
 

@@ -17,7 +17,7 @@ public class BarView2 extends View {
 
     private String TAG = "com.lesso.data.ui.BarView";
 
-    private final int CONSTANTS_COUNT_X = 8;
+    private final int CONSTANTS_COUNT_X = 9;
     private final int CONSTANTS_COUNT_Y = 5;
 
     int[] colors = new int[]{R.color.REPORT_TABLE_C1, R.color.REPORT_TABLE_C2, R.color.REPORT_TABLE_C3, R.color.REPORT_TABLE_C4, R.color.REPORT_TABLE_C5,
@@ -107,7 +107,7 @@ public class BarView2 extends View {
             Log.d(TAG, "data.length == 0 || field.length == 0");
 
             Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setTextSize(mTextHeight * 1.1f);
+            mPaint.setTextSize(mTextHeight);
             mPaint.setShader(null);
             mPaint.setColor(getResources().getColor(R.color.REPORT_UI_C6));
             canvas.drawRect(new Rect(0, 0, mPaddingLeft + mWidth + mPaddingRight, mHeight + mSingleHeight), mPaint);
@@ -123,7 +123,7 @@ public class BarView2 extends View {
             Log.d(TAG, "data.length=" + data.length + " field.length=" + field.length);
 
             Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setTextSize(mTextHeight / 2.1f);
+            mPaint.setTextSize(mTextHeight / 2.5f);
 
             /**
              * 画坐标图

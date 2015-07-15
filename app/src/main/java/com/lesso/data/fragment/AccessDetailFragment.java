@@ -202,6 +202,7 @@ public class AccessDetailFragment extends BaseListFragment {
         RequestParams requestParams = new RequestParams(parems);
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_REPORT_ACCESS, requestParams, new TextHttpResponseHandler() {
 
             @Override

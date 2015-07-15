@@ -423,16 +423,16 @@ public class UserFragment1 extends BaseGraphFragment {
         } else if (tabType == 4) {
             parems.put("type", "store");
         } else {
-            parems.put("type", "nuser");
+
             if (sBeginDate != null && !"".equals(sBeginDate.trim()))
                 parems.put("start", sBeginDate);
             if (sEndDate != null && !"".equals(sEndDate.trim()))
                 parems.put("end", sEndDate);
 
             if (timeType == 2) {
-                // parems.put("type", "nuser");
+                parems.put("type", "nuser_moth");
             } else {
-                // parems.put("type", "nuser");
+                parems.put("type", "nuser");
             }
         }
 
@@ -488,6 +488,7 @@ public class UserFragment1 extends BaseGraphFragment {
         asyncHttpResponseHandler.setCharset("GBK");
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_REPORT_USER, requestParams, asyncHttpResponseHandler);
 
     }

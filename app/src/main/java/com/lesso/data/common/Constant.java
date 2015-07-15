@@ -10,10 +10,11 @@ public class Constant {
     public static final String URL_UPDATE = "http://192.168.4.13:65153/lswm_text/api/VersionHandler.ashx";
     public static final String URL_LOGIN = "http://192.168.4.13:65153/lswm_text/api/AccLogin_Handler.ashx";
     public static final String URL_SETUP_SCRATPWD = "http://192.168.4.13:65153/lswm_text/api/AccLogin_Handler.ashx";
+    public static final String URL_SETUP_MODIFYPWD = "http://192.168.4.186:65153/api/AccLogin_Handler.ashx";
     public static final String URL_PWD_AUTHORITY = "http://192.168.4.13:65153/lswm_text/api/AccLogin_Handler.ashx";
     public static final String URL_REPORT_ACCESS = "http://10.10.7.221/api";
-    public static final String URL_REPORT_SALES = "http://192.168.4.13:65153/lswm_text/api/ZSDHandler.ashx";
-    public static final String URL_REPORT_STORE = "http://192.168.4.13:65153/lswm_text/api/WM_OutHandler.ashx";
+    public static final String URL_REPORT_SALES = "http://192.168.4.186:65153/api/ZSDHandler.ashx";
+    public static final String URL_REPORT_STORE = "http://192.168.4.186:65153/api/WM_OutHandler.ashx";
     public static final String URL_REPORT_USER = "http://10.10.7.137:8021/api/Hybris_Handler.ashx";
 
     public static final String APP_KEY = "fc98141d";
@@ -28,6 +29,7 @@ public class Constant {
 
     public static final SimpleDateFormat DATE_FORMAT_4 = new SimpleDateFormat("HHmmss");
 
+    public static final int CONNECT_TIMEOUT = 18000;
 
     public static int HTTP_STATUS_CODE_SUCCESS = 200;
     public static String ACCESS_STATUS_CODE_SUCCESS = "1";

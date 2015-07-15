@@ -46,9 +46,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private static String TAG = "com.lesso.data.fragment.MainFragment";
 
+    private int loadingCnt = 5;
+
     private int screenWidth, screenHeight;
 
-    private String sBeginDate, sEndDate, yesterday, tomorrow;
+    private String sBeginDate, sEndDate;
 
     private LayoutInflater layoutInflater;
     private MainActivity activity;
@@ -93,17 +95,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_MONTH, -30);
-
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.MONTH, -1);
         sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
 
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
-
-        calendar.add(Calendar.DAY_OF_MONTH, 29);
-        yesterday = Constant.DATE_FORMAT_1.format(calendar.getTime());
-
-        calendar.add(Calendar.DAY_OF_MONTH, 2);
-        tomorrow = Constant.DATE_FORMAT_1.format(calendar.getTime());
+        calendar.add(Calendar.MONTH, 1);
+        sEndDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
 
         initView();
 
@@ -122,10 +119,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         fragment_store.setOnClickListener(this);
         fragment_user.setOnClickListener(this);
 
-        ((TextView) view.findViewById(R.id.fragment_access_date)).setText(sBeginDate + " 至 " + yesterday);
-        ((TextView) view.findViewById(R.id.fragment_sales_date)).setText(sBeginDate + " 至 " + yesterday);
-        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(sBeginDate + " 至 " + yesterday);
-        ((TextView) view.findViewById(R.id.fragment_user_date)).setText(sBeginDate + " 至 " + yesterday);
+        ((TextView) view.findViewById(R.id.fragment_access_date)).setText(sBeginDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_sales_date)).setText(sBeginDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_store_date)).setText(sBeginDate + " 至 " + sEndDate);
+        ((TextView) view.findViewById(R.id.fragment_user_date)).setText(sBeginDate + " 至 " + sEndDate);
 
         initAccessView();
 
@@ -226,7 +223,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         fields[i] = xdata.substring(5);
                         data[i] = Float.parseFloat(ydata);
 
-                        if (yesterday.equals(xdata)) {
+                        if (sEndDate.equals(xdata)) {
                             try {
                                 ((TextView) view.findViewById(R.id.fragment_access_amount)).setText(Integer.parseInt(ydata) + "");
                             } catch (Exception e) {
@@ -292,7 +289,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     fields[i] = xdata.substring(5);
                     data[i] = Float.parseFloat(ydata);
 
-                    if (yesterday.equals(xdata)) {
+                    if (sEndDate.equals(xdata)) {
                         try {
                             ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText(((int) Float.parseFloat(ydata)) + "");
                         } catch (Exception e) {
@@ -425,7 +422,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     fields[i] = xdata.substring(5);
                     data[i] = Float.parseFloat(ydata);
 
-                    if (yesterday.equals(xdata)) {
+                    if (sEndDate.equals(xdata)) {
                         try {
                             ((TextView) view.findViewById(R.id.fragment_user_amount)).setText(Integer.parseInt(ydata) + "");
                         } catch (Exception e) {
@@ -464,7 +461,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("token", token);
 
         parems.put("st", sBeginDate);
-        parems.put("et", yesterday);
+        parems.put("et", sEndDate);
 
         // parems.put("st", "2019-05-01");
         // parems.put("et", "2019-05-30");
@@ -479,7 +476,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         parems.put("VKORG", "1250");
         parems.put("start", sBeginDate);
-        parems.put("end", yesterday);
+        parems.put("end", sEndDate);
         parems.put("VBELN", "00");
         parems.put("type", "MONEY");
 
@@ -497,7 +494,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("uid", "39");
         parems.put("type", "out");
         parems.put("start", sBeginDate);
-        parems.put("end", yesterday);
+        parems.put("end", sEndDate);
 
         parems.put("pages", "1");
         parems.put("numbers", "8");
@@ -514,8 +511,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         parems.put("uid", "39");
         parems.put("type", "out");
-        parems.put("start", yesterday);
-        parems.put("end", yesterday);
+        parems.put("start", sEndDate);
+        parems.put("end", sEndDate);
 
         parems.put("pages", "1");
         parems.put("numbers", "10000");
@@ -533,7 +530,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         parems.put("type", "nuser");
         parems.put("start", sBeginDate);
-        parems.put("end", yesterday);
+        parems.put("end", sEndDate);
 
         //  parems.put("start", "2019-05-01");
         //  parems.put("end", "2019-05-30");
@@ -569,6 +566,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onStart() {
                 super.onStart();
+
+                if (loadingCnt >= 5) {
+                    activity.loading();
+                }
+
+                loadingCnt--;
             }
 
             @Override
@@ -597,12 +600,17 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFinish() {
                 super.onFinish();
+                if (loadingCnt <= 0) {
+                    activity.disLoading();
+                    loadingCnt = 5;
+                }
             }
         };
 
         asyncHttpResponseHandler.setCharset("GBK");
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, url, requestParams, asyncHttpResponseHandler);
 
     }
@@ -718,4 +726,5 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
 }

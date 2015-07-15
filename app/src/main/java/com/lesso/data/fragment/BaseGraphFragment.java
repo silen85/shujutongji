@@ -192,6 +192,7 @@ public abstract class BaseGraphFragment extends Fragment {
         };
         asyncHttpResponseHandler.setCharset("GBK");
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_PWD_AUTHORITY, requestParams, asyncHttpResponseHandler);
 
     }

@@ -297,6 +297,7 @@ public class StoreFragment extends BaseGraphFragment {
         asyncHttpResponseHandler.setCharset("GBK");
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.get(activity, Constant.URL_REPORT_STORE, requestParams, asyncHttpResponseHandler);
 
     }

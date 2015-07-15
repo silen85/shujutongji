@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -34,6 +36,9 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
         if (loginUser == null || loginUser.getScratchable_PWD() == null) {
@@ -105,8 +110,9 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
 
             errcount--;
             if (errcount <= 0) {
+                ((LessoApplication) getApplication()).setLoginUser(null);
                 finish();
-            }else{
+            } else {
 
                 lock_input_tips.setText("密码错误，还可以输入" + (errcount) + "次");
                 lock_input_tips.startAnimation(shakeAnim);

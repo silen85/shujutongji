@@ -1,6 +1,8 @@
 <resources>
 
-    <string name="app_name">联塑商城报表</string>
+    <string name="app_name">联塑BI</string>
+
+    <string name="loading">请求数据中，请稍候&#8230;</string>
 
     <string name="text_login">登  录</string>
     <string name="text_account">账 号</string>
@@ -25,7 +27,7 @@
 
     <string name="app_full_name">联塑商城数据报表系统beta1.0</string>
 
-    <string name="app_title_name1">联塑商城数据报表系统</string>
+    <string name="app_title">联塑商城数据报表系统</string>
 
     <string name="digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
@@ -68,5 +70,13 @@
     <string name="text_lock_setup_too_short" >最少链接4个点，请重新设置</string>
     <string name="text_lock_setup_wrong" >与上次设置不一致，请重新设置</string>
 
+    <string name="text_setup_password" >请输入当前密码</string>
+    <string name="text_setup_password1" >请输入新密码</string>
+    <string name="text_setup_password2" >请确认新密码</string>
+    <string name="text_setup_password_success">密码修改成功</string>
+    <string name="text_setup_password_failed" >密码修改失败</string>
+    <string name="text_setup_password_tips1" >当前密码输入错误</string>
+    <string name="text_setup_password_tips2" >新密码两次输入不一致</string>
+    <string name="text_setup_password_tips3" >密码不少于6位，且不能为纯数字</string>
 
 </resources>

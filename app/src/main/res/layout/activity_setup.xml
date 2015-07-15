@@ -14,6 +14,30 @@
         android:background="@color/REPORT_UI_C5" />
 
     <Button
+        android:id="@+id/setup_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/REPORT_UI_C6"
+        android:gravity="left|center_vertical"
+        android:paddingBottom="@dimen/interval_D"
+        android:paddingLeft="@dimen/interval_B"
+        android:paddingTop="@dimen/interval_D"
+        android:text="密码修改"
+        android:textColor="@color/REPORT_UI_C2"
+        android:textSize="@dimen/F3" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/interval_line_height"
+        android:layout_marginBottom="18dp"
+        android:background="@color/REPORT_UI_C5" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/interval_line_height"
+        android:background="@color/REPORT_UI_C5" />
+
+    <Button
         android:id="@+id/setup_scratpwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

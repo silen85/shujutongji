@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -54,6 +56,10 @@ public class LockSetupActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_lock_setup);
 
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
@@ -170,6 +176,7 @@ public class LockSetupActivity extends Activity implements
             }
         };
         asyncHttpResponseHandler.setCharset("GBK");
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(this, Constant.URL_SETUP_SCRATPWD, requestParams, asyncHttpResponseHandler);
     }
 

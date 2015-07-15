@@ -400,6 +400,7 @@ public class SalesDetailFragment extends BaseListFragment {
         asyncHttpResponseHandler.setCharset("GBK");
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_REPORT_SALES, requestParams, asyncHttpResponseHandler);
 
     }
