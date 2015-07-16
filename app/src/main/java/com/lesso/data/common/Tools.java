@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,6 +44,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tools {
+
+
+    public static void logerror(String tag,Exception e){
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(tag).append(":");
+
+        sb.append(e.getMessage()).append("\r\n");
+
+        for(StackTraceElement element:e.getStackTrace()){
+
+            sb.append(element.getFileName()).append("  ").append(element.getClassName()).append("  ").append(element.getMethodName()).append("  ").append(element.getLineNumber());
+
+        }
+
+        Log.e(tag,sb.toString());
+
+    }
 
     public static boolean isNetworkAvailable(Context context) {
         // Context context = mActivity.getApplicationContext();

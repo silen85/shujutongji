@@ -374,7 +374,7 @@ public class UserFragment extends BaseGraphFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG, responseString + throwable.getMessage());
+                Log.e(TAG,throwable.getMessage(),throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -428,7 +428,7 @@ public class UserFragment extends BaseGraphFragment {
                         List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
                         fillData(viewtable);
                     } catch (Exception e) {
-                        Log.e(TAG, e.getMessage() + json);
+                        Log.e(TAG,e.getMessage(),e);
                         fillData(null);
                         Toast.makeText(activity, getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                     }

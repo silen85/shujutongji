@@ -156,7 +156,7 @@ public abstract class BaseGraphFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG, responseString + throwable.getMessage());
+                Log.e(TAG,throwable.getMessage(),throwable);
                 Toast.makeText(activity, getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
             }
 
@@ -178,7 +178,7 @@ public abstract class BaseGraphFragment extends Fragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.text_authority_failed_dongpwdwrong), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        Log.e(TAG, e.getMessage() + json);
+                        Log.e(TAG,e.getMessage(),e);
                         Toast.makeText(activity, activity.getResources().getString(R.string.text_authority_failed_dongpwdwrong), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -294,10 +294,12 @@ public abstract class BaseGraphFragment extends Fragment {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
         calendar.add(Calendar.MONTH, -1);
-
         sBeginDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
-        sEndDate = Constant.DATE_FORMAT_1.format(new Date());
+
+        calendar.add(Calendar.MONTH, 1);
+        sEndDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
 
         initTimeChooserVal();
 

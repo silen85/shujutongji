@@ -245,7 +245,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 chart_access.setField(new String[]{});
             }
         } catch (Exception e) {
-            Log.e(TAG + ":initAccessData", e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
             ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
             chart_access.setData(new float[]{});
             chart_access.setField(new String[]{});
@@ -305,7 +305,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 chart_sales.setField(new String[]{});
             }
         } catch (Exception e) {
-            Log.e(TAG + ":initSalesData", e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
             ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
             chart_sales.setData(new float[]{});
             chart_sales.setField(new String[]{});
@@ -357,7 +357,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 view.findViewById(R.id.data_view_store_tips).setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
-            Log.e(TAG + ":initStoreData", e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
 
             //((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
             listview_store.setVisibility(View.GONE);
@@ -381,7 +381,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
             }
         } catch (Exception e) {
-            Log.e(TAG + ":initStoreData", e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
             ((TextView) view.findViewById(R.id.fragment_store_amount)).setText("0");
         }
     }
@@ -438,7 +438,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 chart_user.setField(new String[]{});
             }
         } catch (Exception e) {
-            Log.e(TAG + ":initUserData", e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
             ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
             chart_user.setData(new float[]{});
             chart_user.setField(new String[]{});
@@ -568,7 +568,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 super.onStart();
 
                 if (loadingCnt >= 5) {
-                    activity.loading();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.loading();
+                        }
+                    });
                 }
 
                 loadingCnt--;
@@ -576,7 +581,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG, responseString + throwable.getMessage());
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -601,7 +606,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             public void onFinish() {
                 super.onFinish();
                 if (loadingCnt <= 0) {
-                    activity.disLoading();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.disLoading();
+                        }
+                    });
                     loadingCnt = 5;
                 }
             }

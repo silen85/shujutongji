@@ -142,7 +142,7 @@ public class LockSetupActivity extends Activity implements
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG, responseString + throwable.getMessage());
+                Log.e(TAG,throwable.getMessage(),throwable);
                 Toast.makeText(LockSetupActivity.this, getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
                 finish();
             }

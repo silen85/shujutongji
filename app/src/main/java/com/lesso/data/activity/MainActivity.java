@@ -29,8 +29,10 @@ import com.lesso.data.fragment.UserFragment1;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by meisl on 2015/6/19.
@@ -63,6 +65,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private AccessDetailFragment accessDetailFragment;
     private UserFragment1 userFragment;
     private UserDetailFragment userDetailFragment;
+
+    private Map<String, String> salesDataCache = new HashMap();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -410,5 +414,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onBackPressed() {
         backFragment();
+    }
+
+
+    public Map<String, String> getSalesDataCache() {
+        return salesDataCache;
     }
 }

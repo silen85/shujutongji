@@ -24,6 +24,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +100,7 @@ public class SalesDetailFragment extends BaseListFragment {
                     toogleHeader(tabType);
                     toogleTab(tabType);
                     toogleTime();
-                    sendRequest(generateParam());
+                    initData();
                     hideAuthority();
                 }
             }
@@ -113,7 +114,7 @@ public class SalesDetailFragment extends BaseListFragment {
                     tabType = 2;
                     if (activity.AUTHORITY_SALES_AMOUNT) {
                         btn_toogle_fragment.setClickable(true);
-                        sendRequest(generateParam());
+                        initData();
                     } else {
                         btn_toogle_fragment.setClickable(false);
                         displayAuthority();
@@ -135,7 +136,7 @@ public class SalesDetailFragment extends BaseListFragment {
                     toogleHeader(tabType);
                     toogleTab(tabType);
                     toogleTime();
-                    sendRequest(generateParam());
+                    initData();
                     hideAuthority();
                 }
             }
@@ -151,7 +152,7 @@ public class SalesDetailFragment extends BaseListFragment {
                     toogleHeader(tabType);
                     toogleTab(tabType);
                     toogleTime();
-                    sendRequest(generateParam());
+                    initData();
                     hideAuthority();
                 }
             }
@@ -211,10 +212,60 @@ public class SalesDetailFragment extends BaseListFragment {
 
         toogleHeader(tabType);
 
-        /**
-         * 发送请求
-         */
-        sendRequest(generateParam());
+        String cache = null;
+        if (sBeginDate.equals(activity.getSalesDataCache().get("sBeginDate"))
+                && sEndDate.equals(activity.getSalesDataCache().get("sEndDate"))) {
+            if (timeType == 2) {
+                cache = activity.getSalesDataCache().get("MONTH");
+            } else {
+                cache = activity.getSalesDataCache().get("day");
+            }
+        }
+
+
+        if (cache != null && !"".equals(cache.trim())) {
+            try {
+                String dataType = "";
+                if (tabType == 2) {
+                    dataType = "NUMBER";
+                } else if (tabType == 3) {
+                    dataType = "CAR";
+                } else if (tabType == 4) {
+                    dataType = "CLASS";
+                } else {
+                    dataType = "MONEY";
+                }
+
+                if (timeType == 2)
+                    dataType += "_MONTH";
+
+                Map result = Tools.json2Map(cache);
+                JSONObject allViewtable = (JSONObject) result.get("viewtable");
+                result = Tools.json2Map(allViewtable.toString());
+                List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get(dataType);
+
+                if (viewtable != null && viewtable.size() > 0) {
+
+                    List<Map<String, String>> dataCache = viewtable;
+                    fillData(dataCache);
+                } else {
+                    if (list != null && list.size() > 0) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                sendRequest(generateParam());
+            }
+        } else {
+
+            /**
+             * 发送请求
+             */
+            sendRequest(generateParam());
+
+        }
 
     }
 
@@ -320,31 +371,45 @@ public class SalesDetailFragment extends BaseListFragment {
         if (sEndDate != null && !"".equals(sEndDate.trim()))
             parems.put("end", sEndDate);
 
-        if (tabType == 2) {
-            parems.put("VBELN", "00");
-            if (timeType == 2) {
-                parems.put("type", "NUMBER_MONTH");
-            } else {
-                parems.put("type", "NUMBER");
-            }
-        } else if (tabType == 3) {
-            parems.put("VBELN", "01");
-            if (timeType == 2) {
-                parems.put("type", "CAR_MONTH");
-            } else {
-                parems.put("type", "CAR");
-            }
-        } else if (tabType == 4) {
-            parems.put("VBELN", "00");
-            parems.put("type", "CLASS");
+        /**
+         * 这里是四合一请求时的参数
+         */
+        parems.put("VBELN", "00");
+        if (timeType == 2) {
+            parems.put("type", "MONTH");
         } else {
-            parems.put("VBELN", "00");
-            if (timeType == 2) {
-                parems.put("type", "MONEY_MONTH");
-            } else {
-                parems.put("type", "MONEY");
-            }
+            parems.put("type", "day");
         }
+
+        /**这里是单个请求时的参数
+
+         if (tabType == 2) {
+         parems.put("VBELN", "00");
+         if (timeType == 2) {
+         parems.put("type", "NUMBER_MONTH");
+         } else {
+         parems.put("type", "NUMBER");
+         }
+         } else if (tabType == 3) {
+         parems.put("VBELN", "01");
+         if (timeType == 2) {
+         parems.put("type", "CAR_MONTH");
+         } else {
+         parems.put("type", "CAR");
+         }
+         } else if (tabType == 4) {
+         parems.put("VBELN", "00");
+         parems.put("type", "CLASS");
+         } else {
+         parems.put("VBELN", "00");
+         if (timeType == 2) {
+         parems.put("type", "MONEY_MONTH");
+         } else {
+         parems.put("type", "MONEY");
+         }
+         }
+
+         **/
 
         return parems;
 
@@ -366,7 +431,7 @@ public class SalesDetailFragment extends BaseListFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG, responseString + throwable.getMessage());
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -417,9 +482,39 @@ public class SalesDetailFragment extends BaseListFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
+
+                    activity.getSalesDataCache().put("sBeginDate", sBeginDate);
+                    activity.getSalesDataCache().put("sEndDate", sEndDate);
+                    if (timeType == 2) {
+                        activity.getSalesDataCache().put("MONTH", json);
+                        activity.getSalesDataCache().put("day", null);
+                    } else {
+                        activity.getSalesDataCache().put("day", json);
+                        activity.getSalesDataCache().put("MONTH", null);
+                    }
+
+
                     try {
+
+                        String dataType = "";
+                        if (tabType == 2) {
+                            dataType = "NUMBER";
+                        } else if (tabType == 3) {
+                            dataType = "CAR";
+                        } else if (tabType == 4) {
+                            dataType = "CLASS";
+                        } else {
+                            dataType = "MONEY";
+                        }
+
+                        if (timeType == 2)
+                            dataType += "_MONTH";
+
+
                         Map result = Tools.json2Map(json);
-                        List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+                        JSONObject allViewtable = (JSONObject) result.get("viewtable");
+                        result = Tools.json2Map(allViewtable.toString());
+                        List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get(dataType);
 
                         if (viewtable != null && viewtable.size() > 0) {
 
@@ -433,7 +528,7 @@ public class SalesDetailFragment extends BaseListFragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        Log.e(TAG, e.getMessage() + json);
+                        Log.e(TAG, e.getMessage(), e);
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();
@@ -447,9 +542,11 @@ public class SalesDetailFragment extends BaseListFragment {
                         adapter.notifyDataSetChanged();
                     }
                     roatStart();
+                    activity.loading();
                     break;
                 case HANDLER_EROAT:
                     //btn_toogle_fragment.clearAnimation();
+                    activity.disLoading();
                     break;
                 case HANDLER_NETWORK_ERR:
                     if (list != null && list.size() > 0) {

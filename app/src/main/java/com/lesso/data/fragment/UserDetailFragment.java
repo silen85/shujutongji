@@ -164,7 +164,7 @@ public class UserDetailFragment extends BaseListFragment {
         }
 
         TextView a = ((TextView) header.findViewById(R.id.colum1));
-        a.setText(tabType == 2 ? "用户类别" : tabType == 3 ? "供应商所在地" : tabType == 4 ? "门店所在地" : "日期");
+        a.setText(tabType == 2 ? "用户类别" : tabType == 3 ? "所在地" : tabType == 4 ? "所在地" : "日期");
         a.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         a.setBackgroundColor(activity.getResources().getColor(R.color.REPORT_UI_C5));
         TextView b = ((TextView) header.findViewById(R.id.colum2));
@@ -353,7 +353,7 @@ public class UserDetailFragment extends BaseListFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG, responseString + throwable.getMessage());
+                Log.e(TAG,throwable.getMessage(),throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -420,7 +420,7 @@ public class UserDetailFragment extends BaseListFragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        Log.e(TAG, e.getMessage() + json);
+                        Log.e(TAG,e.getMessage(),e);
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();

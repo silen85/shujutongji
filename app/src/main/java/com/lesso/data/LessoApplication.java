@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.lesso.data.common.DefaultExceptionHandler;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -22,6 +23,8 @@ public class LessoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initImageLoader(getApplicationContext());
+
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
         //捕获程序的崩溃信息
 //		CrashHandler crashHandler = CrashHandler.getInstance();
