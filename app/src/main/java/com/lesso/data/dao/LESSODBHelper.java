@@ -1,4 +1,4 @@
-package com.lesso.data.common;
+package com.lesso.data.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,15 +12,24 @@ import com.lesso.data.R;
  */
 public class LESSODBHelper extends SQLiteOpenHelper {
 
-    private String TAG = "com.lesso.data.common.LESSODBHelper";
+    private String TAG = "com.lesso.data.dao.LESSODBHelper";
 
-    private Context context;
     private static final String DATABASE_NAME = "lessobi.db";
     private static final int DB_VERSION = 1;
 
-    public LESSODBHelper(Context context) {
+    private Context context;
+    private static LESSODBHelper instance;
+
+    private LESSODBHelper(Context context) {
         super(context, DATABASE_NAME, null, DB_VERSION);
         this.context = context;
+    }
+
+    public static LESSODBHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new LESSODBHelper(context.getApplicationContext());
+        }
+        return instance;
     }
 
     @Override
@@ -32,7 +41,7 @@ public class LESSODBHelper extends SQLiteOpenHelper {
                 db.execSQL(sql);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 

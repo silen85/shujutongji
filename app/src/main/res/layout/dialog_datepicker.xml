@@ -258,7 +258,7 @@
                 android:id="@+id/datepicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/REPORT_UI_C6"
+                android:background="@null"
                 android:calendarTextColor="@color/REPORT_UI_C2"
                 android:calendarViewShown="false"
                 android:dayOfWeekBackground="@color/REPORT_UI_C6"

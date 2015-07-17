@@ -23,6 +23,7 @@ import com.lesso.data.adapter.HorizontalBarAdapter;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.MD5;
 import com.lesso.data.common.Tools;
+import com.lesso.data.dao.DataCacheDao;
 import com.lesso.data.ui.BarView2;
 import com.lesso.data.ui.XYLineView2;
 import com.loopj.android.http.AsyncHttpClient;
@@ -69,6 +70,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private ListView listview_store;
     private HorizontalBarAdapter horizontalBarAdapter;
 
+    private DataCacheDao dao;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -101,6 +104,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         calendar.add(Calendar.MONTH, 1);
         sEndDate = Constant.DATE_FORMAT_1.format(calendar.getTime());
+
+        dao = new DataCacheDao(activity);
+
+        dao.clearCacheData(sBeginDate, sEndDate);
 
         initView();
 
@@ -559,6 +566,41 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         final int _handlerType = handlerType;
 
+        if (loadingCnt >= 5) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    activity.loading();
+                }
+            });
+        }
+
+        /**
+         * 先查询是否有本地缓存可用
+         */
+        String data = dao.getCacheData(sBeginDate, sEndDate, _handlerType);
+        if (data != null && !"".equals(data.trim())) {
+            Message message = mHandler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("json", data);
+            message.what = _handlerType;
+            message.setData(bundle);
+            message.sendToTarget();
+
+            loadingCnt--;
+            if (loadingCnt <= 0) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.disLoading();
+                    }
+                });
+                loadingCnt = 5;
+            }
+
+            return;
+        }
+
         RequestParams requestParams = new RequestParams(parems);
 
         AsyncHttpResponseHandler asyncHttpResponseHandler = new TextHttpResponseHandler() {
@@ -566,17 +608,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onStart() {
                 super.onStart();
-
-                if (loadingCnt >= 5) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            activity.loading();
-                        }
-                    });
-                }
-
-                loadingCnt--;
             }
 
             @Override
@@ -605,6 +636,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFinish() {
                 super.onFinish();
+
+                loadingCnt--;
                 if (loadingCnt <= 0) {
                     mHandler.post(new Runnable() {
                         @Override
@@ -645,7 +678,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_ACCESS:" + json);
                         initAccessData(json);
-
+                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_ACCESS, json);
                         this.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -659,7 +692,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_SALES:" + json);
                         initSalesData(json);
-
+                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_SALES, json);
                         this.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -673,17 +706,19 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_STORE:" + json);
                         initStoreData(json);
+                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_STORE, json);
                         break;
                     case HANDLER_DATA_STORE_YESTERDAY:
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_USER:" + json);
                         initStoreDataByYesterday(json);
+                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_STORE_YESTERDAY, json);
                         break;
                     case HANDLER_DATA_USER:
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_USER:" + json);
                         initUserData(json);
-
+                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_USER, json);
                         this.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -706,7 +741,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             super.handleMessage(msg);
         }
     };
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -737,4 +771,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        dao.closeDB();
+        super.onDestroy();
+    }
 }

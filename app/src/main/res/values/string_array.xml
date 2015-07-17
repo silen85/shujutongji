@@ -2,7 +2,8 @@
 <resources>
     <string-array name="create_table_sql_array">
         <item>  create table datacache(
-				updatetime date not null,
+				sbegindate varchar(10) not null,
+				senddate varchar(10) not null,
 				type integer default 0,
 				data varchar(1000) not null)
 		</item>
