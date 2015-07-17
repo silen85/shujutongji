@@ -1,6 +1,5 @@
 package com.lesso.data.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,17 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.utils.PercentFormatter;
 import com.lesso.data.R;
-import com.lesso.data.common.Arith;
+import com.lesso.data.adapter.HorizontalBarAdapter;
 import com.lesso.data.common.Constant;
 import com.lesso.data.common.Tools;
 import com.lesso.data.ui.BarView2;
@@ -30,7 +25,6 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +39,12 @@ public class SalesFragment extends BaseGraphFragment {
     private int screenWidth, screenHeight;
     private int chart_sales_width;
 
-    private LinearLayout data_view, chart_bar_container, data_view_sales;
+    private HorizontalScrollView scrollview_linearlayout_sales;
+
+    private LinearLayout data_view, list_content, chart_bar_container, data_view_sales;
     private BarView2 chart_bar;
-    private PieChart mChart;
+    private HorizontalBarAdapter adapter;
+    private ListView listView;
 
     private LinearLayout tab_sales_amount, tab_sales_paper, tab_sales_car, tab_sales_type;
 
@@ -63,7 +60,9 @@ public class SalesFragment extends BaseGraphFragment {
 
         layoutInflater = inflater;
 
-        view = layoutInflater.inflate(R.layout.fragment_sales, null);
+        view = layoutInflater.inflate(R.layout.fragment_sales1, null);
+
+        scrollview_linearlayout_sales = (HorizontalScrollView) view.findViewById(R.id.scrollview_linearlayout_sales);
 
         initView();
 
@@ -76,7 +75,7 @@ public class SalesFragment extends BaseGraphFragment {
 
         // initData();
 
-        if (tabType == 1) {
+        if (tabType == 2) {
             if (!activity.AUTHORITY_SALES_AMOUNT) {
                 btn_toogle_fragment.setClickable(false);
             } else {
@@ -96,26 +95,13 @@ public class SalesFragment extends BaseGraphFragment {
         initBtnToogle();
 
         data_view = (LinearLayout) view.findViewById(R.id.data_view);
+
         chart_bar_container = (LinearLayout) view.findViewById(R.id.chart_bar_container);
         data_view_sales = (LinearLayout) view.findViewById(R.id.data_view_sales);
         chart_sales_width = screenWidth;
 
-
-        mChart = (PieChart) data_view.findViewById(R.id.pieChart);
-        mChart.setUsePercentValues(true);
-        mChart.setDescription("");
-        mChart.setNoDataText("");
-        mChart.setDrawCenterText(false);
-        mChart.highlightValues(null);
-        mChart.setDragDecelerationFrictionCoef(0.95f);
-        mChart.setDrawHoleEnabled(false);
-        mChart.setHoleColorTransparent(false);
-        mChart.setTransparentCircleColor(Color.WHITE);
-        mChart.setRotationAngle(0);
-        mChart.setRotationEnabled(true);
-        mChart.animateY(800, Easing.EasingOption.EaseInOutExpo);
-        mChart.animateX(800, Easing.EasingOption.EaseInOutExpo);
-        mChart.getLegend().setEnabled(false);
+        list_content = (LinearLayout) view.findViewById(R.id.list_content);
+        listView = (ListView) view.findViewById(R.id.listView);
 
         tab_sales_amount = (LinearLayout) view.findViewById(R.id.tab_sales_amount);
         tab_sales_paper = (LinearLayout) view.findViewById(R.id.tab_sales_paper);
@@ -130,15 +116,15 @@ public class SalesFragment extends BaseGraphFragment {
 
                 if (tabType != 1) {
                     tabType = 1;
-                    if (activity.AUTHORITY_SALES_AMOUNT) {
-                        btn_toogle_fragment.setClickable(true);
-                        sendRequest(generateParam());
-                    } else {
-                        btn_toogle_fragment.setClickable(false);
-                        displayAuthority();
-                    }
+                    btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
                     toogleTime();
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    initData();
+                    hideAuthority();
                 }
             }
         });
@@ -149,11 +135,19 @@ public class SalesFragment extends BaseGraphFragment {
 
                 if (tabType != 2) {
                     tabType = 2;
-                    btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
                     toogleTime();
-                    sendRequest(generateParam());
-                    hideAuthority();
+                    if (activity.AUTHORITY_SALES_AMOUNT) {
+                        btn_toogle_fragment.setClickable(true);
+                        if (adapter != null) {
+                            list.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                        initData();
+                    } else {
+                        btn_toogle_fragment.setClickable(false);
+                        displayAuthority();
+                    }
                 }
             }
         });
@@ -167,7 +161,11 @@ public class SalesFragment extends BaseGraphFragment {
                     btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
                     toogleTime();
-                    sendRequest(generateParam());
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    initData();
                     hideAuthority();
                 }
             }
@@ -182,7 +180,11 @@ public class SalesFragment extends BaseGraphFragment {
                     btn_toogle_fragment.setClickable(true);
                     toogleTab(tabType);
                     toogleTime();
-                    sendRequest(generateParam());
+                    if (adapter != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    initData();
                     hideAuthority();
                 }
             }
@@ -192,7 +194,10 @@ public class SalesFragment extends BaseGraphFragment {
 
     @Override
     protected void onBtnToogle() {
-
+        if (adapter != null) {
+            list.clear();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void toogleTab(int tabType) {
@@ -204,20 +209,20 @@ public class SalesFragment extends BaseGraphFragment {
 
         if (tabType == 4) {
             chart_bar_container.setVisibility(View.GONE);
-            mChart.setVisibility(View.VISIBLE);
+            list_content.setVisibility(View.VISIBLE);
         } else {
             chart_bar_container.setVisibility(View.VISIBLE);
-            mChart.setVisibility(View.GONE);
+            list_content.setVisibility(View.GONE);
         }
 
     }
 
     public void initData() {
+
         /**
          * 发送请求
          */
         sendRequest(generateParam());
-
     }
 
     protected void fillData(List<Map<String, String>> data) {
@@ -240,11 +245,16 @@ public class SalesFragment extends BaseGraphFragment {
                         coloum2 = data.get(i).get("ZTOTLE");
                     }
                 } else if (tabType == 3) {
-                    coloum1 = data.get(i).get("ERDAT");
-                    coloum2 = data.get(i).get("ZCOUNT");
+                    if (timeType == 2) {
+                        coloum1 = data.get(i).get("ZMONTH");
+                        coloum2 = data.get(i).get("ZTOTLE");
+                    } else {
+                        coloum1 = data.get(i).get("ERDAT");
+                        coloum2 = data.get(i).get("ZCOUNT");
+                    }
                 } else if (tabType == 4) {
-                    coloum1 = data.get(data.size() - 1 - i).get("WGBEZ")+" ";
-                    coloum1 = coloum1.substring(coloum1.indexOf("-")>0?coloum1.indexOf("-")+1:0);
+                    coloum1 = data.get(data.size() - 1 - i).get("WGBEZ") + " ";
+                    coloum1 = coloum1.substring(coloum1.indexOf("-") > 0 ? coloum1.indexOf("-") + 1 : 0);
                     coloum2 = data.get(i).get("ZTOTLE");
 
                     classTotal += Float.parseFloat(coloum2);
@@ -266,7 +276,7 @@ public class SalesFragment extends BaseGraphFragment {
         }
 
         if (tabType == 4) {
-            fillPieChartData(list);
+            fillHorizontalBarData(list);
         } else {
             if (chart_bar != null) {
                 data_view_sales.removeView(chart_bar);
@@ -283,40 +293,31 @@ public class SalesFragment extends BaseGraphFragment {
         }
     }
 
-    private void fillPieChartData(List<Map<String, String>> list) {
+    private void fillHorizontalBarData(List<Map<String, String>> data) {
 
-        ArrayList<Entry> yVals = new ArrayList<>(list.size());
-        ArrayList<String> xVals = new ArrayList<>(list.size());
-        if (list != null && list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
+        if (data != null && data.size() > 0) {
 
-                String xdata = list.get(i).get("colum1");
-                String ydata = Arith.round(Float.parseFloat(list.get(i).get("colum2")) / classTotal * 100, 2) + "";
+            for (int i = 0; i < data.size(); i++) {
 
-                xVals.add(xdata);
-                yVals.add(new Entry(Float.parseFloat(ydata), i));
+                Map<String, String> item = data.get(i);
+
+                String coloum1, coloum2;
+
+                coloum1 = item.get("colum1");
+                coloum2 = item.get("colum2");
+
+                item.put("product_name", coloum1);
+                item.put("product_num", coloum2);
+                item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / classTotal * 100)) + "");
 
             }
+
+            if (adapter == null) {
+                adapter = new HorizontalBarAdapter(activity, list, R.layout.item_processbar);
+                listView.setAdapter(adapter);
+            }
+            adapter.notifyDataSetChanged();
         }
-
-        PieDataSet dataSet = new PieDataSet(yVals, "");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setValueTextColor(activity.getResources().getColor(R.color.REPORT_UI_C2));
-
-        int[] colorArr = new int[xVals.size()];
-        for (int i = 0; i < xVals.size(); i++) {
-            colorArr[i] = activity.getResources().getColor(colors[i % colors.length]);
-        }
-        dataSet.setColors(colorArr);
-
-        PieData data = new PieData(xVals, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(10f);
-        data.setValueTextColor(activity.getResources().getColor(R.color.REPORT_UI_C2));
-
-        mChart.setData(data);
-        mChart.invalidate();
     }
 
     private void fillBarData(List<Map<String, String>> list) {
@@ -342,6 +343,16 @@ public class SalesFragment extends BaseGraphFragment {
             chart_bar.setField(new String[]{});
         }
         chart_bar.postInvalidate();
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (chart_bar != null && chart_bar.getDataSize() > 5) {
+                    scrollview_linearlayout_sales.scrollTo(chart_bar.getRight(), 0);
+                }
+            }
+        }, 800);
+
     }
 
     protected Map<String, String> generateParam() {
@@ -355,6 +366,20 @@ public class SalesFragment extends BaseGraphFragment {
         if (sEndDate != null && !"".equals(sEndDate.trim()))
             parems.put("end", sEndDate);
 
+        /**
+         * 这里是四合一请求时的参数
+
+         parems.put("VBELN", "00");
+         if (timeType == 2) {
+         parems.put("type", "MONTH");
+         } else {
+         parems.put("type", "day");
+         }
+         */
+
+        /**这里是单个请求时的参数
+         *
+         **/
         if (tabType == 2) {
             parems.put("VBELN", "00");
             if (timeType == 2) {
@@ -381,6 +406,7 @@ public class SalesFragment extends BaseGraphFragment {
             }
         }
 
+
         return parems;
 
     }
@@ -401,7 +427,7 @@ public class SalesFragment extends BaseGraphFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG, responseString + throwable.getMessage());
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -435,6 +461,7 @@ public class SalesFragment extends BaseGraphFragment {
         asyncHttpResponseHandler.setCharset("GBK");
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(Constant.CONNECT_TIMEOUT);
         client.post(activity, Constant.URL_REPORT_SALES, requestParams, asyncHttpResponseHandler);
 
     }
@@ -456,16 +483,18 @@ public class SalesFragment extends BaseGraphFragment {
                         List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
                         fillData(viewtable);
                     } catch (Exception e) {
-                        Log.e(TAG, e.getMessage() + json);
+                        Log.e(TAG, e.getMessage(), e);
                         fillData(null);
                         Toast.makeText(activity, getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case HANDLER_SROAT:
                     roatStart();
+                    activity.loading();
                     break;
                 case HANDLER_EROAT:
                     //btn_toogle_fragment.clearAnimation();
+                    activity.disLoading();
                     break;
                 case HANDLER_NETWORK_ERR:
                     fillData(null);

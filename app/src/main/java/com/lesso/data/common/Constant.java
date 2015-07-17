@@ -7,15 +7,17 @@ import java.text.SimpleDateFormat;
  */
 public class Constant {
 
-    public static final String URL_UPDATE = "http://192.168.4.13:65153/lswm_text/api/VersionHandler.ashx";
-    public static final String URL_LOGIN = "http://192.168.4.13:65153/lswm_text/api/AccLogin_Handler.ashx";
-    public static final String URL_SETUP_SCRATPWD = "http://192.168.4.13:65153/lswm_text/api/AccLogin_Handler.ashx";
-    public static final String URL_SETUP_MODIFYPWD = "http://192.168.4.186:65153/lswm/api/AccLogin_Handler.ashx";
-    public static final String URL_PWD_AUTHORITY = "http://192.168.4.13:65153/lswm_text/api/AccLogin_Handler.ashx";
-    public static final String URL_REPORT_ACCESS = "http://10.10.7.221/api";
-    public static final String URL_REPORT_SALES = "http://192.168.4.186:65153/lswm/api/ZSDHandler.ashx";
-    public static final String URL_REPORT_STORE = "http://192.168.4.186:65153/lswm/api/WM_OutHandler.ashx";
-    public static final String URL_REPORT_USER = "http://10.10.7.137:8021/api/Hybris_Handler.ashx";
+    public static final String URL_DOTNET_BASE = "http://www.lessomall.com/NET/lswm/api/";
+    public static final String URL_UPDATE = URL_DOTNET_BASE + "VersionHandler.ashx";
+    public static final String URL_LOGIN = URL_DOTNET_BASE + "AccLogin_Handler.ashx";
+    public static final String URL_SETUP_SCRATPWD = URL_LOGIN;
+    public static final String URL_SETUP_MODIFYPWD = URL_LOGIN;
+    public static final String URL_PWD_AUTHORITY = URL_LOGIN;
+    public static final String URL_REPORT_SALES = URL_DOTNET_BASE + "ZSDHandler.ashx";
+    public static final String URL_REPORT_STORE = URL_DOTNET_BASE + "WM_OutHandler.ashx";
+    public static final String URL_REPORT_USER = URL_DOTNET_BASE + "Hybris_Handler.ashx";
+
+    public static final String URL_REPORT_ACCESS = "http://www.lessomall.com/PHP/bd/api";
 
     public static final String APP_KEY = "fc98141d";
 

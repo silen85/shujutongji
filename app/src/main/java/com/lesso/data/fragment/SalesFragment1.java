@@ -136,6 +136,8 @@ public class SalesFragment1 extends BaseGraphFragment {
 
                 if (tabType != 2) {
                     tabType = 2;
+                    toogleTab(tabType);
+                    toogleTime();
                     if (activity.AUTHORITY_SALES_AMOUNT) {
                         btn_toogle_fragment.setClickable(true);
                         if (adapter != null) {
@@ -147,10 +149,6 @@ public class SalesFragment1 extends BaseGraphFragment {
                         btn_toogle_fragment.setClickable(false);
                         displayAuthority();
                     }
-
-                    toogleTab(tabType);
-                    toogleTime();
-
                 }
             }
         });
@@ -221,7 +219,7 @@ public class SalesFragment1 extends BaseGraphFragment {
     }
 
     public void initData() {
-
+/*
         String cache = null;
         if (sBeginDate.equals(activity.getSalesDataCache().get("sBeginDate"))
                 && sEndDate.equals(activity.getSalesDataCache().get("sEndDate"))) {
@@ -259,12 +257,13 @@ public class SalesFragment1 extends BaseGraphFragment {
             }
         } else {
 
-            /**
-             * 发送请求
-             */
+            *//**
+         * 发送请求
+         *//*
             sendRequest(generateParam());
 
         }
+        */
     }
 
     protected void fillData(List<Map<String, String>> data) {
@@ -503,6 +502,7 @@ public class SalesFragment1 extends BaseGraphFragment {
 
     }
 
+
     private final int HANDLER_DATA = 1;
     private final int HANDLER_SROAT = 2;
     private final int HANDLER_EROAT = 3;
@@ -515,17 +515,17 @@ public class SalesFragment1 extends BaseGraphFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
-
-                    activity.getSalesDataCache().put("sBeginDate", sBeginDate);
-                    activity.getSalesDataCache().put("sEndDate", sEndDate);
-                    if (timeType == 2) {
-                        activity.getSalesDataCache().put("MONTH", json);
-                        activity.getSalesDataCache().put("day", null);
-                    } else {
-                        activity.getSalesDataCache().put("day", json);
-                        activity.getSalesDataCache().put("MONTH", null);
-                    }
-
+/**
+ activity.getSalesDataCache().put("sBeginDate", sBeginDate);
+ activity.getSalesDataCache().put("sEndDate", sEndDate);
+ if (timeType == 2) {
+ activity.getSalesDataCache().put("MONTH", json);
+ activity.getSalesDataCache().put("day", null);
+ } else {
+ activity.getSalesDataCache().put("day", json);
+ activity.getSalesDataCache().put("MONTH", null);
+ }
+ **/
                     try {
 
                         String dataType = "";
@@ -571,5 +571,6 @@ public class SalesFragment1 extends BaseGraphFragment {
             super.handleMessage(msg);
         }
     };
+
 
 }

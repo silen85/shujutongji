@@ -347,6 +347,14 @@ public abstract class BaseListFragment extends ListFragment {
         this.tabType = tabType;
     }
 
+    public int getTimeType() {
+        return timeType;
+    }
+
+    public void setTimeType(int timeType) {
+        this.timeType = timeType;
+    }
+
     public String getsBeginDate() {
         return sBeginDate;
     }

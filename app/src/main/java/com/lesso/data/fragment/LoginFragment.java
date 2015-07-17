@@ -254,7 +254,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG,throwable.getMessage(),throwable);
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -303,7 +303,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
             loginUser.setUserPassword(password);
             loginUser.setScratchable_PWD(Scratchable_PWD);
 
-            ((LessoApplication) getActivity().getApplication()).setLoginUser(loginUser);
+            ((LessoApplication) activity.getApplication()).setLoginUser(loginUser);
 
             if (Scratchable_PWD != null && !"".equals(Scratchable_PWD.trim())) {
                 Intent intent = new Intent(activity, LockActivity.class);
@@ -339,7 +339,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
                     Toast.makeText(activity, activity.getResources().getString(R.string.text_login_failed), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG,e.getMessage(),e);
+                Log.e(TAG, e.getMessage(), e);
                 Toast.makeText(activity, activity.getResources().getString(R.string.text_login_failed), Toast.LENGTH_SHORT).show();
             }
         } else if (msg.what == HANDLER_NETWORK_ERR) {

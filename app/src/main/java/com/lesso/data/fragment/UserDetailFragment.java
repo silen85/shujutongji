@@ -321,16 +321,15 @@ public class UserDetailFragment extends BaseListFragment {
         } else if (tabType == 4) {
             parems.put("type", "store");
         } else {
-            parems.put("type", "nuser");
             if (sBeginDate != null && !"".equals(sBeginDate.trim()))
                 parems.put("start", sBeginDate);
             if (sEndDate != null && !"".equals(sEndDate.trim()))
                 parems.put("end", sEndDate);
 
             if (timeType == 2) {
-                // parems.put("type", "nuser");
+                parems.put("type", "nuser_moth");
             } else {
-                // parems.put("type", "nuser");
+                parems.put("type", "nuser");
             }
         }
 
@@ -353,7 +352,7 @@ public class UserDetailFragment extends BaseListFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG,throwable.getMessage(),throwable);
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -420,7 +419,7 @@ public class UserDetailFragment extends BaseListFragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        Log.e(TAG,e.getMessage(),e);
+                        Log.e(TAG, e.getMessage(), e);
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();
