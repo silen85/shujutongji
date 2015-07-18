@@ -259,11 +259,7 @@ public abstract class BaseListFragment extends ListFragment {
                 ((TextView) time_chooser.findViewById(R.id.time_chooser_f)).setText(sBeginDate);
                 ((TextView) time_chooser.findViewById(R.id.time_chooser_t)).setText(sEndDate);
 
-                /**
-                 * 发送请求
-                 */
-
-                sendRequest(generateParam());
+                initData();
 
             }
         });
@@ -331,12 +327,6 @@ public abstract class BaseListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = (MainActivity) activity;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
     }
 
     public int getTabType() {

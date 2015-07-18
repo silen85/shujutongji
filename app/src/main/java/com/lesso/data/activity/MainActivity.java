@@ -29,8 +29,10 @@ import com.lesso.data.fragment.UserFragment1;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by meisl on 2015/6/19.
@@ -64,7 +66,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private UserFragment1 userFragment;
     private UserDetailFragment userDetailFragment;
 
-    // private Map<String, String> salesDataCache = new HashMap();
+    private Map<String, String> salesDataCache = new HashMap();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
 
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
+        if (loginUser == null) {
+            finish();
+        }
 
         btn_back = (Button) findViewById(R.id.btn_back);
         btn_back.setVisibility(View.GONE);
@@ -340,17 +345,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Iterator iterator = fragmentList.iterator();
             while (iterator.hasNext()) {
                 Fragment _fragment = (Fragment) iterator.next();
-                if (_fragment != null && !(_fragment instanceof MainFragment)) {
+                if (_fragment != null) {
                     fragmentTransaction.remove(_fragment);
                 }
             }
 
-            btn_back.setVisibility(View.VISIBLE);
-
-            fragmentTransaction.hide(mainFragment);
             fragmentTransaction.add(R.id.main_content, fragment);
-
             fragmentTransaction.commit();
+
+            btn_back.setVisibility(View.VISIBLE);
 
         }
     }
@@ -362,7 +365,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 Toast.makeText(this, getString(R.string.quit_press_again), Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
-                finish();
+
+                Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
+                mHomeIntent.addCategory(Intent.CATEGORY_HOME);
+                mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                startActivity(mHomeIntent);
+
+                //finish();
             }
         } else {
 
@@ -372,16 +381,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Iterator iterator = fragmentList.iterator();
             while (iterator.hasNext()) {
                 Fragment _fragment = (Fragment) iterator.next();
-                if (_fragment != null && !(_fragment instanceof MainFragment)) {
+                if (_fragment != null) {
                     fragmentTransaction.remove(_fragment);
                 }
             }
 
-            btn_back.setVisibility(View.GONE);
-
-            fragmentTransaction.show(mainFragment);
+            mainFragment = new MainFragment();
+            fragmentTransaction.add(R.id.main_content, mainFragment);
             fragmentTransaction.commit();
+
+            btn_back.setVisibility(View.GONE);
             toogleTitle(getString(R.string.app_title), true);
+
         }
     }
 
@@ -431,7 +442,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    /*public Map<String, String> getSalesDataCache() {
+    public Map<String, String> getSalesDataCache() {
         return salesDataCache;
-    }*/
+    }
 }

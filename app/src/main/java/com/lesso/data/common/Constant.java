@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
  */
 public class Constant {
 
+    public static final String LESSOBI = "LESSOBI";
+    public static final String LESSOBI_USERNAME = "LESSOBI_USERNAME";
+
     public static final String URL_DOTNET_BASE = "http://www.lessomall.com/NET/lswm/api/";
     public static final String URL_UPDATE = URL_DOTNET_BASE + "VersionHandler.ashx";
     public static final String URL_LOGIN = URL_DOTNET_BASE + "AccLogin_Handler.ashx";

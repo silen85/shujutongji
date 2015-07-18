@@ -36,6 +36,9 @@ public class SetupActivity extends Activity {
         setContentView(R.layout.activity_setup);
 
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
+        if (loginUser == null){
+            finish();
+        }
 
         btn_back = (Button) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {

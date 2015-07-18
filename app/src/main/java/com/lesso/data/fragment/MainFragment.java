@@ -342,7 +342,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                     item.put("product_name", coloum1);
                     item.put("product_num", coloum2);
-                    item.put("product_percent", ((int) ((Float.parseFloat(viewtable.get(i).get("number"))) / (Float.parseFloat(viewtable.get(0).get("number"))) * 100)) + "");
+                    item.put("product_percent", ((int) ((Float.parseFloat(viewtable.get(i).get("number"))) / (Float.parseFloat(viewtable.get(0).get("number"))) * 10000)) + "");
 
                     //count += Integer.parseInt(viewtable.get(i).get("number"));
 

@@ -73,8 +73,6 @@ public class SalesFragment extends BaseGraphFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // initData();
-
         if (tabType == 2) {
             if (!activity.AUTHORITY_SALES_AMOUNT) {
                 btn_toogle_fragment.setClickable(false);
@@ -85,7 +83,7 @@ public class SalesFragment extends BaseGraphFragment {
         } else {
             hideAuthority();
         }
-
+        initData();
     }
 
     protected void initView() {
@@ -219,10 +217,45 @@ public class SalesFragment extends BaseGraphFragment {
 
     public void initData() {
 
-        /**
-         * 发送请求
-         */
-        sendRequest(generateParam());
+
+        Message message = mHandler.obtainMessage();
+        message.what = HANDLER_SROAT;
+        message.sendToTarget();
+
+        String cache = null;
+        if (sBeginDate.equals(activity.getSalesDataCache().get("sBeginDate"))
+                && sEndDate.equals(activity.getSalesDataCache().get("sEndDate"))
+                && (tabType + "").equals(activity.getSalesDataCache().get("tabType"))
+                && (timeType + "").equals(activity.getSalesDataCache().get("timeType"))) {
+
+            String dataType = "";
+            if (tabType == 2) {
+                dataType = "NUMBER";
+            } else if (tabType == 3) {
+                dataType = "CAR";
+            } else if (tabType == 4) {
+                dataType = "CLASS";
+            } else {
+                dataType = "MONEY";
+            }
+
+            if (timeType == 2)
+                dataType += "_MONTH";
+
+            cache = activity.getSalesDataCache().get(dataType);
+        }
+
+
+        if (cache != null && !"".equals(cache.trim())) {
+            Message _message = mHandler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("json", cache);
+            _message.what = HANDLER_DATA;
+            _message.setData(bundle);
+            _message.sendToTarget();
+        } else {
+            sendRequest(generateParam());
+        }
     }
 
     protected void fillData(List<Map<String, String>> data) {
@@ -308,7 +341,7 @@ public class SalesFragment extends BaseGraphFragment {
 
                 item.put("product_name", coloum1);
                 item.put("product_num", coloum2);
-                item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / classTotal * 100)) + "");
+                item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / classTotal * 10000)) + "");
 
             }
 
@@ -420,9 +453,7 @@ public class SalesFragment extends BaseGraphFragment {
             @Override
             public void onStart() {
                 super.onStart();
-                Message message = mHandler.obtainMessage();
-                message.what = HANDLER_SROAT;
-                message.sendToTarget();
+                activity.loading();
             }
 
             @Override
@@ -451,9 +482,10 @@ public class SalesFragment extends BaseGraphFragment {
             @Override
             public void onFinish() {
                 super.onFinish();
-                Message message = mHandler.obtainMessage();
+                /*Message message = mHandler.obtainMessage();
                 message.what = HANDLER_EROAT;
-                message.sendToTarget();
+                message.sendToTarget();*/
+                activity.disLoading();
             }
 
         };
@@ -478,6 +510,28 @@ public class SalesFragment extends BaseGraphFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
+
+                    activity.getSalesDataCache().put("sBeginDate", sBeginDate);
+                    activity.getSalesDataCache().put("sEndDate", sEndDate);
+                    activity.getSalesDataCache().put("tabType", tabType + "");
+                    activity.getSalesDataCache().put("timeType", timeType + "");
+
+                    String dataType = "";
+                    if (tabType == 2) {
+                        dataType = "NUMBER";
+                    } else if (tabType == 3) {
+                        dataType = "CAR";
+                    } else if (tabType == 4) {
+                        dataType = "CLASS";
+                    } else {
+                        dataType = "MONEY";
+                    }
+
+                    if (timeType == 2)
+                        dataType += "_MONTH";
+
+                    activity.getSalesDataCache().put(dataType, json);
+
                     try {
                         Map result = Tools.json2Map(json);
                         List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
@@ -490,11 +544,9 @@ public class SalesFragment extends BaseGraphFragment {
                     break;
                 case HANDLER_SROAT:
                     roatStart();
-                    activity.loading();
                     break;
                 case HANDLER_EROAT:
                     //btn_toogle_fragment.clearAnimation();
-                    activity.disLoading();
                     break;
                 case HANDLER_NETWORK_ERR:
                     fillData(null);

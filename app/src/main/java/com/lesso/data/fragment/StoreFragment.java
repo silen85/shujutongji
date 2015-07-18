@@ -204,7 +204,7 @@ public class StoreFragment extends BaseGraphFragment {
 
                 item.put("product_name", coloum1);
                 item.put("product_num", coloum2);
-                item.put("product_percent", ((int) ((Float.parseFloat(data.get(i).get("number"))) / (Float.parseFloat(data.get(0).get("number"))) * 100)) + "");
+                item.put("product_percent", ((int) ((Float.parseFloat(data.get(i).get("number"))) / (Float.parseFloat(data.get(0).get("number"))) * 10000)) + "");
 
                 list.add(item);
             }

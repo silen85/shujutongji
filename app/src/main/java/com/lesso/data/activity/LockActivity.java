@@ -40,13 +40,12 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        setContentView(R.layout.activity_lock);
+
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
         if (loginUser == null || loginUser.getScratchable_PWD() == null) {
             finish();
-            return;
         }
-
-        setContentView(R.layout.activity_lock);
 
         lock_input_tips = (TextView) findViewById(R.id.lock_input_tips);
 

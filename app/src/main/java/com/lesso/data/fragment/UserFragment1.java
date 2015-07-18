@@ -400,7 +400,7 @@ public class UserFragment1 extends BaseGraphFragment {
 
                 item.put("product_name", coloum1);
                 item.put("product_num", coloum2);
-                item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / (Float.parseFloat(coloum3)) * 100)) + "");
+                item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / (Float.parseFloat(coloum3)) * 10000)) + "");
 
             }
 

@@ -219,7 +219,7 @@ public class SalesFragment1 extends BaseGraphFragment {
     }
 
     public void initData() {
-/*
+
         String cache = null;
         if (sBeginDate.equals(activity.getSalesDataCache().get("sBeginDate"))
                 && sEndDate.equals(activity.getSalesDataCache().get("sEndDate"))) {
@@ -257,13 +257,13 @@ public class SalesFragment1 extends BaseGraphFragment {
             }
         } else {
 
-            *//**
-         * 发送请求
-         *//*
+            /**
+             * 发送请求
+             */
             sendRequest(generateParam());
 
         }
-        */
+
     }
 
     protected void fillData(List<Map<String, String>> data) {
@@ -404,44 +404,44 @@ public class SalesFragment1 extends BaseGraphFragment {
 
         /**
          * 这里是四合一请求时的参数
-         */
-        parems.put("VBELN", "00");
-        if (timeType == 2) {
-            parems.put("type", "MONTH");
-        } else {
-            parems.put("type", "day");
-        }
 
+         parems.put("VBELN", "00");
+         if (timeType == 2) {
+         parems.put("type", "MONTH");
+         } else {
+         parems.put("type", "day");
+         }
+         */
 
         /**这里是单个请求时的参数
-
-         if (tabType == 2) {
-         parems.put("VBELN", "00");
-         if (timeType == 2) {
-         parems.put("type", "NUMBER_MONTH");
-         } else {
-         parems.put("type", "NUMBER");
-         }
-         } else if (tabType == 3) {
-         parems.put("VBELN", "01");
-         if (timeType == 2) {
-         parems.put("type", "CAR_MONTH");
-         } else {
-         parems.put("type", "CAR");
-         }
-         } else if (tabType == 4) {
-         parems.put("VBELN", "00");
-         parems.put("type", "CLASS");
-         } else {
-         parems.put("VBELN", "00");
-         if (timeType == 2) {
-         parems.put("type", "MONEY_MONTH");
-         } else {
-         parems.put("type", "MONEY");
-         }
-         }
-
          **/
+
+        if (tabType == 2) {
+            parems.put("VBELN", "00");
+            if (timeType == 2) {
+                parems.put("type", "NUMBER_MONTH");
+            } else {
+                parems.put("type", "NUMBER");
+            }
+        } else if (tabType == 3) {
+            parems.put("VBELN", "01");
+            if (timeType == 2) {
+                parems.put("type", "CAR_MONTH");
+            } else {
+                parems.put("type", "CAR");
+            }
+        } else if (tabType == 4) {
+            parems.put("VBELN", "00");
+            parems.put("type", "CLASS");
+        } else {
+            parems.put("VBELN", "00");
+            if (timeType == 2) {
+                parems.put("type", "MONEY_MONTH");
+            } else {
+                parems.put("type", "MONEY");
+            }
+        }
+
 
         return parems;
 
@@ -515,17 +515,17 @@ public class SalesFragment1 extends BaseGraphFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
-/**
- activity.getSalesDataCache().put("sBeginDate", sBeginDate);
- activity.getSalesDataCache().put("sEndDate", sEndDate);
- if (timeType == 2) {
- activity.getSalesDataCache().put("MONTH", json);
- activity.getSalesDataCache().put("day", null);
- } else {
- activity.getSalesDataCache().put("day", json);
- activity.getSalesDataCache().put("MONTH", null);
- }
- **/
+
+                    activity.getSalesDataCache().put("sBeginDate", sBeginDate);
+                    activity.getSalesDataCache().put("sEndDate", sEndDate);
+                    if (timeType == 2) {
+                        activity.getSalesDataCache().put("MONTH", json);
+                        activity.getSalesDataCache().put("day", null);
+                    } else {
+                        activity.getSalesDataCache().put("day", json);
+                        activity.getSalesDataCache().put("MONTH", null);
+                    }
+
                     try {
 
                         String dataType = "";

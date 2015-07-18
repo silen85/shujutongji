@@ -3,6 +3,7 @@ package com.lesso.data.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -118,6 +119,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
 
         accountEditText = (EditText) view.findViewById(R.id.accountEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+
+        SharedPreferences sp = activity.getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
+        String uid = sp.getString(Constant.LESSOBI_USERNAME, "");
+        if (uid != null && !"".equals(uid.trim())) {
+            accountEditText.setText(uid);
+            login_account_icon.setVisibility(View.GONE);
+            login_password_icon.setVisibility(View.GONE);
+        }
 
         //accountEditText.setShowSoftInputOnFocus(true);
         //passwordEditText.setShowSoftInputOnFocus(true);
@@ -296,6 +305,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
             String username = accountEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             String Scratchable_PWD = (String) data.get("Scratchable_PWD");
+
+            SharedPreferences sp = activity.getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
+            sp.edit().putString(Constant.LESSOBI_USERNAME, username).commit();
 
             LessoApplication.LoginUser loginUser = ((LessoApplication) activity.getApplication()).new LoginUser();
             loginUser.setUserid(uid);

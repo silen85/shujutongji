@@ -65,7 +65,6 @@ public class LockSetupActivity extends Activity implements
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
         if (loginUser == null){
             finish();
-            return;
         }
 
         lockPatternView = (LockPatternView) findViewById(R.id.lock_pattern);

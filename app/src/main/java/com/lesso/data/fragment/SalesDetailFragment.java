@@ -59,7 +59,6 @@ public class SalesDetailFragment extends BaseListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // initData();
         if (tabType == 2) {
             if (!activity.AUTHORITY_SALES_AMOUNT) {
                 btn_toogle_fragment.setClickable(false);
@@ -70,7 +69,7 @@ public class SalesDetailFragment extends BaseListFragment {
         } else {
             hideAuthority();
         }
-
+        initData();
     }
 
     protected void initView() {
@@ -209,12 +208,46 @@ public class SalesDetailFragment extends BaseListFragment {
 
     public void initData() {
 
+        Message message = mHandler.obtainMessage();
+        message.what = HANDLER_SROAT;
+        message.sendToTarget();
+
         toogleHeader(tabType);
 
-        /**
-         * 发送请求
-         */
-        sendRequest(generateParam());
+        String cache = null;
+        if (sBeginDate.equals(activity.getSalesDataCache().get("sBeginDate"))
+                && sEndDate.equals(activity.getSalesDataCache().get("sEndDate"))
+                && (tabType + "").equals(activity.getSalesDataCache().get("tabType"))
+                && (timeType + "").equals(activity.getSalesDataCache().get("timeType"))) {
+
+            String dataType = "";
+            if (tabType == 2) {
+                dataType = "NUMBER";
+            } else if (tabType == 3) {
+                dataType = "CAR";
+            } else if (tabType == 4) {
+                dataType = "CLASS";
+            } else {
+                dataType = "MONEY";
+            }
+
+            if (timeType == 2)
+                dataType += "_MONTH";
+
+            cache = activity.getSalesDataCache().get(dataType);
+        }
+
+
+        if (cache != null && !"".equals(cache.trim())) {
+            Message _message = mHandler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("json", cache);
+            _message.what = HANDLER_DATA;
+            _message.setData(bundle);
+            _message.sendToTarget();
+        } else {
+            sendRequest(generateParam());
+        }
 
     }
 
@@ -381,9 +414,7 @@ public class SalesDetailFragment extends BaseListFragment {
             @Override
             public void onStart() {
                 super.onStart();
-                Message message = mHandler.obtainMessage();
-                message.what = HANDLER_SROAT;
-                message.sendToTarget();
+                activity.loading();
             }
 
             @Override
@@ -412,9 +443,10 @@ public class SalesDetailFragment extends BaseListFragment {
             @Override
             public void onFinish() {
                 super.onFinish();
-                Message message = mHandler.obtainMessage();
+                /*Message message = mHandler.obtainMessage();
                 message.what = HANDLER_EROAT;
-                message.sendToTarget();
+                message.sendToTarget();*/
+                activity.disLoading();
             }
 
         };
@@ -439,6 +471,28 @@ public class SalesDetailFragment extends BaseListFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
+
+                    activity.getSalesDataCache().put("sBeginDate", sBeginDate);
+                    activity.getSalesDataCache().put("sEndDate", sEndDate);
+                    activity.getSalesDataCache().put("tabType", tabType + "");
+                    activity.getSalesDataCache().put("timeType", timeType + "");
+
+                    String dataType = "";
+                    if (tabType == 2) {
+                        dataType = "NUMBER";
+                    } else if (tabType == 3) {
+                        dataType = "CAR";
+                    } else if (tabType == 4) {
+                        dataType = "CLASS";
+                    } else {
+                        dataType = "MONEY";
+                    }
+
+                    if (timeType == 2)
+                        dataType += "_MONTH";
+
+                    activity.getSalesDataCache().put(dataType, json);
+
                     try {
 
                         Map result = Tools.json2Map(json);
@@ -470,11 +524,9 @@ public class SalesDetailFragment extends BaseListFragment {
                         adapter.notifyDataSetChanged();
                     }
                     roatStart();
-                    activity.loading();
                     break;
                 case HANDLER_EROAT:
                     //btn_toogle_fragment.clearAnimation();
-                    activity.disLoading();
                     break;
                 case HANDLER_NETWORK_ERR:
                     if (list != null && list.size() > 0) {
