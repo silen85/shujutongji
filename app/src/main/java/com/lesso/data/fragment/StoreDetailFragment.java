@@ -309,6 +309,7 @@ public class StoreDetailFragment extends BaseListFragment {
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_SROAT;
                 message.sendToTarget();
+                activity.loading();
             }
 
             @Override
@@ -340,6 +341,7 @@ public class StoreDetailFragment extends BaseListFragment {
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_EROAT;
                 message.sendToTarget();
+                activity.disLoading();
             }
 
         };
