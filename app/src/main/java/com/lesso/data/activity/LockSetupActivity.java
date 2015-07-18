@@ -63,7 +63,7 @@ public class LockSetupActivity extends Activity implements
         setContentView(R.layout.activity_lock_setup);
 
         loginUser = ((LessoApplication) getApplication()).getLoginUser();
-        if (loginUser == null){
+        if (loginUser == null) {
             finish();
         }
 
@@ -132,7 +132,7 @@ public class LockSetupActivity extends Activity implements
 
         parems.put("type", "ScratUP");
         parems.put("id", loginUser.getUserid());
-        parems.put("Scrat",pattern);
+        parems.put("Scrat", pattern);
 
         RequestParams requestParams = new RequestParams(parems);
 
@@ -141,7 +141,7 @@ public class LockSetupActivity extends Activity implements
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG,throwable.getMessage(),throwable);
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Toast.makeText(LockSetupActivity.this, getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -223,6 +223,12 @@ public class LockSetupActivity extends Activity implements
         step = STEP_4;
         updateView();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        sendBroadcast(new Intent(Constant.FINISH_ACTION));
+        super.onBackPressed();
     }
 
 }

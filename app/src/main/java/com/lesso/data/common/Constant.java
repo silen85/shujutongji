@@ -47,4 +47,6 @@ public class Constant {
     public static int LOGIN_STATUS_CODE_NODONGPWD = -3; // -3没有绑定动态密码器
     public static int LOGIN_STATUS_CODE_SUCCESS = 0; // 正数表示成功
 
+    public static final String FINISH_ACTION = "com.lesso.data.FINISH_ACTION";
+
 }

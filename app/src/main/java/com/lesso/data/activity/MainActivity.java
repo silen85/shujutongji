@@ -1,7 +1,10 @@
 package com.lesso.data.activity;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -68,6 +71,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private Map<String, String> salesDataCache = new HashMap();
 
+    BroadcastReceiver finishReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MainActivity.this.finish();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +92,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (loginUser == null) {
             finish();
         }
+
+        IntentFilter finishFilter = new IntentFilter(Constant.FINISH_ACTION);
+        registerReceiver(finishReceiver, finishFilter);
 
         btn_back = (Button) findViewById(R.id.btn_back);
         btn_back.setVisibility(View.GONE);
@@ -441,6 +455,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         backFragment();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        try {
+            unregisterReceiver(finishReceiver);
+        } catch (Exception e) {
+        }
+
+    }
 
     public Map<String, String> getSalesDataCache() {
         return salesDataCache;

@@ -14,6 +14,7 @@ import android.view.WindowManager;
 
 import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
+import com.lesso.data.common.Constant;
 import com.lesso.data.common.UpdateManager;
 import com.lesso.data.cusinterface.FragmentListener;
 import com.lesso.data.fragment.LoginFragment;
@@ -125,4 +126,9 @@ public class SplashLoginActivity extends FragmentActivity {
         this.fragmentListener = fragmentListener;
     }
 
+    @Override
+    public void onBackPressed() {
+        sendBroadcast(new Intent(Constant.FINISH_ACTION));
+        super.onBackPressed();
+    }
 }

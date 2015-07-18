@@ -428,18 +428,17 @@ public class SalesFragment extends BaseGraphFragment {
                 parems.put("type", "CAR");
             }
         } else if (tabType == 4) {
-            parems.put("VBELN", "00");
+            parems.put("VBELN", "03");
             parems.put("type", "CLASS");
         } else {
-            parems.put("VBELN", "00");
+            parems.put("VBELN", "02");
             if (timeType == 2) {
                 parems.put("type", "MONEY_MONTH");
             } else {
                 parems.put("type", "MONEY");
             }
         }
-
-
+        
         return parems;
 
     }

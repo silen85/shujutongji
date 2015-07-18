@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
+import com.lesso.data.common.Constant;
 import com.lesso.data.ui.LockPatternView;
 
 import java.util.List;
@@ -67,18 +67,6 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        // disable back key
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public void onPatternStart() {
         Log.d(TAG, "onPatternStart");
     }
@@ -119,7 +107,11 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
                 lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
             }
         }
-
     }
 
+    @Override
+    public void onBackPressed() {
+        sendBroadcast(new Intent(Constant.FINISH_ACTION));
+        super.onBackPressed();
+    }
 }
