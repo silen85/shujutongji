@@ -150,7 +150,6 @@ public class AccessDetailFragment extends BaseListFragment {
     }
 
     protected void fillData(List<Map<String, String>> data) {
-        roatStart();
         list.clear();
         if (data != null && data.size() > 0) {
             for (int i = 0; i < data.size(); i++) {

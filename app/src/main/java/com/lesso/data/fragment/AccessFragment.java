@@ -134,7 +134,6 @@ public class AccessFragment extends BaseGraphFragment {
     }
 
     protected void fillData(List<Map<String, String>> data) {
-        roatStart();
         list.clear();
         if (data != null && data.size() > 0) {
 
