@@ -110,8 +110,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         dao.clearCacheData(sBeginDate, sEndDate);
 
         initView();
-
-        initData();
     }
 
     private void initView() {
@@ -142,8 +140,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initData() {
+
+        requestAccessData();
+        requestSalesData();
         requestStoreData();
         requestStoreDataByYesterday();
+        requestUserData();
     }
 
     private void initAccessView() {
@@ -152,8 +154,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         data_view_access.setOnClickListener(this);
         chart_access_width = screenWidth;
 
-        requestAccessData();
-
     }
 
     private void initSalesView() {
@@ -161,8 +161,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         data_view_sales = (LinearLayout) view.findViewById(R.id.data_view_sales);
         data_view_sales.setOnClickListener(this);
         chart_sales_width = screenWidth;
-
-        requestSalesData();
 
     }
 
@@ -186,8 +184,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         data_view_user = (LinearLayout) view.findViewById(R.id.data_view_user);
         data_view_user.setOnClickListener(this);
         chart_user_width = screenWidth;
-
-        requestUserData();
 
     }
 
@@ -218,6 +214,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 List<Map<String, String>> dataList = (List<Map<String, String>>) result.get("data");
                 if (dataList != null && dataList.size() > 0) {
+
+                    dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_ACCESS, json);
 
                     String[] fields = new String[dataList.size()];
                     float[] data = new float[dataList.size()];
@@ -285,6 +283,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             if (viewtable != null && viewtable.size() > 0) {
 
+                dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_SALES, json);
+
                 String[] fields = new String[viewtable.size()];
                 float[] data = new float[viewtable.size()];
 
@@ -328,6 +328,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
 
             if (viewtable != null && viewtable.size() > 0) {
+
+                dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_STORE, json);
 
                 storeList.clear();
                 //int count = 0;
@@ -379,6 +381,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             Map result = Tools.json2Map(json);
             List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
             if (viewtable != null && viewtable.size() > 0) {
+
+                dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_STORE_YESTERDAY, json);
+
                 int count = 0;
                 for (int i = 0; i < viewtable.size(); i++) {
                     count += ((int) Float.parseFloat(viewtable.get(i).get("number")));
@@ -417,6 +422,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
 
             if (viewtable != null && viewtable.size() > 0) {
+
+                dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_USER, json);
 
                 String[] fields = new String[viewtable.size()];
                 float[] data = new float[viewtable.size()];
@@ -484,7 +491,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("VKORG", "1250");
         parems.put("start", sBeginDate);
         parems.put("end", sEndDate);
-        parems.put("VBELN", "00");
+        parems.put("VBELN", "02");
         parems.put("type", "MONEY");
 
         //  parems.put("start", "2019-05-01");
@@ -678,7 +685,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_ACCESS:" + json);
                         initAccessData(json);
-                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_ACCESS, json);
                         this.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -692,7 +698,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_SALES:" + json);
                         initSalesData(json);
-                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_SALES, json);
                         this.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -706,19 +711,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_STORE:" + json);
                         initStoreData(json);
-                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_STORE, json);
                         break;
                     case HANDLER_DATA_STORE_YESTERDAY:
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_USER:" + json);
                         initStoreDataByYesterday(json);
-                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_STORE_YESTERDAY, json);
                         break;
                     case HANDLER_DATA_USER:
                         json = msg.getData().getString("json");
                         Log.d(TAG, "HANDLER_DATA_USER:" + json);
                         initUserData(json);
-                        dao.putCacheData(sBeginDate, sEndDate, HANDLER_DATA_USER, json);
                         this.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -769,6 +771,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        initData();
+
     }
 
     @Override

@@ -98,6 +98,7 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
             errcount--;
             if (errcount <= 0) {
                 ((LessoApplication) getApplication()).setLoginUser(null);
+                sendBroadcast(new Intent(Constant.FINISH_ACTION));
                 finish();
             } else {
 
