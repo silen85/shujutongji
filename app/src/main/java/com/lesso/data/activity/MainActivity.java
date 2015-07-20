@@ -48,8 +48,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public boolean AUTHORITY_SALES_AMOUNT = false;
 
-    private LessoApplication.LoginUser loginUser;
-
     private Button btn_back;
     private RelativeLayout main_title;
     private TextView main_title_txt;
@@ -88,8 +86,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setContentView(R.layout.activity_main);
 
-        loginUser = ((LessoApplication) getApplication()).getLoginUser();
-        if (loginUser == null) {
+        if (((LessoApplication) getApplication()).getLoginUser() == null) {
             finish();
         }
 

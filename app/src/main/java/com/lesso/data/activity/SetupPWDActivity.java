@@ -3,6 +3,7 @@ package com.lesso.data.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,8 +40,6 @@ public class SetupPWDActivity extends Activity {
 
     private String TAG = "com.lesso.data.fragment.SetupPWDActivity";
 
-    private LessoApplication.LoginUser loginUser;
-
     private Button btn_back, submit;
 
     private RelativeLayout main_title;
@@ -61,8 +60,7 @@ public class SetupPWDActivity extends Activity {
 
         setContentView(R.layout.activity_setuppwd);
 
-        loginUser = ((LessoApplication) getApplication()).getLoginUser();
-        if (loginUser == null) {
+        if (((LessoApplication) getApplication()).getLoginUser() == null) {
             finish();
         }
 
@@ -151,7 +149,7 @@ public class SetupPWDActivity extends Activity {
         Map<String, String> parems = new HashMap();
 
         parems.put("type", "logkey");
-        parems.put("id", loginUser.getUserid());
+        parems.put("id", ((LessoApplication) getApplication()).getLoginUser().getUserid());
         parems.put("key", authorityEditText.getText().toString());
 
         RequestParams requestParams = new RequestParams(parems);
@@ -165,7 +163,7 @@ public class SetupPWDActivity extends Activity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG,throwable.getMessage(),throwable);
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Toast.makeText(SetupPWDActivity.this, getString(R.string.no_data_error), Toast.LENGTH_SHORT).show();
             }
 
@@ -186,7 +184,7 @@ public class SetupPWDActivity extends Activity {
                             Toast.makeText(SetupPWDActivity.this, SetupPWDActivity.this.getResources().getString(R.string.text_authority_failed_dongpwdwrong), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        Log.e(TAG,e.getMessage(),e);
+                        Log.e(TAG, e.getMessage(), e);
                         Toast.makeText(SetupPWDActivity.this, SetupPWDActivity.this.getResources().getString(R.string.text_authority_failed_dongpwdwrong), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -218,7 +216,7 @@ public class SetupPWDActivity extends Activity {
             Toast.makeText(this, getString(R.string.text_setup_password1), Toast.LENGTH_SHORT).show();
         } else if ("".equals(confirmpasswordEditText.getText().toString())) {
             Toast.makeText(this, getString(R.string.text_setup_password2), Toast.LENGTH_SHORT).show();
-        } else if (!passwordEditText.getText().toString().equals(loginUser.getUserPassword())) {
+        } else if (!passwordEditText.getText().toString().equals(((LessoApplication) getApplication()).getLoginUser().getUserPassword())) {
             Toast.makeText(this, getString(R.string.text_setup_password_tips1), Toast.LENGTH_SHORT).show();
         } else if (!newpasswordEditText.getText().toString().equals(confirmpasswordEditText.getText().toString())) {
             Toast.makeText(this, getString(R.string.text_setup_password_tips2), Toast.LENGTH_SHORT).show();
@@ -230,7 +228,7 @@ public class SetupPWDActivity extends Activity {
             Map<String, String> parems = new HashMap();
 
             parems.put("type", "PwdUP");
-            parems.put("id", loginUser.getUserid());
+            parems.put("id", ((LessoApplication) getApplication()).getLoginUser().getUserid());
             parems.put("pwd", newpasswordEditText.getText().toString());
             parems.put("OldPwd", passwordEditText.getText().toString());
 
@@ -261,7 +259,12 @@ public class SetupPWDActivity extends Activity {
                             int state = Integer.parseInt((String) viewtable.get("state"));
                             if (state > 0) {
                                 Toast.makeText(SetupPWDActivity.this, SetupPWDActivity.this.getResources().getString(R.string.text_setup_password_success), Toast.LENGTH_SHORT).show();
-                                loginUser.setUserPassword(newpasswordEditText.getText().toString());
+
+                                ((LessoApplication) getApplication()).getLoginUser().setUserPassword(newpasswordEditText.getText().toString());
+
+                                SharedPreferences sp = SetupPWDActivity.this.getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
+                                sp.edit().putString(Constant.LESSOBI_USERPASSWORD, newpasswordEditText.getText().toString()).commit();
+
                                 Intent intent = new Intent();
                                 setResult(RESULT_OK, intent);
                                 finish();

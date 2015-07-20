@@ -2,6 +2,7 @@ package com.lesso.data.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -35,8 +36,6 @@ public class LockSetupActivity extends Activity implements
 
     private static final String TAG = "LockSetupActivity";
 
-    private LessoApplication.LoginUser loginUser;
-
     private LockPatternView lockPatternView;
 
     private static final int STEP_1 = 1; // 开始
@@ -62,8 +61,7 @@ public class LockSetupActivity extends Activity implements
 
         setContentView(R.layout.activity_lock_setup);
 
-        loginUser = ((LessoApplication) getApplication()).getLoginUser();
-        if (loginUser == null) {
+        if (((LessoApplication) getApplication()).getLoginUser() == null) {
             finish();
         }
 
@@ -121,7 +119,7 @@ public class LockSetupActivity extends Activity implements
 
     private void setupScratPWD() {
 
-        if (loginUser == null) {
+        if (((LessoApplication) getApplication()).getLoginUser() == null) {
             finish();
             return;
         }
@@ -131,7 +129,7 @@ public class LockSetupActivity extends Activity implements
         Map<String, String> parems = new HashMap();
 
         parems.put("type", "ScratUP");
-        parems.put("id", loginUser.getUserid());
+        parems.put("id", ((LessoApplication) getApplication()).getLoginUser().getUserid());
         parems.put("Scrat", pattern);
 
         RequestParams requestParams = new RequestParams(parems);
@@ -156,7 +154,12 @@ public class LockSetupActivity extends Activity implements
                         JSONObject viewtable = (JSONObject) result.get("viewtable");
                         int state = Integer.parseInt((String) viewtable.get("state"));
                         if (state > 0) {
-                            loginUser.setScratchable_PWD(pattern);
+
+                            ((LessoApplication) getApplication()).getLoginUser().setScratchable_PWD(pattern);
+
+                            SharedPreferences sp = LockSetupActivity.this.getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
+                            sp.edit().putString(Constant.LESSOBI_USERSCRATPWD, pattern).commit();
+
                             Intent intent = new Intent(LockSetupActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();

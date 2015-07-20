@@ -2,6 +2,7 @@ package com.lesso.data.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -25,8 +26,6 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
 
     private int errcount = 5;
 
-    private LessoApplication.LoginUser loginUser;
-
     private List<LockPatternView.Cell> lockPattern;
     private LockPatternView lockPatternView;
 
@@ -42,14 +41,13 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
 
         setContentView(R.layout.activity_lock);
 
-        loginUser = ((LessoApplication) getApplication()).getLoginUser();
-        if (loginUser == null || loginUser.getScratchable_PWD() == null) {
+        if (((LessoApplication) getApplication()).getLoginUser() == null || ((LessoApplication) getApplication()).getLoginUser().getScratchable_PWD() == null) {
             finish();
         }
 
         lock_input_tips = (TextView) findViewById(R.id.lock_input_tips);
 
-        lockPattern = LockPatternView.stringToPattern(loginUser.getScratchable_PWD());
+        lockPattern = LockPatternView.stringToPattern(((LessoApplication) getApplication()).getLoginUser().getScratchable_PWD());
         lockPatternView = (LockPatternView) findViewById(R.id.lock_pattern);
         lockPatternView.setOnPatternListener(this);
 
@@ -59,11 +57,11 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
     protected void onRestart() {
         super.onRestart();
 
-        if (loginUser == null || loginUser.getScratchable_PWD() == null) {
+        if (((LessoApplication) getApplication()).getLoginUser() == null || ((LessoApplication) getApplication()).getLoginUser().getScratchable_PWD() == null) {
             finish();
             return;
         }
-        lockPattern = LockPatternView.stringToPattern(loginUser.getScratchable_PWD());
+        lockPattern = LockPatternView.stringToPattern(((LessoApplication) getApplication()).getLoginUser().getScratchable_PWD());
     }
 
     @Override
@@ -98,6 +96,16 @@ public class LockActivity extends Activity implements LockPatternView.OnPatternL
             errcount--;
             if (errcount <= 0) {
                 ((LessoApplication) getApplication()).setLoginUser(null);
+
+                SharedPreferences sp = getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.remove(Constant.LESSOBI_USERID);
+                editor.remove(Constant.LESSOBI_USERNAME);
+                editor.remove(Constant.LESSOBI_USERPASSWORD);
+                editor.remove(Constant.LESSOBI_USERSCRATPWD);
+                editor.commit();
+
+
                 sendBroadcast(new Intent(Constant.FINISH_ACTION));
                 finish();
             } else {

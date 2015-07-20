@@ -2,6 +2,7 @@ package com.lesso.data.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.lesso.data.LessoApplication;
 import com.lesso.data.R;
+import com.lesso.data.common.Constant;
 
 /**
  * Created by meisl on 2015/7/6.
@@ -18,8 +20,6 @@ import com.lesso.data.R;
 public class SetupActivity extends Activity {
 
     public static final int REQUEST_CODE_SETUP_PASSWORD = 1;
-
-    private LessoApplication.LoginUser loginUser;
 
     private Button btn_back, setup_password, setup_scratpwd, setup_logout;
     private RelativeLayout main_title;
@@ -35,8 +35,7 @@ public class SetupActivity extends Activity {
 
         setContentView(R.layout.activity_setup);
 
-        loginUser = ((LessoApplication) getApplication()).getLoginUser();
-        if (loginUser == null){
+        if (((LessoApplication) getApplication()).getLoginUser() == null) {
             finish();
         }
 
@@ -80,6 +79,15 @@ public class SetupActivity extends Activity {
             @Override
             public void onClick(View view) {
                 ((LessoApplication) getApplication()).setLoginUser(null);
+
+                SharedPreferences sp = getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.remove(Constant.LESSOBI_USERID);
+                editor.remove(Constant.LESSOBI_USERNAME);
+                editor.remove(Constant.LESSOBI_USERPASSWORD);
+                editor.remove(Constant.LESSOBI_USERSCRATPWD);
+                editor.commit();
+
                 Intent intent = new Intent(SetupActivity.this, SplashLoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -95,8 +103,20 @@ public class SetupActivity extends Activity {
             switch (requestCode) {
                 case REQUEST_CODE_SETUP_PASSWORD:
                     ((LessoApplication) getApplication()).setLoginUser(null);
+
+                    SharedPreferences sp = getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.remove(Constant.LESSOBI_USERID);
+                    editor.remove(Constant.LESSOBI_USERNAME);
+                    editor.remove(Constant.LESSOBI_USERPASSWORD);
+                    editor.remove(Constant.LESSOBI_USERSCRATPWD);
+                    editor.commit();
+
                     Intent intent = new Intent(SetupActivity.this, SplashLoginActivity.class);
                     startActivity(intent);
+
+                    sendBroadcast(new Intent(Constant.FINISH_ACTION));
+                    finish();
                     break;
                 default:
                     break;

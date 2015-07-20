@@ -350,6 +350,11 @@ public class SalesFragment extends BaseGraphFragment {
                 listView.setAdapter(adapter);
             }
             adapter.notifyDataSetChanged();
+        } else {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+            Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -438,7 +443,7 @@ public class SalesFragment extends BaseGraphFragment {
                 parems.put("type", "MONEY");
             }
         }
-        
+
         return parems;
 
     }
@@ -509,31 +514,33 @@ public class SalesFragment extends BaseGraphFragment {
                 case HANDLER_DATA:
 
                     String json = msg.getData().getString("json");
-
-                    activity.getSalesDataCache().put("sBeginDate", sBeginDate);
-                    activity.getSalesDataCache().put("sEndDate", sEndDate);
-                    activity.getSalesDataCache().put("tabType", tabType + "");
-                    activity.getSalesDataCache().put("timeType", timeType + "");
-
-                    String dataType = "";
-                    if (tabType == 2) {
-                        dataType = "NUMBER";
-                    } else if (tabType == 3) {
-                        dataType = "CAR";
-                    } else if (tabType == 4) {
-                        dataType = "CLASS";
-                    } else {
-                        dataType = "MONEY";
-                    }
-
-                    if (timeType == 2)
-                        dataType += "_MONTH";
-
-                    activity.getSalesDataCache().put(dataType, json);
-
                     try {
                         Map result = Tools.json2Map(json);
                         List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
+
+                        if (viewtable != null && viewtable.size() > 0) {
+                            activity.getSalesDataCache().put("sBeginDate", sBeginDate);
+                            activity.getSalesDataCache().put("sEndDate", sEndDate);
+                            activity.getSalesDataCache().put("tabType", tabType + "");
+                            activity.getSalesDataCache().put("timeType", timeType + "");
+
+                            String dataType = "";
+                            if (tabType == 2) {
+                                dataType = "NUMBER";
+                            } else if (tabType == 3) {
+                                dataType = "CAR";
+                            } else if (tabType == 4) {
+                                dataType = "CLASS";
+                            } else {
+                                dataType = "MONEY";
+                            }
+
+                            if (timeType == 2)
+                                dataType += "_MONTH";
+
+                            activity.getSalesDataCache().put(dataType, json);
+                        }
+
                         fillData(viewtable);
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage(), e);

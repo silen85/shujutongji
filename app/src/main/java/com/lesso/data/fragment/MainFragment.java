@@ -234,6 +234,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             } catch (Exception e) {
                                 ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
                             }
+                        } else {
+                            ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
                         }
 
                     }
@@ -302,6 +304,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         } catch (Exception e) {
                             ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
                         }
+                    } else {
+                        ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
                     }
                 }
                 chart_sales.setData(data);
@@ -442,6 +446,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         } catch (Exception e) {
                             ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
                         }
+                    } else {
+                        ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
                     }
                 }
                 chart_user.setData(data);
@@ -714,7 +720,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         break;
                     case HANDLER_DATA_STORE_YESTERDAY:
                         json = msg.getData().getString("json");
-                        Log.d(TAG, "HANDLER_DATA_USER:" + json);
+                        Log.d(TAG, "HANDLER_DATA_STORE_YESTERDAY:" + json);
                         initStoreDataByYesterday(json);
                         break;
                     case HANDLER_DATA_USER:

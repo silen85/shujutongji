@@ -50,7 +50,7 @@ import java.util.Map;
  */
 public class LoginFragment extends Fragment implements View.OnClickListener, Handler.Callback, FragmentListener {
 
-    String TAG = "com.lesso.data.fragment.LoginFragment";
+    private String TAG = "com.lesso.data.fragment.LoginFragment";
 
     private static final int HANDLER_DATA = 1;
     private static final int HANDLER_NETWORK_ERR = 2;
@@ -121,9 +121,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
 
         SharedPreferences sp = activity.getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
-        String uid = sp.getString(Constant.LESSOBI_USERNAME, "");
-        if (uid != null && !"".equals(uid.trim())) {
-            accountEditText.setText(uid);
+        String username = sp.getString(Constant.LESSOBI_USERNAME, "");
+        if (username != null && !"".equals(username.trim())) {
+            accountEditText.setText(username);
             login_account_icon.setVisibility(View.GONE);
             login_password_icon.setVisibility(View.GONE);
         }
@@ -307,7 +307,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Han
             String Scratchable_PWD = (String) data.get("Scratchable_PWD");
 
             SharedPreferences sp = activity.getSharedPreferences(Constant.LESSOBI, Activity.MODE_PRIVATE);
-            sp.edit().putString(Constant.LESSOBI_USERNAME, username).commit();
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(Constant.LESSOBI_USERID, uid);
+            editor.putString(Constant.LESSOBI_USERNAME, username);
+            editor.putString(Constant.LESSOBI_USERPASSWORD, password);
+            editor.putString(Constant.LESSOBI_USERSCRATPWD, Scratchable_PWD);
+            editor.commit();
 
             LessoApplication.LoginUser loginUser = ((LessoApplication) activity.getApplication()).new LoginUser();
             loginUser.setUserid(uid);
