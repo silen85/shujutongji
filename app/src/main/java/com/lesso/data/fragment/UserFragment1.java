@@ -431,6 +431,12 @@ public class UserFragment1 extends BaseGraphFragment {
 
             if (timeType == 2) {
                 parems.put("type", "nuser_moth");
+                try {
+                    parems.put("start", sBeginDate.substring(0, 7));
+                    parems.put("end", sEndDate.substring(0, 7));
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
             } else {
                 parems.put("type", "nuser");
             }
@@ -457,7 +463,7 @@ public class UserFragment1 extends BaseGraphFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG,throwable.getMessage(),throwable);
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -512,7 +518,7 @@ public class UserFragment1 extends BaseGraphFragment {
                         List<Map<String, String>> viewtable = (List<Map<String, String>>) result.get("viewtable");
                         fillData(viewtable);
                     } catch (Exception e) {
-                        Log.e(TAG,e.getMessage(),e);
+                        Log.e(TAG, e.getMessage(), e);
                         fillData(null);
                         Toast.makeText(activity, getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                     }

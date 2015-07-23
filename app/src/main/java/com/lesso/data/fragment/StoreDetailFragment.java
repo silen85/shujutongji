@@ -49,6 +49,8 @@ public class StoreDetailFragment extends BaseListFragment {
 
     private LinearLayout tab_store_out, tab_store_in, tab_store_all;
 
+    private String searchParam = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -278,7 +280,8 @@ public class StoreDetailFragment extends BaseListFragment {
 
         if (tabType == 3) {
             Log.d(TAG, Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
-            parems.put("txt", Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
+            //  parems.put("txt", Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString())));
+            searchParam = Tools.encodeContent(Tools.encodeContent(searcher_text.getText().toString()));
         }
 
         if (sBeginDate != null && !"".equals(sBeginDate.trim()))
@@ -314,7 +317,7 @@ public class StoreDetailFragment extends BaseListFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(TAG,throwable.getMessage(),throwable);
+                Log.e(TAG, throwable.getMessage(), throwable);
                 Message message = mHandler.obtainMessage();
                 message.what = HANDLER_NETWORK_ERR;
                 message.sendToTarget();
@@ -350,7 +353,7 @@ public class StoreDetailFragment extends BaseListFragment {
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.setTimeout(Constant.CONNECT_TIMEOUT);
-        client.get(activity, Constant.URL_REPORT_STORE, requestParams, asyncHttpResponseHandler);
+        client.get(activity, Constant.URL_REPORT_STORE + (tabType == 3 ? "?txt=" + searchParam : ""), requestParams, asyncHttpResponseHandler);
 
     }
 
@@ -382,7 +385,7 @@ public class StoreDetailFragment extends BaseListFragment {
                             Toast.makeText(activity, activity.getResources().getString(R.string.no_data_tips), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        Log.e(TAG,e.getMessage(),e);
+                        Log.e(TAG, e.getMessage(), e);
                         if (list != null && list.size() > 0) {
                             list.clear();
                             adapter.notifyDataSetChanged();

@@ -328,6 +328,12 @@ public class UserDetailFragment extends BaseListFragment {
 
             if (timeType == 2) {
                 parems.put("type", "nuser_moth");
+                try {
+                    parems.put("start", sBeginDate.substring(0, 7));
+                    parems.put("end", sEndDate.substring(0, 7));
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
             } else {
                 parems.put("type", "nuser");
             }
