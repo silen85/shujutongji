@@ -234,11 +234,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             } catch (Exception e) {
                                 ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
                             }
-                        } else {
-                            ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
                         }
 
                     }
+
+                    if ("".equals(((TextView) view.findViewById(R.id.fragment_access_amount)).getText())) {
+                        ((TextView) view.findViewById(R.id.fragment_access_amount)).setText("0");
+                    }
+
                     chart_access.setData(data);
                     chart_access.setField(fields);
                 } else {
@@ -304,10 +307,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         } catch (Exception e) {
                             ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
                         }
-                    } else {
-                        ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
                     }
                 }
+
+                if ("".equals(((TextView) view.findViewById(R.id.fragment_sales_amount)).getText())) {
+                    ((TextView) view.findViewById(R.id.fragment_sales_amount)).setText("0");
+                }
+
                 chart_sales.setData(data);
                 chart_sales.setField(fields);
             } else {
@@ -446,10 +452,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         } catch (Exception e) {
                             ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
                         }
-                    } else {
-                        ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
                     }
+
                 }
+
+                if ("".equals(((TextView) view.findViewById(R.id.fragment_user_amount)).getText())) {
+                    ((TextView) view.findViewById(R.id.fragment_user_amount)).setText("0");
+                }
+
                 chart_user.setData(data);
                 chart_user.setField(fields);
             } else {

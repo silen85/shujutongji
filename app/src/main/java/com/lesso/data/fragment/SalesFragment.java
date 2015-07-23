@@ -25,6 +25,8 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -258,6 +260,30 @@ public class SalesFragment extends BaseGraphFragment {
         }
     }
 
+    private void sortMoneyMonth() throws ParseException {
+
+        if (list != null && list.size() > 0) {
+            Object[] data = list.toArray();
+            for (int i = 0; i < data.length; i++) {
+                for (int j = i + 1; j < data.length; j++) {
+                    Date a = Constant.DATE_FORMAT_3.parse(((Map<String, String>) data[i]).get("colum1"));
+                    Date b = Constant.DATE_FORMAT_3.parse(((Map<String, String>) data[j]).get("colum1"));
+                    int k = a.compareTo(b);
+                    if (k >= 1) {
+                        Map<String, String> temp = ((Map<String, String>) data[i]);
+                        data[i] = data[j];
+                        data[j] = temp;
+                    }
+                }
+            }
+
+            list.clear();
+            for (int i = 0; i < data.length; i++) {
+                list.add((Map<String, String>) data[i]);
+            }
+        }
+    }
+
     protected void fillData(List<Map<String, String>> data) {
 
         list.clear();
@@ -322,6 +348,16 @@ public class SalesFragment extends BaseGraphFragment {
             chart_bar.setScreenHeight((int) activity.getResources().getDimension(R.dimen.report_graph_size_height_user));
             data_view_sales.addView(chart_bar);
 
+            /**
+             * 因为后台按月查询没有排序
+             */
+            if (tabType == 1 && timeType == 2) {
+                try {
+                    sortMoneyMonth();
+                } catch (ParseException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
+            }
             fillBarData(list);
         }
     }
@@ -434,7 +470,7 @@ public class SalesFragment extends BaseGraphFragment {
             }
         } else if (tabType == 4) {
             parems.put("VBELN", "03");
-            parems.put("type", "CLASS");
+            parems.put("type", "CLASS_MONTH");
         } else {
             parems.put("VBELN", "02");
             if (timeType == 2) {
