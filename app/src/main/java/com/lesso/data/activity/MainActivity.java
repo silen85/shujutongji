@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         registerReceiver(finishReceiver, finishFilter);
 
         btn_back = (Button) findViewById(R.id.btn_back);
-        btn_back.setVisibility(View.GONE);
+        btn_back.setVisibility(View.INVISIBLE);
         btn_back.setOnClickListener(this);
 
         main_title = (RelativeLayout) findViewById(R.id.main_title);
@@ -126,7 +126,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             main_setting.setVisibility(View.VISIBLE);
         } else {
             main_title.setBackgroundColor(getResources().getColor(R.color.REPORT_UI_C2));
-            main_setting.setVisibility(View.GONE);
+            main_setting.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -401,7 +401,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             fragmentTransaction.add(R.id.main_content, mainFragment);
             fragmentTransaction.commit();
 
-            btn_back.setVisibility(View.GONE);
+            btn_back.setVisibility(View.INVISIBLE);
             toogleTitle(getString(R.string.app_title), true);
 
         }

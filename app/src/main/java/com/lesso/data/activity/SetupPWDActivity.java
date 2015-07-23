@@ -78,7 +78,7 @@ public class SetupPWDActivity extends Activity {
 
         main_title.setBackgroundColor(getResources().getColor(R.color.REPORT_UI_C2));
         main_title_txt.setText("密码修改");
-        main_setting.setVisibility(View.GONE);
+        main_setting.setVisibility(View.INVISIBLE);
 
 
         authority_layer = (LinearLayout) findViewById(R.id.authority_layer);

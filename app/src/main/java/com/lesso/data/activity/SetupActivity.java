@@ -54,7 +54,7 @@ public class SetupActivity extends Activity {
         main_setting = (ImageView) findViewById(R.id.main_setting);
 
         main_title_txt.setText("设置");
-        main_setting.setVisibility(View.GONE);
+        main_setting.setVisibility(View.INVISIBLE);
 
         setup_password = (Button) findViewById(R.id.setup_password);
         setup_password.setOnClickListener(new View.OnClickListener() {
