@@ -311,9 +311,9 @@ public class SalesDetailFragment extends BaseListFragment {
                         coloum2 = coloum2.substring(0, coloum2.indexOf(".") > -1 ? coloum2.indexOf(".") : coloum2.length());
                     }
                 } else if (tabType == 4) {
-                    coloum1 = data.get(data.size() - 1 - i).get("WGBEZ") + " ";
+                    coloum1 = data.get(i).get("WGBEZ") + " ";
                     coloum1 = coloum1.substring(coloum1.indexOf("-") > 0 ? coloum1.indexOf("-") + 1 : 0);
-                    coloum2 = data.get(data.size() - 1 - i).get("ZTOTLE");
+                    coloum2 = data.get(i).get("ZTOTLE");
                     coloum3 = coloum2;
                     classTotal += Float.parseFloat(coloum2);
                 } else {

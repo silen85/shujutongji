@@ -10,7 +10,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/REPORT_UI_C6</item>
-        <item name="android:textSize">@dimen/F2</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
     </style>
 
     <style name="TIME_CHOOSER">

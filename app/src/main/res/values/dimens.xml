@@ -12,7 +12,7 @@
     <dimen name="F5">12sp</dimen>
     <dimen name="F6">10sp</dimen>
 
-    <dimen name="title_text_size">@dimen/F1</dimen>
+    <dimen name="title_text_size">@dimen/F2</dimen>
     <dimen name="title_padding">4dp</dimen>
     <dimen name="title_padding_top">4dp</dimen>
     <dimen name="title_padding_right">8dp</dimen>

@@ -312,7 +312,7 @@ public class SalesFragment extends BaseGraphFragment {
                         coloum2 = data.get(i).get("ZCOUNT");
                     }
                 } else if (tabType == 4) {
-                    coloum1 = data.get(data.size() - 1 - i).get("WGBEZ") + " ";
+                    coloum1 = data.get(i).get("WGBEZ") + " ";
                     coloum1 = coloum1.substring(coloum1.indexOf("-") > 0 ? coloum1.indexOf("-") + 1 : 0);
                     coloum2 = data.get(i).get("ZTOTLE");
 
@@ -377,7 +377,8 @@ public class SalesFragment extends BaseGraphFragment {
 
                 item.put("product_name", coloum1);
                 item.put("product_num", coloum2);
-                item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / classTotal * 10000)) + "");
+                item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / (Float.parseFloat(data.get(0).get("colum2"))) * 10000)) + "");
+                //item.put("product_percent", ((int) ((Float.parseFloat(coloum2)) / classTotal * 10000)) + "");
 
             }
 
