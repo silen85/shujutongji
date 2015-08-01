@@ -34,7 +34,7 @@
     <string name="main_access">访问统计</string>
     <string name="main_access_today">昨日访客</string>
     <string name="main_sales">销售统计</string>
-    <string name="main_sales_today">昨日销售额</string>
+    <string name="main_sales_today">昨日单据量</string>
     <string name="main_store">库存统计</string>
     <string name="main_store_today">昨日出货合计</string>
     <string name="main_user">用户统计</string>

@@ -507,8 +507,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         parems.put("VKORG", "1250");
         parems.put("start", sBeginDate);
         parems.put("end", sEndDate);
-        parems.put("VBELN", "02");
-        parems.put("type", "MONEY");
+        parems.put("VBELN", "00");
+        parems.put("type", "NUMBER");
 
         //  parems.put("start", "2019-05-01");
         // parems.put("end", "2019-05-30");

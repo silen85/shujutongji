@@ -61,17 +61,18 @@ public class SalesDetailFragment extends BaseListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (tabType == 2) {
+        if (tabType == 1) {
             if (!activity.AUTHORITY_SALES_AMOUNT) {
                 btn_toogle_fragment.setClickable(false);
             } else {
                 btn_toogle_fragment.setClickable(true);
                 hideAuthority();
+                initData();
             }
         } else {
             hideAuthority();
+            initData();
         }
-        initData();
     }
 
     protected void initView() {
@@ -96,22 +97,6 @@ public class SalesDetailFragment extends BaseListFragment {
 
                 if (tabType != 1) {
                     tabType = 1;
-                    btn_toogle_fragment.setClickable(true);
-                    toogleHeader(tabType);
-                    toogleTab(tabType);
-                    toogleTime();
-                    initData();
-                    hideAuthority();
-                }
-            }
-        });
-
-        tab_sales_paper.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (tabType != 2) {
-                    tabType = 2;
                     toogleHeader(tabType);
                     toogleTab(tabType);
                     toogleTime();
@@ -122,6 +107,22 @@ public class SalesDetailFragment extends BaseListFragment {
                         btn_toogle_fragment.setClickable(false);
                         displayAuthority();
                     }
+                }
+            }
+        });
+
+        tab_sales_paper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (tabType != 2) {
+                    tabType = 2;
+                    btn_toogle_fragment.setClickable(true);
+                    toogleHeader(tabType);
+                    toogleTab(tabType);
+                    toogleTime();
+                    initData();
+                    hideAuthority();
                 }
             }
         });

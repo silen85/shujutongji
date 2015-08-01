@@ -448,6 +448,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        AUTHORITY_SALES_AMOUNT = false;
+    }
+
+    @Override
     public void onBackPressed() {
         backFragment();
     }
