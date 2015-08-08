@@ -351,17 +351,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (fragment != null) {
 
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            List<Fragment> fragmentList = fragmentManager.getFragments();
-            Iterator iterator = fragmentList.iterator();
-            while (iterator.hasNext()) {
-                Fragment _fragment = (Fragment) iterator.next();
-                if (_fragment != null) {
-                    fragmentTransaction.remove(_fragment);
-                }
-            }
-
-            fragmentTransaction.add(R.id.main_content, fragment);
+            fragmentTransaction.replace(R.id.main_content, fragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
             btn_back.setVisibility(View.VISIBLE);
@@ -386,23 +377,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         } else {
 
+            btn_back.setVisibility(View.INVISIBLE);
+            toogleTitle(getString(R.string.app_title), true);
+
+            fragmentManager.popBackStackImmediate();
+
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
             List<Fragment> fragmentList = fragmentManager.getFragments();
             Iterator iterator = fragmentList.iterator();
             while (iterator.hasNext()) {
                 Fragment _fragment = (Fragment) iterator.next();
-                if (_fragment != null) {
+                if (_fragment != null && !(_fragment instanceof MainFragment)) {
                     fragmentTransaction.remove(_fragment);
                 }
             }
-
-            mainFragment = new MainFragment();
-            fragmentTransaction.add(R.id.main_content, mainFragment);
             fragmentTransaction.commit();
-
-            btn_back.setVisibility(View.INVISIBLE);
-            toogleTitle(getString(R.string.app_title), true);
 
         }
     }
